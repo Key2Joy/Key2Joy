@@ -1,4 +1,4 @@
-﻿namespace Key2Joy.Gui
+namespace Key2Joy.Gui
 {
     partial class ConfigForm
     {
@@ -39,16 +39,18 @@
             this.pnlConfigurations.AutoSize = true;
             this.pnlConfigurations.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlConfigurations.Location = new System.Drawing.Point(0, 0);
+            this.pnlConfigurations.Margin = new System.Windows.Forms.Padding(4);
             this.pnlConfigurations.Name = "pnlConfigurations";
-            this.pnlConfigurations.Size = new System.Drawing.Size(453, 0);
+            this.pnlConfigurations.Size = new System.Drawing.Size(526, 0);
             this.pnlConfigurations.TabIndex = 0;
             // 
             // btnSave
             // 
-            this.btnSave.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnSave.Location = new System.Drawing.Point(0, 6);
+            this.btnSave.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnSave.Location = new System.Drawing.Point(418, 4);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(4);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(453, 35);
+            this.btnSave.Size = new System.Drawing.Size(104, 26);
             this.btnSave.TabIndex = 0;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -58,24 +60,27 @@
             // 
             this.pnlSave.Controls.Add(this.btnSave);
             this.pnlSave.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlSave.Location = new System.Drawing.Point(0, 75);
+            this.pnlSave.Location = new System.Drawing.Point(0, 118);
+            this.pnlSave.Margin = new System.Windows.Forms.Padding(4);
             this.pnlSave.Name = "pnlSave";
-            this.pnlSave.Size = new System.Drawing.Size(453, 41);
+            this.pnlSave.Padding = new System.Windows.Forms.Padding(4);
+            this.pnlSave.Size = new System.Drawing.Size(526, 34);
             this.pnlSave.TabIndex = 1;
             // 
             // ConfigForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(453, 116);
+            this.ClientSize = new System.Drawing.Size(526, 152);
             this.Controls.Add(this.pnlConfigurations);
             this.Controls.Add(this.pnlSave);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximumSize = new System.Drawing.Size(469, 600);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ConfigForm";
-            this.Text = "Key2Joy User Configurations";
+            this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Configuration";
             this.pnlSave.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

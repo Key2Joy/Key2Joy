@@ -41,7 +41,6 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.InitializeComponent();
 
         this.ApplyMinimizedStateIfNeeded(shouldStartMinimized);
-        this.ConfigureStatusLabels();
         this.SetupNotificationIndicator();
         this.PopulateGroupImages();
         this.RegisterListViewEvents();
@@ -109,9 +108,6 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.WindowState = shouldMinimize ? FormWindowState.Minimized : FormWindowState.Normal;
         this.ShowInTaskbar = !shouldMinimize;
     }
-
-    private void ConfigureStatusLabels()
-        => this.lblStatusActive.Visible = this.chkArmed.Checked;
 
     private void SetupNotificationIndicator()
     {
@@ -237,9 +233,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.chkArmed.CheckedChanged -= this.ChkEnabled_CheckedChanged;
         this.chkArmed.Checked = isEnabled;
         this.chkArmed.CheckedChanged += this.ChkEnabled_CheckedChanged;
-
-        this.lblStatusActive.Visible = isEnabled;
-        this.lblStatusInactive.Visible = !isEnabled;
+        this.chkArmed.Text = isEnabled ? "Disconnect" : "Connect";
     }
 
     private MappingProfile CreateNewProfile(string nameSuffix = default)
@@ -757,9 +751,6 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
         this.SetSelectedProfile(profile);
     }
-
-    private void SaveProfileToolStripMenuItem_Click(object sender, EventArgs e)
-        => MessageBox.Show("When you make changes to a profile, changes are automatically saved. This button is only here to explain that feature to you.", "Profile already saved!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
     private void OpenProfileFolderToolStripMenuItem_Click(object sender, EventArgs e)
     {

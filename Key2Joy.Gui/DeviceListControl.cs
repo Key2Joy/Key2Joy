@@ -27,18 +27,7 @@ public partial class DeviceListControl : UserControl
         this.RefreshSimulatedDevices();
         this.RefreshPhysicalDevices();
 
-        if (this.pnlDevices.Controls.Count == 0)
-        {
-            this.pnlDevices.Controls.Add(new Label()
-            {
-                Text = "No physical or simulated devices found. Try arming the mappings.",
-                Font = new Font("Arial", 8, FontStyle.Italic),
-                Padding = new Padding(5),
-                Dock = DockStyle.Top,
-                Height = 100,
-                TextAlign = ContentAlignment.MiddleCenter,
-            });
-        }
+        this.lblListPlaceholder.Visible = this.pnlDevices.Controls.Count == 0;
     }
 
     private void AddDeviceControl(DeviceControl control)
