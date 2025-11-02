@@ -16,6 +16,8 @@ using Key2Joy.Contracts.Util;
 using Key2Joy.Gui.Properties;
 using Key2Joy.Gui.Util;
 using Key2Joy.LowLevelInput;
+using Key2Joy.LowLevelInput.SimulatedGamePad;
+using Key2Joy.LowLevelInput.XInput;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions;
 using Key2Joy.Mapping.Actions.Input;
@@ -48,6 +50,12 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.ConfigureTriggerColumn();
         this.ConfigureActionColumn();
         this.ConfigureTooltips();
+
+        // Don't go looking for devices in design mode
+        if (System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv")
+        {
+            this.RefreshDevices();
+        }
     }
 
     private void RefreshMappingGroupMenu()
@@ -698,7 +706,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
             Key2JoyManager.Instance.DisarmMappings();
         }
 
-        this.deviceListControl.RefreshDevices();
+        this.RefreshDevices();
     }
 
     private void TxtProfileName_TextChanged(object sender, EventArgs e)
@@ -926,4 +934,6 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
     private void MainForm_SizeChanged(object sender, EventArgs e)
         => this.RefreshColumnWidths();
+
+    private void btnRefresh_Click(object sender, EventArgs e) => this.RefreshDevices();
 }
