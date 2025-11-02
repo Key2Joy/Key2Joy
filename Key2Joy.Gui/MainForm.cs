@@ -855,7 +855,10 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.Show();
     }
 
-    private void CloseToolStripMenuItem_Click(object sender, EventArgs e) => this.Close();
+    private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        this.Hide();
+    }
 
     private void ViewLogFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
