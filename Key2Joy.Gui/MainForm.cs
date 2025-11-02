@@ -934,4 +934,6 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
     private void MainForm_SizeChanged(object sender, EventArgs e)
         => this.RefreshColumnWidths();
+
+    private void btnRefresh_Click(object sender, EventArgs e) => this.RefreshDevices();
 }
