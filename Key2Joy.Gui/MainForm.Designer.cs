@@ -121,8 +121,8 @@ namespace Key2Joy.Gui
             this.olvColumnTrigger});
             this.olvMappings.Cursor = System.Windows.Forms.Cursors.Default;
             this.olvMappings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.olvMappings.EmptyListMsg = "There are no mappings, or a search filter is applied that matched no mappings.";
-            this.olvMappings.EmptyListMsgFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.olvMappings.EmptyListMsg = "No mappings found.\nTry another search query or add a mapping if there are none.";
+            this.olvMappings.EmptyListMsgFont = new System.Drawing.Font("Microsoft Sans Serif", 10f);
             this.olvMappings.FullRowSelect = true;
             this.olvMappings.HideSelection = false;
             this.olvMappings.LabelWrap = false;
