@@ -23,7 +23,7 @@ public class ConfigState
     private string lastInstallPath;
 
     [EnumConfigControl(
-        Text = "Mapped options grouping style",
+        Text = "Group Mappings by",
         EnumType = typeof(ViewMappingGroupType)
     )]
     public ViewMappingGroupType SelectedViewMappingGroupType
@@ -35,7 +35,7 @@ public class ConfigState
     private ViewMappingGroupType selectedViewMappingGroupType = ViewMappingGroupType.ByAction;
 
     [BooleanConfigControl(
-        Text = "Minimize app when pressing the close button"
+        Text = "Minimize to Tray"
     )]
     public bool ShouldCloseButtonMinimize
     {
@@ -45,21 +45,10 @@ public class ConfigState
 
     private bool shouldCloseButtonMinimize;
 
-    [TextConfigControl(
-        Text = "Last loaded mapping profile file location"
-    )]
-    public string LastLoadedProfile
-    {
-        get => this.lastLoadedProfile;
-        set => this.SaveIfInitialized(this.lastLoadedProfile = value);
-    }
-
-    private string lastLoadedProfile;
-
     #region Listener Overrides
 
     [BooleanConfigControl(
-        Text = "While armed override the default Keyboard behaviour for mapped keys"
+        Text = "Override Mapped Keyboard Input when Connected"
     )]
     public bool ListenerOverrideDefaultKeyboard
     {
@@ -70,8 +59,8 @@ public class ConfigState
     private bool listenerOverrideDefaultKeyboard = true;
 
     [BooleanConfigControl(
-        Text = "While armed override the default Keyboard behaviour for all keys",
-        Hint = "Make sure you map an 'Abort' action to a key, so you can disarm the mappings."
+        Text = "Override All Keyboard Input when Connected",
+        Hint = "Make sure you map 'Abort', so you can disconnect."
     )]
     public bool ListenerOverrideDefaultKeyboardAll
     {
@@ -82,7 +71,7 @@ public class ConfigState
     private bool listenerOverrideDefaultKeyboardAll = false;
 
     [BooleanConfigControl(
-        Text = "While armed override the default Mouse behaviour for mapped buttons"
+        Text = "Override Mapped Mouse Buttons when Connected"
     )]
     public bool ListenerOverrideDefaultMouse
     {
@@ -93,8 +82,8 @@ public class ConfigState
     private bool listenerOverrideDefaultMouse = true;
 
     [BooleanConfigControl(
-        Text = "While armed override the default Mouse behaviour for all buttons",
-        Hint = "Make sure you map an 'Abort' action to a key, otherwise you can't click the disarm checkbox!"
+        Text = "Override All Mouse Buttons when Connected",
+        Hint = "Make sure you map 'Abort', so you can disconnect."
     )]
     public bool ListenerOverrideDefaultMouseAll
     {
@@ -105,7 +94,7 @@ public class ConfigState
     private bool listenerOverrideDefaultMouseAll = false;
 
     [BooleanConfigControl(
-        Text = "While armed override the default Mouse Move behaviour for mapped moves",
+        Text = "Override Mapped Mouse Moves when Connected",
         Hint = "This cannot properly override moves in a specific direction. Use the 'Any' mouse move direction instead."
     )]
     public bool ListenerOverrideDefaultMouseMove
@@ -117,8 +106,8 @@ public class ConfigState
     private bool listenerOverrideDefaultMouseMove = false;
 
     [BooleanConfigControl(
-        Text = "While armed override the default Mouse Move behaviour for all moves",
-        Hint = "Make sure you map an 'Abort' action to a key, otherwise you can't move to click the disarm checkbox!"
+        Text = "Override All Mouse Moves when Connected",
+        Hint = "Make sure you map 'Abort', so you can disconnect."
     )]
     public bool ListenerOverrideDefaultMouseMoveAll
     {
@@ -129,6 +118,17 @@ public class ConfigState
     private bool listenerOverrideDefaultMouseMoveAll = false;
 
     #endregion Listener Overrides
+
+    [TextConfigControl(
+        Text = "Most Recent Profile"
+    )]
+    public string LastLoadedProfile
+    {
+        get => this.lastLoadedProfile;
+        set => this.SaveIfInitialized(this.lastLoadedProfile = value);
+    }
+
+    private string lastLoadedProfile;
 
     public Dictionary<string, string> EnabledPlugins { get; set; } = new Dictionary<string, string>();
 
