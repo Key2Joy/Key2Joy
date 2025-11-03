@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using CommonServiceLocator;
 using Key2Joy.LowLevelInput.SimulatedGamePad;
 using Key2Joy.Mapping;
+using SimWinInput;
 
 namespace Key2Joy.Gui;
 
@@ -16,18 +17,24 @@ public partial class InitForm : Form
 
         this.InitializeComponent();
 
-        if (shouldStartMinimized)
-        {
-            this.WindowState = FormWindowState.Minimized;
-            this.ShowInTaskbar = false;
-        }
+        this.WindowState = FormWindowState.Minimized;
+        this.ShowInTaskbar = false;
     }
 
     private void InitForm_Load(object sender, EventArgs e)
     {
         MappingProfile.ExtractDefaultIfNotExists();
         var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
-        gamePadService.Initialize();
+
+        try
+        {
+            gamePadService.Initialize();
+        }
+        catch (UserDeclinedDriverException)
+        {
+            Application.Exit();
+            return;
+        }
 
         MainForm mainForm = new(this.shouldStartMinimized);
         Program.GoToNextForm(mainForm);
