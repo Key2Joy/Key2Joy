@@ -726,6 +726,11 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
                 return;
             }
         }
+
+        if (this.chkArmed.Checked)
+        {
+            Key2JoyManager.Instance.DisarmMappings();
+        }
     }
 
     private void NewProfileToolStripMenuItem_Click(object sender, EventArgs e) => this.CreateNewProfile(" - Copy");
