@@ -16,7 +16,7 @@ public static class Program
     public static Form ActiveForm { get; set; }
     public static PluginSet Plugins { get; private set; }
 
-    private static bool shouldStartMaximized;
+    private static bool shouldStartMinimized;
 
     /// <summary>
     /// The main entry point for the application.
@@ -35,13 +35,11 @@ public static class Program
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                shouldStartMaximized = false;
-
                 foreach (var arg in args)
                 {
                     if (arg == "--minimized")
                     {
-                        shouldStartMaximized = false;
+                        shouldStartMinimized = true;
                     }
                 }
 
@@ -62,7 +60,7 @@ public static class Program
     {
         if (ScpBus.IsDriverInstalled())
         {
-            return new MainForm(shouldStartMaximized);
+            return new MainForm(shouldStartMinimized);
         }
         return new SetupForm();
     }
@@ -92,7 +90,7 @@ public static class Program
 
     public static void ShowMainForm()
     {
-        ShowForm(new MainForm(shouldStartMaximized));
+        ShowForm(new MainForm(shouldStartMinimized));
     }
 
     internal static Bitmap ResourceBitmapFromName(string name)
