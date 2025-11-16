@@ -41,7 +41,7 @@ public static class Program
                 {
                     if (arg == "--minimized")
                     {
-                        shouldStartMaximized = true;
+                        shouldStartMaximized = false;
                     }
                 }
 
