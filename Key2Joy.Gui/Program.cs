@@ -7,6 +7,7 @@ using Key2Joy.LowLevelInput.SimulatedGamePad;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions.Logic;
 using Key2Joy.Plugins;
+using SimWinInput;
 
 namespace Key2Joy.Gui;
 
@@ -59,7 +60,7 @@ public static class Program
 
     private static Form GetStartupForm()
     {
-        if (ScpBusExtensions.IsDriverInstalled())
+        if (ScpBus.IsDriverInstalled())
         {
             return new MainForm(shouldStartMaximized);
         }
