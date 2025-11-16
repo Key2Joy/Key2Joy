@@ -15,14 +15,16 @@ public partial class SetupForm : Form
 
     private void btnNext_Click(object sender, EventArgs e)
     {
-
-        try
+        if (chkSystemRestorePoint.Checked)
         {
-            WindowsUtilities.CreateRestorePoint("Key2Joy Installation", WindowsUtilities.EventType.BeginSystemChange, WindowsUtilities.RestorePointType.ApplicationInstall);
-        }
-        catch
-        {
-            // ignored, non-critical
+            try
+            {
+                WindowsUtilities.CreateRestorePoint("Key2Joy Installation", WindowsUtilities.EventType.BeginSystemChange, WindowsUtilities.RestorePointType.ApplicationInstall);
+            }
+            catch
+            {
+                // ignored, non-critical
+            }
         }
 
         try
