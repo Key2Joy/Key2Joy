@@ -1,6 +1,10 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using CommonServiceLocator;
+using Key2Joy.Extensions;
+using Key2Joy.LowLevelInput.SimulatedGamePad;
+using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions.Logic;
 using Key2Joy.Plugins;
 
@@ -10,6 +14,8 @@ public static class Program
 {
     public static Form ActiveForm { get; set; }
     public static PluginSet Plugins { get; private set; }
+
+    private static bool shouldStartMaximized;
 
     /// <summary>
     /// The main entry point for the application.
@@ -28,17 +34,17 @@ public static class Program
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                var shouldStartMinimized = false;
+                shouldStartMaximized = false;
 
                 foreach (var arg in args)
                 {
                     if (arg == "--minimized")
                     {
-                        shouldStartMinimized = true;
+                        shouldStartMaximized = true;
                     }
                 }
 
-                ActiveForm = new InitForm(shouldStartMinimized);
+                ActiveForm = GetStartupForm();
 
                 while (ActiveForm != null && !ActiveForm.IsDisposed)
                 {
@@ -48,6 +54,15 @@ public static class Program
         );
 
         Plugins.Dispose();
+    }
+
+    private static Form GetStartupForm()
+    {
+        if (ScpBusExtensions.IsDriverInstalled())
+        {
+            return new MainForm(shouldStartMaximized);
+        }
+        return new SetupForm();
     }
 
     internal static void GoToNextForm(Form form)
@@ -72,5 +87,23 @@ public static class Program
         }
 
         return false;
+    }
+
+    public static void GoToMainForm()
+    {
+        MappingProfile.ExtractDefaultIfNotExists();
+        var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
+
+        try
+        {
+            gamePadService.Initialize();
+        }
+        catch
+        {
+            Application.Exit();
+            return;
+        }
+
+        GoToNextForm(new MainForm(shouldStartMaximized));
     }
 }

@@ -23,20 +23,6 @@ public partial class InitForm : Form
 
     private void InitForm_Load(object sender, EventArgs e)
     {
-        MappingProfile.ExtractDefaultIfNotExists();
-        var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
-
-        try
-        {
-            gamePadService.Initialize();
-        }
-        catch (UserDeclinedDriverException)
-        {
-            Application.Exit();
-            return;
-        }
-
-        MainForm mainForm = new(this.shouldStartMinimized);
-        Program.GoToNextForm(mainForm);
+        
     }
 }
