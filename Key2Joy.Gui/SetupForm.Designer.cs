@@ -30,8 +30,8 @@ partial class SetupForm
     {
             this.lblTitle = new System.Windows.Forms.Label();
             this.lblDescription = new System.Windows.Forms.Label();
-            this.chkSystemRestorePoint = new System.Windows.Forms.CheckBox();
             this.btnInstall = new System.Windows.Forms.Button();
+            this.btnCreateSystemRestorePoint = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblTitle
@@ -49,28 +49,18 @@ partial class SetupForm
             this.lblDescription.AutoSize = true;
             this.lblDescription.Location = new System.Drawing.Point(14, 47);
             this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(511, 16);
+            this.lblDescription.Size = new System.Drawing.Size(511, 32);
             this.lblDescription.TabIndex = 2;
             this.lblDescription.Text = "In order for Key2Joy to function correctly, you need to install the SCP Virtual B" +
-    "us driver.";
-            // 
-            // chkSystemRestorePoint
-            // 
-            this.chkSystemRestorePoint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkSystemRestorePoint.AutoSize = true;
-            this.chkSystemRestorePoint.Location = new System.Drawing.Point(247, 81);
-            this.chkSystemRestorePoint.Name = "chkSystemRestorePoint";
-            this.chkSystemRestorePoint.Size = new System.Drawing.Size(201, 20);
-            this.chkSystemRestorePoint.TabIndex = 3;
-            this.chkSystemRestorePoint.Text = "Create System Restore Point";
-            this.chkSystemRestorePoint.UseVisualStyleBackColor = true;
+    "us driver.\r\nYou might want to create a system restore point prior to installatio" +
+    "n.";
             // 
             // btnInstall
             // 
             this.btnInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnInstall.Image = global::Key2Joy.Gui.Properties.Resources.arrow_down;
             this.btnInstall.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnInstall.Location = new System.Drawing.Point(454, 75);
+            this.btnInstall.Location = new System.Drawing.Point(454, 89);
             this.btnInstall.Name = "btnInstall";
             this.btnInstall.Size = new System.Drawing.Size(102, 30);
             this.btnInstall.TabIndex = 0;
@@ -79,16 +69,28 @@ partial class SetupForm
             this.btnInstall.UseVisualStyleBackColor = true;
             this.btnInstall.Click += new System.EventHandler(this.btnNext_Click);
             // 
+            // btnCreateSystemRestorePoint
+            // 
+            this.btnCreateSystemRestorePoint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCreateSystemRestorePoint.Location = new System.Drawing.Point(214, 89);
+            this.btnCreateSystemRestorePoint.Name = "btnCreateSystemRestorePoint";
+            this.btnCreateSystemRestorePoint.Size = new System.Drawing.Size(234, 30);
+            this.btnCreateSystemRestorePoint.TabIndex = 4;
+            this.btnCreateSystemRestorePoint.Text = "Create System Restore Point";
+            this.btnCreateSystemRestorePoint.UseVisualStyleBackColor = true;
+            this.btnCreateSystemRestorePoint.Click += new System.EventHandler(this.btnCreateSystemRestorePoint_Click);
+            // 
             // SetupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(568, 117);
-            this.Controls.Add(this.chkSystemRestorePoint);
+            this.ClientSize = new System.Drawing.Size(568, 131);
+            this.Controls.Add(this.btnCreateSystemRestorePoint);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.lblDescription);
             this.Controls.Add(this.btnInstall);
             this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(586, 178);
             this.Name = "SetupForm";
             this.ShowIcon = false;
             this.Text = "Key2Joy Setup";
@@ -102,5 +104,5 @@ partial class SetupForm
     private System.Windows.Forms.Button btnInstall;
     private System.Windows.Forms.Label lblTitle;
     private System.Windows.Forms.Label lblDescription;
-    private System.Windows.Forms.CheckBox chkSystemRestorePoint;
+    private System.Windows.Forms.Button btnCreateSystemRestorePoint;
 }

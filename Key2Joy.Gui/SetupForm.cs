@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
-using Key2Joy.Gui.Util;
 using SimWinInput;
 
 namespace Key2Joy.Gui;
@@ -15,27 +15,19 @@ public partial class SetupForm : Form
 
     private void btnNext_Click(object sender, EventArgs e)
     {
-        if (chkSystemRestorePoint.Checked)
-        {
-            try
-            {
-                WindowsUtilities.CreateRestorePoint("Key2Joy Installation", WindowsUtilities.EventType.BeginSystemChange, WindowsUtilities.RestorePointType.ApplicationInstall);
-            }
-            catch
-            {
-                // ignored, non-critical
-            }
-        }
-
         try
         {
             ScpDriverInstaller.Install();
+            Program.ShowMainForm();
         }
         catch (Win32Exception)
         {
             return;
         }
+    }
 
-        Program.ShowMainForm();
+    private void btnCreateSystemRestorePoint_Click(object sender, EventArgs e)
+    {
+        Process.Start("SystemPropertiesProtection.exe");
     }
 }
