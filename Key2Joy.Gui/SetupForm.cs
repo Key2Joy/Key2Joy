@@ -34,6 +34,6 @@ public partial class SetupForm : Form
             return;
         }
 
-        Program.GoToMainForm();
+        Program.ShowMainForm();
     }
 }
