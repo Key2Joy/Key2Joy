@@ -77,6 +77,7 @@ partial class MappingControl
             this.btnSaveMapping.TabIndex = 91;
             this.btnSaveMapping.Text = "Apply";
             this.btnSaveMapping.UseVisualStyleBackColor = true;
+            this.btnSaveMapping.Click += new System.EventHandler(this.btnSaveMapping_Click);
             // 
             // grpTrigger
             // 

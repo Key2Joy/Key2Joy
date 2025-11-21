@@ -191,4 +191,9 @@ public partial class MappingControl : UserControl
     {
         this._dominantReverseCheckedState = this.chkCreateReverseMapping.Checked;
     }
+
+    private void btnSaveMapping_Click(object sender, EventArgs e)
+    {
+        Apply();
+    }
 }
