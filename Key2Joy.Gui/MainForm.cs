@@ -41,7 +41,11 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
             .GetConfigState();
 
         this.InitializeComponent();
-
+        this.mappingControl.OnApplied += (_, _) =>
+        {
+            this.selectedProfile.Save();
+            this.RefreshMappings();
+        };
         this.ApplyMinimizedStateIfNeeded(shouldStartMinimized);
         this.SetupNotificationIndicator();
         this.PopulateGroupImages();
@@ -255,27 +259,12 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
     private void EditMappedOption(MappedOption existingMappedOption = null)
     {
-        this.chkArmed.Checked = false;
-        MappingForm mappingForm = new(existingMappedOption);
-        var result = mappingForm.ShowDialog();
-
-        if (result == DialogResult.Cancel)
+        if (existingMappedOption == null)
         {
             return;
         }
-
-        if (existingMappedOption == null)
-        {
-            this.selectedProfile.AddMapping(mappingForm.MappedOption);
-        }
-
-        if (mappingForm.MappedOptionReverse != null)
-        {
-            this.selectedProfile.AddMapping(mappingForm.MappedOptionReverse);
-        }
-
-        this.selectedProfile.Save();
-        this.RefreshMappings();
+        this.chkArmed.Checked = false;
+        this.mappingControl.StartEdit(this.selectedProfile, existingMappedOption);
     }
 
     private void RemoveMappings(IList<MappedOption> mappedOptions)

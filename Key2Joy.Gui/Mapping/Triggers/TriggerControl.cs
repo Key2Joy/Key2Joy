@@ -118,7 +118,7 @@ public partial class TriggerControl : UserControl
             return;
         }
 
-        var options = MappingForm.BuildOptionsForComboBox<TriggerAttribute, AbstractTrigger>(this.cmbTrigger, this.pnlTriggerOptions);
+        var options = MappingControl.BuildOptionsForComboBox<TriggerAttribute, AbstractTrigger>(this.cmbTrigger, this.pnlTriggerOptions);
 
         if (options != null)
         {

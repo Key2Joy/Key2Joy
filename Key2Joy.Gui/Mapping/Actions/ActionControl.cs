@@ -124,7 +124,7 @@ public partial class ActionControl : UserControl
             return;
         }
 
-        var options = MappingForm.BuildOptionsForComboBox<ActionAttribute, AbstractAction>(this.cmbAction, this.pnlActionOptions);
+        var options = MappingControl.BuildOptionsForComboBox<ActionAttribute, AbstractAction>(this.cmbAction, this.pnlActionOptions);
 
         if (options != null)
         {
