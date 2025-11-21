@@ -80,6 +80,7 @@ public partial class TriggerControl : UserControl
         var triggerFullTypeName = trigger.GetType().FullName;
         var selectedType = selected.FirstOrDefault(x => x.ItemValue.Value.FullTypeName == triggerFullTypeName);
         this.cmbTrigger.SelectedItem = selectedType;
+        this.UpdateSelection();
     }
 
     private void LoadTriggers()
@@ -111,7 +112,7 @@ public partial class TriggerControl : UserControl
         }
     }
 
-    private void CmbTrigger_SelectedIndexChanged(object sender, EventArgs e)
+    private void UpdateSelection()
     {
         if (!this.isLoaded)
         {
@@ -145,6 +146,8 @@ public partial class TriggerControl : UserControl
         this.selectedTrigger = null;
         this.PerformLayout();
     }
+
+    private void CmbTrigger_SelectedIndexChanged(object sender, EventArgs e) => this.UpdateSelection();
 
     private void OnOptionsChanged(object sender, EventArgs e)
     {
