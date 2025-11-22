@@ -136,7 +136,7 @@ namespace Key2Joy.Gui
             this.olvMappings.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.olvMappings.Name = "olvMappings";
             this.olvMappings.RowHeight = 25;
-            this.olvMappings.Size = new System.Drawing.Size(885, 371);
+            this.olvMappings.Size = new System.Drawing.Size(883, 331);
             this.olvMappings.TabIndex = 84;
             this.olvMappings.UseCellFormatEvents = true;
             this.olvMappings.UseCompatibleStateImageBehavior = false;
@@ -163,7 +163,7 @@ namespace Key2Joy.Gui
             // btnCreateMapping
             // 
             this.btnCreateMapping.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnCreateMapping.Location = new System.Drawing.Point(719, 5);
+            this.btnCreateMapping.Location = new System.Drawing.Point(717, 5);
             this.btnCreateMapping.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.btnCreateMapping.Name = "btnCreateMapping";
             this.btnCreateMapping.Size = new System.Drawing.Size(161, 28);
@@ -194,7 +194,7 @@ namespace Key2Joy.Gui
             this.pnlProfileManagement.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.pnlProfileManagement.Name = "pnlProfileManagement";
             this.pnlProfileManagement.Padding = new System.Windows.Forms.Padding(7);
-            this.pnlProfileManagement.Size = new System.Drawing.Size(885, 38);
+            this.pnlProfileManagement.Size = new System.Drawing.Size(883, 38);
             this.pnlProfileManagement.TabIndex = 82;
             // 
             // txtFilterLabel
@@ -241,7 +241,7 @@ namespace Key2Joy.Gui
             this.menMainMenu.Location = new System.Drawing.Point(0, 0);
             this.menMainMenu.Name = "menMainMenu";
             this.menMainMenu.Padding = new System.Windows.Forms.Padding(8, 3, 0, 3);
-            this.menMainMenu.Size = new System.Drawing.Size(885, 30);
+            this.menMainMenu.Size = new System.Drawing.Size(883, 30);
             this.menMainMenu.TabIndex = 81;
             this.menMainMenu.Text = "menuStrip1";
             // 
@@ -600,7 +600,7 @@ namespace Key2Joy.Gui
             this.pnlMainMenu.Location = new System.Drawing.Point(0, 0);
             this.pnlMainMenu.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.pnlMainMenu.Name = "pnlMainMenu";
-            this.pnlMainMenu.Size = new System.Drawing.Size(885, 28);
+            this.pnlMainMenu.Size = new System.Drawing.Size(883, 28);
             this.pnlMainMenu.TabIndex = 85;
             // 
             // pnlNotificationsParent
@@ -610,7 +610,7 @@ namespace Key2Joy.Gui
             this.pnlNotificationsParent.Location = new System.Drawing.Point(0, 0);
             this.pnlNotificationsParent.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.pnlNotificationsParent.Name = "pnlNotificationsParent";
-            this.pnlNotificationsParent.Size = new System.Drawing.Size(885, 0);
+            this.pnlNotificationsParent.Size = new System.Drawing.Size(883, 0);
             this.pnlNotificationsParent.TabIndex = 89;
             // 
             // splitContainer
@@ -633,8 +633,8 @@ namespace Key2Joy.Gui
             // 
             this.splitContainer.Panel2.Controls.Add(this.pnlContainer);
             this.splitContainer.Panel2MinSize = 100;
-            this.splitContainer.Size = new System.Drawing.Size(1046, 437);
-            this.splitContainer.SplitterDistance = 885;
+            this.splitContainer.Size = new System.Drawing.Size(1046, 397);
+            this.splitContainer.SplitterDistance = 883;
             this.splitContainer.SplitterWidth = 6;
             this.splitContainer.TabIndex = 90;
             // 
@@ -647,7 +647,7 @@ namespace Key2Joy.Gui
             this.pnlContainer.Location = new System.Drawing.Point(0, 0);
             this.pnlContainer.Name = "pnlContainer";
             this.pnlContainer.Padding = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.pnlContainer.Size = new System.Drawing.Size(155, 437);
+            this.pnlContainer.Size = new System.Drawing.Size(157, 397);
             this.pnlContainer.TabIndex = 5;
             // 
             // pnlDeviceListContainer
@@ -659,7 +659,7 @@ namespace Key2Joy.Gui
             this.pnlDeviceListContainer.Location = new System.Drawing.Point(6, 66);
             this.pnlDeviceListContainer.Name = "pnlDeviceListContainer";
             this.pnlDeviceListContainer.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
-            this.pnlDeviceListContainer.Size = new System.Drawing.Size(143, 371);
+            this.pnlDeviceListContainer.Size = new System.Drawing.Size(145, 371);
             this.pnlDeviceListContainer.TabIndex = 4;
             // 
             // pnlDevices
@@ -669,7 +669,7 @@ namespace Key2Joy.Gui
             this.pnlDevices.Location = new System.Drawing.Point(0, 5);
             this.pnlDevices.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.pnlDevices.Name = "pnlDevices";
-            this.pnlDevices.Size = new System.Drawing.Size(143, 0);
+            this.pnlDevices.Size = new System.Drawing.Size(145, 0);
             this.pnlDevices.TabIndex = 0;
             // 
             // lblListPlaceholder
@@ -680,7 +680,7 @@ namespace Key2Joy.Gui
             this.lblListPlaceholder.ForeColor = System.Drawing.SystemColors.WindowText;
             this.lblListPlaceholder.Location = new System.Drawing.Point(0, 5);
             this.lblListPlaceholder.Name = "lblListPlaceholder";
-            this.lblListPlaceholder.Size = new System.Drawing.Size(143, 366);
+            this.lblListPlaceholder.Size = new System.Drawing.Size(145, 366);
             this.lblListPlaceholder.TabIndex = 3;
             this.lblListPlaceholder.Text = "No devices found.\r\n\r\nTry connecting the Key2Joy device.";
             this.lblListPlaceholder.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -692,7 +692,7 @@ namespace Key2Joy.Gui
             this.pnlDeviceListActions.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlDeviceListActions.Location = new System.Drawing.Point(6, 28);
             this.pnlDeviceListActions.Name = "pnlDeviceListActions";
-            this.pnlDeviceListActions.Size = new System.Drawing.Size(143, 38);
+            this.pnlDeviceListActions.Size = new System.Drawing.Size(145, 38);
             this.pnlDeviceListActions.TabIndex = 4;
             // 
             // chkArmed
@@ -715,7 +715,7 @@ namespace Key2Joy.Gui
             this.btnRefresh.AccessibleName = "Refresh";
             this.btnRefresh.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnRefresh.Image = global::Key2Joy.Gui.Properties.Resources.arrow_refresh;
-            this.btnRefresh.Location = new System.Drawing.Point(104, 0);
+            this.btnRefresh.Location = new System.Drawing.Point(106, 0);
             this.btnRefresh.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(39, 38);
@@ -732,7 +732,7 @@ namespace Key2Joy.Gui
             this.lblDevices.Location = new System.Drawing.Point(6, 0);
             this.lblDevices.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblDevices.Name = "lblDevices";
-            this.lblDevices.Size = new System.Drawing.Size(143, 28);
+            this.lblDevices.Size = new System.Drawing.Size(145, 28);
             this.lblDevices.TabIndex = 0;
             this.lblDevices.Text = "Devices";
             this.lblDevices.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -752,9 +752,9 @@ namespace Key2Joy.Gui
             // splitContainerOuter.Panel2
             // 
             this.splitContainerOuter.Panel2.Controls.Add(this.panel1);
-            this.splitContainerOuter.Panel2MinSize = 250;
+            this.splitContainerOuter.Panel2MinSize = 290;
             this.splitContainerOuter.Size = new System.Drawing.Size(1046, 691);
-            this.splitContainerOuter.SplitterDistance = 437;
+            this.splitContainerOuter.SplitterDistance = 397;
             this.splitContainerOuter.TabIndex = 90;
             // 
             // panel1
@@ -764,7 +764,7 @@ namespace Key2Joy.Gui
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1046, 250);
+            this.panel1.Size = new System.Drawing.Size(1046, 290);
             this.panel1.TabIndex = 0;
             // 
             // mappingControl
@@ -772,7 +772,7 @@ namespace Key2Joy.Gui
             this.mappingControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mappingControl.Location = new System.Drawing.Point(0, 0);
             this.mappingControl.Name = "mappingControl";
-            this.mappingControl.Size = new System.Drawing.Size(1044, 248);
+            this.mappingControl.Size = new System.Drawing.Size(1044, 288);
             this.mappingControl.TabIndex = 0;
             // 
             // MainForm

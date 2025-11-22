@@ -46,6 +46,7 @@ public partial class MappingControl : UserControl
         }
 
         this.btnSaveMapping.Text = "Save";
+        this.lblHeader.Text = "Edit Mapping";
 
         this._profile = profile;
         this._mapping = mapping;
@@ -64,6 +65,7 @@ public partial class MappingControl : UserControl
         }
 
         this.btnSaveMapping.Text = "Create";
+        this.lblHeader.Text = "Create Mapping";
 
         this._profile = profile;
         this._mapping = null;
@@ -75,7 +77,7 @@ public partial class MappingControl : UserControl
         this.RefreshCreateReverseMappingOption();
     }
 
-    private void Apply()
+    private bool Apply()
     {
         var trigger = this.triggerControl.Trigger;
         var action = this.actionControl.Action;
@@ -83,13 +85,13 @@ public partial class MappingControl : UserControl
         if (trigger == null)
         {
             MessageBox.Show("You must select a trigger!", "No trigger selected!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return;
+            return false;
         }
 
         if (action == null)
         {
             MessageBox.Show("You must select an action!", "No action selected!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return;
+            return false;
         }
 
         this._mapping ??= new MappedOption();
@@ -98,12 +100,12 @@ public partial class MappingControl : UserControl
 
         if (!this.triggerControl.CanMappingSave(this._mapping))
         {
-            return;
+            return false;
         }
 
         if (!this.actionControl.CanMappingSave(this._mapping))
         {
-            return;
+            return false;
         }
 
         if (this.chkCreateReverseMapping.Checked)
@@ -135,24 +137,43 @@ public partial class MappingControl : UserControl
             }
         }
 
-        // TODO: PROPER CREATION HANDLING
-        //if (existingMapping == null)
-        //{
-        //    this.Profile.AddMapping(Mapping);
-        //}
+        return true;
+    }
+
+    private void Save()
+    {
+        if (!this.Apply())
+        {
+            return;
+        }
 
         if (this._reverseMapping != null)
         {
             this._profile.AddMapping(this._reverseMapping);
         }
 
-
         this.OnApplied?.Invoke(this, EventArgs.Empty);
     }
 
     private void Create()
     {
+        if (!this.Apply())
+        {
+            this._mapping = null;
+            return;
+        }
 
+        this._profile.AddMapping(this._mapping);
+
+        if (this._reverseMapping != null)
+        {
+            this._profile.AddMapping(this._reverseMapping);
+        }
+
+        this.OnApplied?.Invoke(this, EventArgs.Empty);
+
+        // We now switch to edit mode for convenience.
+        this.StartEdit(this._profile, this._mapping);
     }
 
     private void ActionControl_ActionChanged(object sender, ActionChangedEventArgs e)
@@ -240,7 +261,7 @@ public partial class MappingControl : UserControl
         }
         else
         {
-            this.Apply();
+            this.Save();
         }
     }
 
