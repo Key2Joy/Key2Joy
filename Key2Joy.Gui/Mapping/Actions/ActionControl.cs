@@ -79,7 +79,9 @@ public partial class ActionControl : UserControl
         actionFullTypeName = MappingTypeHelper.EnsureSimpleTypeName(actionFullTypeName);
 
         var selectedType = selected.FirstOrDefault(x => x.ItemValue.Value.FullTypeName == actionFullTypeName);
+
         this.cmbAction.SelectedItem = selectedType;
+        this.UpdateSelection();
     }
 
     private void LoadActions()
@@ -117,14 +119,15 @@ public partial class ActionControl : UserControl
         }
     }
 
-    private void CmbAction_SelectedIndexChanged(object sender, EventArgs e)
+    private void UpdateSelection()
     {
+
         if (!this.isLoaded)
         {
             return;
         }
 
-        var options = MappingForm.BuildOptionsForComboBox<ActionAttribute, AbstractAction>(this.cmbAction, this.pnlActionOptions);
+        var options = MappingControl.BuildOptionsForComboBox<ActionAttribute, AbstractAction>(this.cmbAction, this.pnlActionOptions);
 
         if (options != null)
         {
@@ -146,6 +149,8 @@ public partial class ActionControl : UserControl
         this.selectedAction = null;
         this.PerformLayout();
     }
+
+    private void CmbAction_SelectedIndexChanged(object sender, EventArgs e) => this.UpdateSelection();
 
     private void ActionControl_Load(object sender, EventArgs e) => this.LoadActions();
 }

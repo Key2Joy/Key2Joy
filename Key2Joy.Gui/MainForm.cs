@@ -47,6 +47,8 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.PopulateGroupImages();
         this.RegisterListViewEvents();
 
+        this.mappingControl.OnApplied += (_, __) => OnMappingChangesApplied();
+
         this.ConfigureTriggerColumn();
         this.ConfigureActionColumn();
         this.ConfigureTooltips();
@@ -56,6 +58,12 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         {
             this.RefreshDevices();
         }
+    }
+
+    private void OnMappingChangesApplied()
+    {
+        this.selectedProfile.Save();
+        this.RefreshMappings();
     }
 
     private void RefreshMappingGroupMenu()
@@ -253,29 +261,18 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         return profile;
     }
 
-    private void EditMappedOption(MappedOption existingMappedOption = null)
+    private void EditOrCreateMapping(MappedOption? mapping)
     {
         this.chkArmed.Checked = false;
-        MappingForm mappingForm = new(existingMappedOption);
-        var result = mappingForm.ShowDialog();
 
-        if (result == DialogResult.Cancel)
+        if (mapping == null)
         {
-            return;
+            this.mappingControl.StartCreate(this.selectedProfile);
         }
-
-        if (existingMappedOption == null)
+        else
         {
-            this.selectedProfile.AddMapping(mappingForm.MappedOption);
+            this.mappingControl.StartEdit(this.selectedProfile, mapping);
         }
-
-        if (mappingForm.MappedOptionReverse != null)
-        {
-            this.selectedProfile.AddMapping(mappingForm.MappedOptionReverse);
-        }
-
-        this.selectedProfile.Save();
-        this.RefreshMappings();
     }
 
     private void RemoveMappings(IList<MappedOption> mappedOptions)
@@ -509,7 +506,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
             this.CreateNewProfile();
         }
 
-        this.EditMappedOption();
+        this.EditOrCreateMapping(null);
     }
 
     private void OlvMappings_CellClick(object sender, CellClickEventArgs e)
@@ -524,7 +521,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
             return;
         }
 
-        this.EditMappedOption(mappedOption);
+        this.EditOrCreateMapping(mappedOption);
     }
 
     private CachedMappingGroup GetGroupOrCreateInCache(MappingAttribute attribute)
@@ -613,7 +610,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
     private void OlvMappings_CellRightClick(object sender, CellRightClickEventArgs e)
     {
         var builder = new MappingContextMenuBuilder(this.olvMappings.SelectedItems);
-        builder.SelectEditMapping += (s, e) => this.EditMappedOption(e.MappedOption);
+        builder.SelectEditMapping += (s, e) => this.EditOrCreateMapping(e.MappedOption);
         builder.SelectMakeMappingParentless += (s, e) => this.MakeMappingParentless(e.MappedOption);
         builder.SelectChooseNewParent += (s, e) => this.ChooseNewParent(e.MappedOption, e.NewParent);
         builder.SelectMultiEditMapping += this.Builder_SelectMultiEditMapping;
