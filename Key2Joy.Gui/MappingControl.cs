@@ -77,7 +77,8 @@ public partial class MappingControl : UserControl
         this.RefreshCreateReverseMappingOption();
     }
 
-    private bool Apply()
+
+    private MappedOption? CreateMappingWithCurrentSettings()
     {
         var trigger = this.triggerControl.Trigger;
         var action = this.actionControl.Action;
@@ -85,50 +86,52 @@ public partial class MappingControl : UserControl
         if (trigger == null)
         {
             MessageBox.Show("You must select a trigger!", "No trigger selected!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return false;
+            return null;
         }
 
         if (action == null)
         {
             MessageBox.Show("You must select an action!", "No action selected!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return false;
+            return null;
         }
 
-        this._mapping ??= new MappedOption();
-        this._mapping.Trigger = trigger;
-        this._mapping.Action = action;
-
-        if (!this.triggerControl.CanMappingSave(this._mapping))
+        var mapping = new MappedOption
         {
-            return false;
+            Trigger = trigger,
+            Action = action
+        };
+
+        if (!this.triggerControl.CanMappingSave(mapping))
+        {
+            return null;
         }
 
-        if (!this.actionControl.CanMappingSave(this._mapping))
+        if (!this.actionControl.CanMappingSave(mapping))
         {
-            return false;
+            return null;
         }
 
         if (this.chkCreateReverseMapping.Checked)
         {
-            var reverse = MappedOption.GenerateReverseMapping(this._mapping, true);
+            var reverse = MappedOption.GenerateReverseMapping(mapping, true);
 
-            if (!this._mapping.Children.Any())
+            if (!mapping.Children.Any())
             {
                 this._reverseMapping = reverse;
-                this._reverseMapping.SetParent(this._mapping);
+                this._reverseMapping.SetParent(mapping);
             }
             else
             {
                 // Update the existing reverse mapping
-                var existingReverse = this._mapping.Children.First();
+                var existingReverse = mapping.Children.First();
                 existingReverse.Trigger = reverse.Trigger;
                 existingReverse.Action = reverse.Action;
 
-                if (this._mapping.Children.Count > 1)
+                if (mapping.Children.Count > 1)
                 {
                     // TODO: What do we do if there's multiple children?
                     MessageBox.Show(
-                        $"There are {this._mapping.Children.Count} children of this mapping. Only the first one was updated with the reverse mapping.",
+                        $"There are {mapping.Children.Count} children of this mapping. Only the first one was updated with the reverse mapping.",
                         "Multiple children",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning
@@ -137,15 +140,18 @@ public partial class MappingControl : UserControl
             }
         }
 
-        return true;
+        return mapping;
     }
 
     private void Save()
     {
-        if (!this.Apply())
+        var createdMapping = this.CreateMappingWithCurrentSettings();
+        if (createdMapping == null)
         {
             return;
         }
+
+        this._mapping = createdMapping;
 
         if (this._reverseMapping != null)
         {
@@ -157,11 +163,13 @@ public partial class MappingControl : UserControl
 
     private void Create()
     {
-        if (!this.Apply())
+        var createdMapping = this.CreateMappingWithCurrentSettings();
+        if (createdMapping == null)
         {
-            this._mapping = null;
             return;
         }
+
+        this._mapping = createdMapping;
 
         this._profile.AddMapping(this._mapping);
 
