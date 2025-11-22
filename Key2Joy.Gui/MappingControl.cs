@@ -7,6 +7,10 @@ using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.Gui.Mapping;
 using Key2Joy.Mapping;
+using Key2Joy.Mapping.Actions;
+using Key2Joy.Mapping.Actions.Input;
+using Key2Joy.Mapping.Triggers;
+using Key2Joy.Mapping.Triggers.Keyboard;
 using Key2Joy.Plugins;
 
 namespace Key2Joy.Gui;
@@ -19,10 +23,11 @@ public partial class MappingControl : UserControl
     private MappedOption _mapping;
     private MappedOption _reverseMapping;
     private bool _dominantReverseCheckedState;
+    private bool IsCreating => this._mapping == null;
 
     public MappingControl()
     {
-        InitializeComponent();
+        this.InitializeComponent();
 
         this.triggerControl.TriggerChanged += this.TriggerControl_TriggerChanged;
         this.actionControl.ActionChanged += this.ActionControl_ActionChanged;
@@ -31,16 +36,46 @@ public partial class MappingControl : UserControl
 
     public void StartEdit(MappingProfile profile, MappedOption mapping)
     {
-        _profile = profile;
-        _mapping = mapping;
+        if (profile == null)
+        {
+            throw new ArgumentNullException(nameof(profile));
+        }
+        if (mapping == null)
+        {
+            throw new ArgumentNullException(nameof(mapping));
+        }
 
-        this._dominantReverseCheckedState = _mapping == null || _mapping.Children.Any();
-        this.triggerControl.SelectTrigger(_mapping.Trigger);
-        this.actionControl.SelectAction(_mapping.Action);
+        this.btnSaveMapping.Text = "Save";
+
+        this._profile = profile;
+        this._mapping = mapping;
+
+        this._dominantReverseCheckedState = this._mapping.Children.Any();
+        this.triggerControl.SelectTrigger(this._mapping.Trigger);
+        this.actionControl.SelectAction(this._mapping.Action);
         this.RefreshCreateReverseMappingOption();
     }
 
-    public void Apply()
+    public void StartCreate(MappingProfile profile)
+    {
+        if (profile == null)
+        {
+            throw new ArgumentNullException(nameof(profile));
+        }
+
+        this.btnSaveMapping.Text = "Create";
+
+        this._profile = profile;
+        this._mapping = null;
+        this._reverseMapping = null;
+
+        this._dominantReverseCheckedState = true;
+        this.triggerControl.SelectTrigger(new KeyboardTrigger("Test"));
+        this.actionControl.SelectAction(new KeyboardAction("ok"));
+        this.RefreshCreateReverseMappingOption();
+    }
+
+    private void Apply()
     {
         var trigger = this.triggerControl.Trigger;
         var action = this.actionControl.Action;
@@ -106,13 +141,18 @@ public partial class MappingControl : UserControl
         //    this.Profile.AddMapping(Mapping);
         //}
 
-        if (_reverseMapping != null)
+        if (this._reverseMapping != null)
         {
-            this._profile.AddMapping(_reverseMapping);
+            this._profile.AddMapping(this._reverseMapping);
         }
 
 
         this.OnApplied?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Create()
+    {
+
     }
 
     private void ActionControl_ActionChanged(object sender, ActionChangedEventArgs e)
@@ -194,6 +234,14 @@ public partial class MappingControl : UserControl
 
     private void btnSaveMapping_Click(object sender, EventArgs e)
     {
-        Apply();
+        if (this.IsCreating)
+        {
+            this.Create();
+        }
+        else
+        {
+            this.Apply();
+        }
     }
+
 }
