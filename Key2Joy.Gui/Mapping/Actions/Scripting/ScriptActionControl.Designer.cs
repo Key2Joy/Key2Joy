@@ -1,4 +1,4 @@
-﻿namespace Key2Joy.Gui.Mapping
+namespace Key2Joy.Gui.Mapping
 {
     partial class ScriptActionControl
     {
@@ -43,12 +43,13 @@
             // 
             this.txtScript.Dock = System.Windows.Forms.DockStyle.Top;
             this.txtScript.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtScript.Location = new System.Drawing.Point(5, 25);
-            this.txtScript.MinimumSize = new System.Drawing.Size(254, 132);
+            this.txtScript.Location = new System.Drawing.Point(7, 31);
+            this.txtScript.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtScript.MinimumSize = new System.Drawing.Size(337, 130);
             this.txtScript.Multiline = true;
             this.txtScript.Name = "txtScript";
             this.txtScript.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtScript.Size = new System.Drawing.Size(254, 132);
+            this.txtScript.Size = new System.Drawing.Size(338, 130);
             this.txtScript.TabIndex = 13;
             this.txtScript.TextChanged += new System.EventHandler(this.TxtScript_TextChanged);
             // 
@@ -57,9 +58,10 @@
             this.pnlTop.Controls.Add(this.chkDirectInput);
             this.pnlTop.Controls.Add(this.lblInfo);
             this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTop.Location = new System.Drawing.Point(5, 5);
+            this.pnlTop.Location = new System.Drawing.Point(7, 6);
+            this.pnlTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pnlTop.Name = "pnlTop";
-            this.pnlTop.Size = new System.Drawing.Size(254, 20);
+            this.pnlTop.Size = new System.Drawing.Size(338, 25);
             this.pnlTop.TabIndex = 15;
             // 
             // chkDirectInput
@@ -68,9 +70,10 @@
             this.chkDirectInput.Checked = true;
             this.chkDirectInput.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkDirectInput.Dock = System.Windows.Forms.DockStyle.Right;
-            this.chkDirectInput.Location = new System.Drawing.Point(173, 0);
+            this.chkDirectInput.Location = new System.Drawing.Point(243, 0);
+            this.chkDirectInput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkDirectInput.Name = "chkDirectInput";
-            this.chkDirectInput.Size = new System.Drawing.Size(81, 20);
+            this.chkDirectInput.Size = new System.Drawing.Size(95, 25);
             this.chkDirectInput.TabIndex = 15;
             this.chkDirectInput.Text = "Direct Input";
             this.chkDirectInput.UseVisualStyleBackColor = true;
@@ -80,8 +83,9 @@
             // 
             this.lblInfo.Dock = System.Windows.Forms.DockStyle.Left;
             this.lblInfo.Location = new System.Drawing.Point(0, 0);
+            this.lblInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(254, 20);
+            this.lblInfo.Size = new System.Drawing.Size(339, 25);
             this.lblInfo.TabIndex = 13;
             this.lblInfo.Text = "Script:";
             this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -91,26 +95,29 @@
             this.pnlFileInput.Controls.Add(this.txtFilePath);
             this.pnlFileInput.Controls.Add(this.btnBrowseFile);
             this.pnlFileInput.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlFileInput.Location = new System.Drawing.Point(5, 157);
+            this.pnlFileInput.Location = new System.Drawing.Point(7, 161);
+            this.pnlFileInput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pnlFileInput.Name = "pnlFileInput";
-            this.pnlFileInput.Size = new System.Drawing.Size(254, 21);
+            this.pnlFileInput.Size = new System.Drawing.Size(338, 26);
             this.pnlFileInput.TabIndex = 16;
             // 
             // txtFilePath
             // 
             this.txtFilePath.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtFilePath.Location = new System.Drawing.Point(0, 0);
+            this.txtFilePath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtFilePath.Name = "txtFilePath";
-            this.txtFilePath.Size = new System.Drawing.Size(190, 20);
+            this.txtFilePath.Size = new System.Drawing.Size(253, 22);
             this.txtFilePath.TabIndex = 0;
             this.txtFilePath.TextChanged += new System.EventHandler(this.TxtFilePath_TextChanged);
             // 
             // btnBrowseFile
             // 
             this.btnBrowseFile.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseFile.Location = new System.Drawing.Point(190, 0);
+            this.btnBrowseFile.Location = new System.Drawing.Point(253, 0);
+            this.btnBrowseFile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnBrowseFile.Name = "btnBrowseFile";
-            this.btnBrowseFile.Size = new System.Drawing.Size(64, 21);
+            this.btnBrowseFile.Size = new System.Drawing.Size(85, 26);
             this.btnBrowseFile.TabIndex = 1;
             this.btnBrowseFile.Text = "Browse...";
             this.btnBrowseFile.UseVisualStyleBackColor = true;
@@ -118,15 +125,16 @@
             // 
             // ScriptActionControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.Controls.Add(this.pnlFileInput);
             this.Controls.Add(this.txtScript);
             this.Controls.Add(this.pnlTop);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ScriptActionControl";
-            this.Padding = new System.Windows.Forms.Padding(5);
-            this.Size = new System.Drawing.Size(264, 183);
+            this.Padding = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Size = new System.Drawing.Size(352, 193);
             this.pnlTop.ResumeLayout(false);
             this.pnlTop.PerformLayout();
             this.pnlFileInput.ResumeLayout(false);

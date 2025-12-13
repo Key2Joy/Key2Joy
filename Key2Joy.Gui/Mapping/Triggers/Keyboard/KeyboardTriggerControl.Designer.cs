@@ -1,4 +1,4 @@
-﻿namespace Key2Joy.Gui.Mapping
+namespace Key2Joy.Gui.Mapping
 {
     partial class KeyboardTriggerControl
     {
@@ -36,10 +36,11 @@
             // txtKeyBind
             // 
             this.txtKeyBind.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtKeyBind.Location = new System.Drawing.Point(88, 5);
+            this.txtKeyBind.Location = new System.Drawing.Point(118, 6);
+            this.txtKeyBind.Margin = new System.Windows.Forms.Padding(4);
             this.txtKeyBind.Name = "txtKeyBind";
             this.txtKeyBind.ReadOnly = true;
-            this.txtKeyBind.Size = new System.Drawing.Size(194, 20);
+            this.txtKeyBind.Size = new System.Drawing.Size(259, 22);
             this.txtKeyBind.TabIndex = 7;
             this.txtKeyBind.Text = "(click here, then press any key to select it as the trigger)";
             this.txtKeyBind.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TxtKeyBind_MouseUp);
@@ -48,9 +49,10 @@
             // 
             this.lblInfo.Dock = System.Windows.Forms.DockStyle.Left;
             this.lblInfo.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblInfo.Location = new System.Drawing.Point(5, 5);
+            this.lblInfo.Location = new System.Drawing.Point(7, 6);
+            this.lblInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(83, 17);
+            this.lblInfo.Size = new System.Drawing.Size(111, 21);
             this.lblInfo.TabIndex = 10;
             this.lblInfo.Text = "Keyboard Key:";
             this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -60,24 +62,26 @@
             this.cmbPressState.Dock = System.Windows.Forms.DockStyle.Right;
             this.cmbPressState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPressState.FormattingEnabled = true;
-            this.cmbPressState.Location = new System.Drawing.Point(282, 5);
+            this.cmbPressState.Location = new System.Drawing.Point(377, 6);
+            this.cmbPressState.Margin = new System.Windows.Forms.Padding(4);
             this.cmbPressState.Name = "cmbPressState";
-            this.cmbPressState.Size = new System.Drawing.Size(89, 21);
+            this.cmbPressState.Size = new System.Drawing.Size(117, 24);
             this.cmbPressState.TabIndex = 11;
             this.cmbPressState.SelectedIndexChanged += new System.EventHandler(this.CmbPressedState_SelectedIndexChanged);
             // 
             // KeyboardTriggerControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.Controls.Add(this.txtKeyBind);
             this.Controls.Add(this.cmbPressState);
             this.Controls.Add(this.lblInfo);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "KeyboardTriggerControl";
-            this.Padding = new System.Windows.Forms.Padding(5);
-            this.Size = new System.Drawing.Size(376, 27);
+            this.Padding = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Size = new System.Drawing.Size(501, 33);
             this.ResumeLayout(false);
             this.PerformLayout();
 

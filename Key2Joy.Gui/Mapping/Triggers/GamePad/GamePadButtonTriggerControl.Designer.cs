@@ -44,10 +44,11 @@ namespace Key2Joy.Gui.Mapping
             // txtButtonBind
             // 
             this.txtButtonBind.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtButtonBind.Location = new System.Drawing.Point(43, 5);
+            this.txtButtonBind.Location = new System.Drawing.Point(57, 6);
+            this.txtButtonBind.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtButtonBind.Name = "txtButtonBind";
             this.txtButtonBind.ReadOnly = true;
-            this.txtButtonBind.Size = new System.Drawing.Size(249, 20);
+            this.txtButtonBind.Size = new System.Drawing.Size(333, 22);
             this.txtButtonBind.TabIndex = 7;
             this.txtButtonBind.Text = "(click here, then press any button to select it as the trigger)";
             this.txtButtonBind.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TxtKeyBind_MouseUp);
@@ -56,9 +57,10 @@ namespace Key2Joy.Gui.Mapping
             // 
             this.lblInfo.Dock = System.Windows.Forms.DockStyle.Left;
             this.lblInfo.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblInfo.Location = new System.Drawing.Point(0, 5);
+            this.lblInfo.Location = new System.Drawing.Point(0, 6);
+            this.lblInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(43, 16);
+            this.lblInfo.Size = new System.Drawing.Size(57, 20);
             this.lblInfo.TabIndex = 10;
             this.lblInfo.Text = "Button:";
             this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -68,9 +70,10 @@ namespace Key2Joy.Gui.Mapping
             this.cmbPressState.Dock = System.Windows.Forms.DockStyle.Right;
             this.cmbPressState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPressState.FormattingEnabled = true;
-            this.cmbPressState.Location = new System.Drawing.Point(292, 5);
+            this.cmbPressState.Location = new System.Drawing.Point(390, 6);
+            this.cmbPressState.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cmbPressState.Name = "cmbPressState";
-            this.cmbPressState.Size = new System.Drawing.Size(74, 21);
+            this.cmbPressState.Size = new System.Drawing.Size(97, 24);
             this.cmbPressState.TabIndex = 11;
             this.cmbPressState.SelectedIndexChanged += new System.EventHandler(this.CmbPressedState_SelectedIndexChanged);
             // 
@@ -79,17 +82,19 @@ namespace Key2Joy.Gui.Mapping
             this.pnlGamePadIndex.Controls.Add(this.nudGamePadIndex);
             this.pnlGamePadIndex.Controls.Add(this.lblInfoIndex);
             this.pnlGamePadIndex.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlGamePadIndex.Location = new System.Drawing.Point(5, 5);
+            this.pnlGamePadIndex.Location = new System.Drawing.Point(7, 6);
+            this.pnlGamePadIndex.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pnlGamePadIndex.Name = "pnlGamePadIndex";
-            this.pnlGamePadIndex.Size = new System.Drawing.Size(366, 20);
+            this.pnlGamePadIndex.Size = new System.Drawing.Size(487, 25);
             this.pnlGamePadIndex.TabIndex = 12;
             // 
             // nudGamePadIndex
             // 
             this.nudGamePadIndex.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nudGamePadIndex.Location = new System.Drawing.Point(69, 0);
+            this.nudGamePadIndex.Location = new System.Drawing.Point(92, 0);
+            this.nudGamePadIndex.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.nudGamePadIndex.Name = "nudGamePadIndex";
-            this.nudGamePadIndex.Size = new System.Drawing.Size(297, 20);
+            this.nudGamePadIndex.Size = new System.Drawing.Size(395, 22);
             this.nudGamePadIndex.TabIndex = 10;
             this.nudGamePadIndex.ValueChanged += new System.EventHandler(this.NudGamePadIndex_ValueChanged);
             // 
@@ -98,8 +103,9 @@ namespace Key2Joy.Gui.Mapping
             this.lblInfoIndex.Dock = System.Windows.Forms.DockStyle.Left;
             this.lblInfoIndex.ForeColor = System.Drawing.SystemColors.ControlText;
             this.lblInfoIndex.Location = new System.Drawing.Point(0, 0);
+            this.lblInfoIndex.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblInfoIndex.Name = "lblInfoIndex";
-            this.lblInfoIndex.Size = new System.Drawing.Size(69, 20);
+            this.lblInfoIndex.Size = new System.Drawing.Size(92, 25);
             this.lblInfoIndex.TabIndex = 9;
             this.lblInfoIndex.Text = "GamePad #:";
             this.lblInfoIndex.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -110,10 +116,11 @@ namespace Key2Joy.Gui.Mapping
             this.pnlButton.Controls.Add(this.cmbPressState);
             this.pnlButton.Controls.Add(this.lblInfo);
             this.pnlButton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlButton.Location = new System.Drawing.Point(5, 25);
+            this.pnlButton.Location = new System.Drawing.Point(7, 31);
+            this.pnlButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pnlButton.Name = "pnlButton";
-            this.pnlButton.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.pnlButton.Size = new System.Drawing.Size(366, 26);
+            this.pnlButton.Padding = new System.Windows.Forms.Padding(0, 6, 0, 6);
+            this.pnlButton.Size = new System.Drawing.Size(487, 32);
             this.pnlButton.TabIndex = 14;
             // 
             // lblLastGamePadLabel
@@ -121,24 +128,26 @@ namespace Key2Joy.Gui.Mapping
             this.lblLastGamePadLabel.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblLastGamePadLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLastGamePadLabel.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lblLastGamePadLabel.Location = new System.Drawing.Point(5, 51);
+            this.lblLastGamePadLabel.Location = new System.Drawing.Point(7, 63);
+            this.lblLastGamePadLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLastGamePadLabel.Name = "lblLastGamePadLabel";
-            this.lblLastGamePadLabel.Size = new System.Drawing.Size(366, 15);
+            this.lblLastGamePadLabel.Size = new System.Drawing.Size(487, 18);
             this.lblLastGamePadLabel.TabIndex = 15;
             this.lblLastGamePadLabel.Text = "Last GamePad used was #: <none>";
             // 
             // GamePadButtonTriggerControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.Controls.Add(this.lblLastGamePadLabel);
             this.Controls.Add(this.pnlButton);
             this.Controls.Add(this.pnlGamePadIndex);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "GamePadButtonTriggerControl";
-            this.Padding = new System.Windows.Forms.Padding(5);
-            this.Size = new System.Drawing.Size(376, 71);
+            this.Padding = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.Size = new System.Drawing.Size(501, 87);
             this.pnlGamePadIndex.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.nudGamePadIndex)).EndInit();
             this.pnlButton.ResumeLayout(false);
