@@ -317,6 +317,41 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.RefreshMappings();
     }
 
+    private void GenerateReversesForSelectedMappings()
+    {
+        var selectedCount = this.olvMappings.SelectedItems.Count;
+
+        if (selectedCount == 0)
+        {
+            return;
+        }
+
+        if (selectedCount > 1
+            && DialogUtilities.Confirm(
+                $"Are you sure you want to create reverse mappings for all {selectedCount} selected mappings? Each type of action and trigger will configure their own useful reverse if possible.\n\n"
+                + $"An example of an reverse mapping is how new 'Release' mappings will be created for each 'Press' and vice versa.",
+                $"Generate {selectedCount} reverse mappings"
+            ) == DialogResult.No)
+        {
+            return;
+        }
+
+        var selectedMappings = this.olvMappings.SelectedItems
+            .Cast<OLVListItem>()
+            .Select(item => (MappedOption)item.RowObject)
+            .ToList();
+
+        var newOptions = MappedOption.GenerateReverseMappings(selectedMappings);
+
+        foreach (var option in newOptions)
+        {
+            this.selectedProfile.MappedOptions.Add(option);
+        }
+
+        this.selectedProfile.Save();
+        this.RefreshMappings();
+    }
+
     private void RemoveSelectedMappings()
     {
         var selectedCount = this.olvMappings.SelectedItems.Count;
@@ -614,6 +649,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
     {
         var builder = new MappingContextMenuBuilder(this.olvMappings.SelectedItems);
         builder.SelectEditMapping += (s, e) => this.EditMappedOption(e.MappedOption);
+        builder.SelectGenerateReverseMappings += (s, e) => this.GenerateReversesForSelectedMappings();
         builder.SelectMakeMappingParentless += (s, e) => this.MakeMappingParentless(e.MappedOption);
         builder.SelectChooseNewParent += (s, e) => this.ChooseNewParent(e.MappedOption, e.NewParent);
         builder.SelectMultiEditMapping += this.Builder_SelectMultiEditMapping;
@@ -887,42 +923,6 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
     private void OpenPluginsFolderToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start(Program.Plugins.PluginsFolder);
 
     private void ManagePluginsToolStripMenuItem_Click(object sender, EventArgs e) => new PluginsForm().ShowDialog();
-
-    private void GenerateReverseMappingsToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        var selectedCount = this.olvMappings.SelectedItems.Count;
-
-        if (selectedCount == 0)
-        {
-            return;
-        }
-
-        if (selectedCount > 1
-            && DialogUtilities.Confirm(
-                $"Are you sure you want to create reverse mappings for all {selectedCount} selected mappings? Each type of action and trigger will configure their own useful reverse if possible.\n\n"
-                + $"An example of an reverse mapping is how new 'Release' mappings will be created for each 'Press' and vice versa.",
-                $"Generate {selectedCount} reverse mappings"
-            ) == DialogResult.No)
-        {
-            return;
-        }
-
-        var selectedMappings = this.olvMappings.SelectedItems
-            .Cast<OLVListItem>()
-            .Select(item => (MappedOption)item.RowObject)
-            .ToList();
-
-        var newOptions = MappedOption.GenerateReverseMappings(selectedMappings);
-
-        foreach (var option in newOptions)
-        {
-            this.selectedProfile.MappedOptions.Add(option);
-        }
-
-        this.selectedProfile.Save();
-        this.RefreshMappings();
-    }
-
     private void TxtFilter_TextChanged(object sender, EventArgs e)
         => this.olvMappings.ModelFilter = new ModelFilter(
             x =>
