@@ -1,5 +1,3 @@
-using System;
-using System.Drawing;
 using System.Windows.Forms;
 using Key2Joy.LowLevelInput;
 
@@ -7,31 +5,16 @@ namespace Key2Joy.Gui;
 
 public partial class DeviceControl : UserControl
 {
-    private const int FADE_DURATION = 2;
-    private const int BORDER_WIDTH = 2;
-    private DateTime lastActivityOccurred = DateTime.Now;
-    private readonly Timer fadeTimer = new();
-    private readonly IGamePadInfo device;
-
     private DeviceControl()
     {
         this.InitializeComponent();
-
-        this.fadeTimer.Interval = 50;
-        this.fadeTimer.Tick += this.FadeTimer_Tick;
-        this.fadeTimer.Start();
-
-        this.pnlDevice.Paint += this.DeviceControl_Paint;
-        this.Layout += this.DeviceControl_Layout;
     }
 
     public DeviceControl(IGamePadInfo device)
         : this()
     {
-        this.device = device;
         this.lblIndex.Text = $"#{device.Index}";
         this.lblDevice.Text = device.Name;
-        //this.picImage.Image = null;
         device.ActivityOccurred += this.Device_ActivityOccurred;
     }
 

@@ -16,6 +16,8 @@ using Key2Joy.Contracts.Util;
 using Key2Joy.Gui.Properties;
 using Key2Joy.Gui.Util;
 using Key2Joy.LowLevelInput;
+using Key2Joy.LowLevelInput.SimulatedGamePad;
+using Key2Joy.LowLevelInput.XInput;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions;
 using Key2Joy.Mapping.Actions.Input;
@@ -42,7 +44,6 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.InitializeComponent();
 
         this.ApplyMinimizedStateIfNeeded(shouldStartMinimized);
-        this.ConfigureStatusLabels();
         this.SetupNotificationIndicator();
         this.PopulateGroupImages();
         this.RegisterListViewEvents();
@@ -50,6 +51,12 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.ConfigureTriggerColumn();
         this.ConfigureActionColumn();
         this.ConfigureTooltips();
+
+        // Don't go looking for devices in design mode
+        if (System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv")
+        {
+            this.RefreshDevices();
+        }
     }
 
     private void RefreshMappingGroupMenu()
@@ -110,9 +117,6 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.WindowState = shouldMinimize ? FormWindowState.Minimized : FormWindowState.Normal;
         this.ShowInTaskbar = !shouldMinimize;
     }
-
-    private void ConfigureStatusLabels()
-        => this.lblStatusActive.Visible = this.chkArmed.Checked;
 
     private void SetupNotificationIndicator()
     {
@@ -238,9 +242,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.chkArmed.CheckedChanged -= this.ChkEnabled_CheckedChanged;
         this.chkArmed.Checked = isEnabled;
         this.chkArmed.CheckedChanged += this.ChkEnabled_CheckedChanged;
-
-        this.lblStatusActive.Visible = isEnabled;
-        this.lblStatusInactive.Visible = !isEnabled;
+        this.chkArmed.Text = isEnabled ? "Disconnect" : "Connect";
     }
 
     private MappingProfile CreateNewProfile(string nameSuffix = default)
@@ -707,7 +709,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
             Key2JoyManager.Instance.DisarmMappings();
         }
 
-        this.deviceListControl.RefreshDevices();
+        this.RefreshDevices();
     }
 
     protected override void WndProc(ref Message m)
@@ -736,6 +738,11 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
                 this.Hide();
                 return;
             }
+        }
+
+        if (this.chkArmed.Checked)
+        {
+            Key2JoyManager.Instance.DisarmMappings();
         }
     }
 
@@ -770,9 +777,6 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
         this.SetSelectedProfile(profile);
     }
-
-    private void SaveProfileToolStripMenuItem_Click(object sender, EventArgs e)
-        => MessageBox.Show("When you make changes to a profile, changes are automatically saved. This button is only here to explain that feature to you.", "Profile already saved!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
     private void OpenProfileFolderToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -869,7 +873,10 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.Show();
     }
 
-    private void CloseToolStripMenuItem_Click(object sender, EventArgs e) => this.Close();
+    private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        this.Hide();
+    }
 
     private void ViewLogFileToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -948,4 +955,6 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
     private void MainForm_SizeChanged(object sender, EventArgs e)
         => this.RefreshColumnWidths();
+
+    private void btnRefresh_Click(object sender, EventArgs e) => this.RefreshDevices();
 }

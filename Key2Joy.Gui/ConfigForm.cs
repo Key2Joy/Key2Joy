@@ -82,7 +82,6 @@ public partial class ConfigForm : Form
             }
         }
 
-        MessageBox.Show("Configurations successfully saved!", "Configurations saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
         this.Close();
     }
 

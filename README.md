@@ -1,3 +1,14 @@
+
+> [!CAUTION]  
+> This project is not actively maintained. Development is sporadic and handled by a single developer, so it cannot be relied upon.
+> 
+> There are currently some critical [bugs](https://github.com/luttje/Key2Joy/issues) that make it largely unusable—input jitter and unregistered key releases are common issues.  
+> [Version 0.6.0](https://github.com/luttje/Key2Joy/releases/tag/0.6.0) appears more stable, so it's recommended for now.
+> 
+> Contributions are welcome! If you'd like to help, feel free to submit a [Pull Request](https://github.com/luttje/Key2Joy/pulls).
+> 
+> Thanks for your understanding.
+
 <div align="center">
 
 # ![](Key2Joy.Gui/Graphics/Icons/icon256.png?raw=true)<br> Key2Joy
@@ -45,9 +56,9 @@ In addition to simply simulating a button being pressed on the Joystick, you can
 
    **An action** is what will happen when that trigger occurs. *E.g: simulating a joystick button being pressed, a keyboard button being released, or executing a Lua/Javascript script.*
 
-4. Tick the *Arm Mappings* checkbox for Key2Joy to start listening for triggers that will execute the configured actions.
+4. Click the *Connect* button for Key2Joy to start listening for triggers that will execute the configured actions.
 
-5. When you're done using Key2Joy, uncheck the *Arm Mappings* checkbox to stop listening for triggers.
+5. When you're done using Key2Joy, click the *Disconnect* button to stop listening for triggers.
 
    *In the default profile there is also a mapping that stops Key2Joy from listening using the `Escape`-key. Don't forget to include such a mapping for your custom profiles.*
 
