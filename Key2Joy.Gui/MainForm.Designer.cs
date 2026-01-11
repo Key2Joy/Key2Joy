@@ -76,8 +76,6 @@ namespace Key2Joy.Gui
             this.gamepadtestercomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testKeyboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testMouseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.withSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.generateOppositePressStateMappingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.userConfigurationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -386,7 +384,6 @@ namespace Key2Joy.Gui
             this.toolStripSeparator6,
             this.fillProfileWithToolStripMenuItem,
             this.testMappingsToolStripMenuItem,
-            this.withSelectedToolStripMenuItem,
             this.toolStripSeparator4,
             this.userConfigurationsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -522,21 +519,6 @@ namespace Key2Joy.Gui
             this.testMouseToolStripMenuItem.Size = new System.Drawing.Size(249, 26);
             this.testMouseToolStripMenuItem.Text = "Test Mouse";
             this.testMouseToolStripMenuItem.Click += new System.EventHandler(this.TestMouseToolStripMenuItem_Click);
-            // 
-            // withSelectedToolStripMenuItem
-            // 
-            this.withSelectedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.generateOppositePressStateMappingsToolStripMenuItem});
-            this.withSelectedToolStripMenuItem.Name = "withSelectedToolStripMenuItem";
-            this.withSelectedToolStripMenuItem.Size = new System.Drawing.Size(307, 26);
-            this.withSelectedToolStripMenuItem.Text = "With Selected...";
-            // 
-            // generateOppositePressStateMappingsToolStripMenuItem
-            // 
-            this.generateOppositePressStateMappingsToolStripMenuItem.Name = "generateOppositePressStateMappingsToolStripMenuItem";
-            this.generateOppositePressStateMappingsToolStripMenuItem.Size = new System.Drawing.Size(277, 26);
-            this.generateOppositePressStateMappingsToolStripMenuItem.Text = "Generate Reverse Mappings";
-            this.generateOppositePressStateMappingsToolStripMenuItem.Click += new System.EventHandler(this.GenerateReverseMappingsToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
@@ -828,8 +810,6 @@ namespace Key2Joy.Gui
         private System.Windows.Forms.ToolStripMenuItem pluginsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem managePluginsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openPluginsFolderToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem withSelectedToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem generateOppositePressStateMappingsToolStripMenuItem;
         private BrightIdeasSoftware.ObjectListView olvMappings;
         private System.Windows.Forms.TextBox txtFilter;
         private System.Windows.Forms.Label txtFilterLabel;

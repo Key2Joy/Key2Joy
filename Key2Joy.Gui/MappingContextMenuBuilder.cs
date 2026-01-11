@@ -77,6 +77,8 @@ internal class MappingContextMenuBuilder
 {
     public event EventHandler<SelectEditMappingEventArgs> SelectEditMapping;
 
+    public event EventHandler<EventArgs> SelectGenerateReverseMappings;
+
     public event EventHandler<SelectRemoveMappingsEventArgs> SelectRemoveMappings;
 
     public event EventHandler<SelectMakeMappingParentlessEventArgs> SelectMakeMappingParentless;
@@ -211,6 +213,9 @@ internal class MappingContextMenuBuilder
     {
         var addItem = this.menu.Items.Add("Add New Mapping");
         addItem.Click += (s, _) => this.SelectEditMapping?.Invoke(this, new(null));
+
+        var generateReverses = menu.Items.Add("Generate Reverse Mappings");
+        generateReverses.Click += (s, _) => this.SelectGenerateReverseMappings?.Invoke(this, EventArgs.Empty);
 
         var selectedCount = this.selectedItems.Count;
 
