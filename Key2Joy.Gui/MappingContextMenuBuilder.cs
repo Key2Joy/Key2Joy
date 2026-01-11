@@ -214,7 +214,7 @@ internal class MappingContextMenuBuilder
         var addItem = this.menu.Items.Add("Add New Mapping");
         addItem.Click += (s, _) => this.SelectEditMapping?.Invoke(this, new(null));
 
-        var generateReverses = menu.Items.Add($"Generate Reverse Mappings");
+        var generateReverses = menu.Items.Add("Generate Reverse Mappings");
         generateReverses.Click += (s, _) => this.SelectGenerateReverseMappings?.Invoke(this, EventArgs.Empty);
 
         var selectedCount = this.selectedItems.Count;
