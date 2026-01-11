@@ -687,7 +687,7 @@ namespace Key2Joy.Gui
             this.chkArmed.Location = new System.Drawing.Point(0, 0);
             this.chkArmed.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.chkArmed.Name = "chkArmed";
-            this.chkArmed.Size = new System.Drawing.Size(105, 38);
+            this.chkArmed.Size = new System.Drawing.Size(100, 38);
             this.chkArmed.TabIndex = 81;
             this.chkArmed.Text = "Connect";
             this.chkArmed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -700,10 +700,10 @@ namespace Key2Joy.Gui
             this.btnRefresh.AccessibleName = "Refresh";
             this.btnRefresh.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnRefresh.Image = global::Key2Joy.Gui.Properties.Resources.arrow_refresh;
-            this.btnRefresh.Location = new System.Drawing.Point(93, 0);
+            this.btnRefresh.Location = new System.Drawing.Point(101, 0);
             this.btnRefresh.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(46, 38);
+            this.btnRefresh.Size = new System.Drawing.Size(38, 38);
             this.btnRefresh.TabIndex = 2;
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
