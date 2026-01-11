@@ -11,6 +11,8 @@ jobs:
     needs: [build]
   publish-pre-release:
     uses: ./.github/workflows/pre-release.yml
-    needs: [build,test]
+    needs: [build, test]
+    permissions:
+      contents: write
     with:
       versionid: ${{ needs.build.outputs.versionid }}
