@@ -61,6 +61,7 @@
     <PackageReference Include="MSTest.TestFramework">
       <Version>3.0.2</Version>
     </PackageReference>
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>
