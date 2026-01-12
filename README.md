@@ -1,5 +1,5 @@
 > [!WARNING]
-> Due to critical bugs impacting input processing, it's recommended to try [version 0.6.0](https://github.com/luttje/Key2Joy/releases/tag/0.6.0) instead of newer releases.
+> Due to critical bugs impacting input processing in the 0.7.x releases, it's recommended to use [version 0.6.0](https://github.com/luttje/Key2Joy/releases/tag/0.6.0) or 0.8.0 and later.
 > 
 > Contributions are welcome! If you'd like to help, feel free to submit a [Pull Request](https://github.com/luttje/Key2Joy/pulls).
 > 
