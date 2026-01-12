@@ -1,13 +1,10 @@
-
-> [!CAUTION]  
-> This project is not actively maintained. Development is sporadic and handled by a single developer, so it cannot be relied upon.
-> 
-> There are currently some critical [bugs](https://github.com/luttje/Key2Joy/issues) that make it largely unusable—input jitter and unregistered key releases are common issues.  
-> [Version 0.6.0](https://github.com/luttje/Key2Joy/releases/tag/0.6.0) appears more stable, so it's recommended for now.
+> [!WARNING]
+> Due to critical bugs impacting input processing, it's recommended to try [version 0.6.0](https://github.com/luttje/Key2Joy/releases/tag/0.6.0) instead of newer releases.
 > 
 > Contributions are welcome! If you'd like to help, feel free to submit a [Pull Request](https://github.com/luttje/Key2Joy/pulls).
 > 
 > Thanks for your understanding.
+>
 
 <div align="center">
 
