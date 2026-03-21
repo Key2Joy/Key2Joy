@@ -57,23 +57,6 @@
         Loads the configuration or creates a default one on disk.
       </summary>
     </member>
-    <member name="M:Key2Joy.Config.ConfigManager.NormalizePluginPath(System.String)">
-      <summary>
-        Turns the plugin path into a relative one from the app directory
-      </summary>
-      <param name="pluginAssemblyPath"></param>
-      <returns></returns>
-    </member>
-    <member name="M:Key2Joy.Config.ConfigManager.SetPluginEnabled(System.String,System.String)">
-      <summary>
-        Sets a plugin as enabled, the permissions checksum is stored so no changes to the permissions
-        are accepted when loading the plugin later.
-
-        Set permissionsChecksumOrNull to null to disable the plugin.
-      </summary>
-      <param name="pluginAssemblyPath"></param>
-      <param name="permissionsChecksumOrNull"></param>
-    </member>
     <member name="T:Key2Joy.Config.EnumConfigControlAttribute">
       <summary>
         Only applied to <see cref="T:Key2Joy.Config.ConfigState" />
@@ -181,24 +164,11 @@
       </summary>
       <param name="command"></param>
     </member>
-    <member name="F:Key2Joy.Key2JoyManager.PluginsDirectory">
-      <summary>
-        Directory where plugins are located
-      </summary>
-    </member>
     <member name="P:Key2Joy.Key2JoyManager.ExplicitTriggerListeners">
       <summary>
         Trigger listeners that should explicitly loaded. This ensures that they're available for scripts
         even if no mapping option is mapped to be triggered by it.
       </summary>
-    </member>
-    <member name="M:Key2Joy.Key2JoyManager.InitSafely(Key2Joy.AppCommandRunner,System.Action{Key2Joy.Plugins.PluginSet},Key2Joy.Config.IConfigManager)">
-      <summary>
-        Ensures Key2Joy is running and ready to accept commands as long as the main loop does not end.
-      </summary>
-      <param name="commandRunner"></param>
-      <param name="mainLoop"></param>
-      <param name="configManager">Optionally a custom config manager (probably only useful for unit testing)</param>
     </member>
     <member name="M:Key2Joy.Key2JoyManager.ArmMappings(Key2Joy.Mapping.MappingProfile)">
       <inheritdoc />
@@ -2444,12 +2414,6 @@
       <param name="motorSpeed">The speed for a motor as a fraction of the maximum speed.</param>
       <returns>The true speed for a motor.</returns>
     </member>
-    <member name="M:Key2Joy.Mapping.Actions.ActionsRepository.Buffer(System.Collections.Generic.IReadOnlyList{Key2Joy.Plugins.MappingTypeFactory{Key2Joy.Contracts.Mapping.Actions.AbstractAction}},System.Boolean)">
-      <summary>
-        Loads all actions in the assembly, optionally merging it with additional action types.
-      </summary>
-      <param name="additionalActionTypeFactories"></param>
-    </member>
     <member name="M:Key2Joy.Mapping.Actions.ActionsRepository.GetAllActions">
       <summary>
         Gets all action type factories
@@ -3088,7 +3052,7 @@
       <param name="callbacks">One or more functions to execute</param>
       <name>SetDelayedFunctions</name>
     </member>
-    <member name="M:Key2Joy.Mapping.Actions.Logic.SetIntervalAction.ExecuteForScript(Key2Joy.Contracts.Plugins.CallbackAction,System.Int64,System.Object[])">
+    <member name="M:Key2Joy.Mapping.Actions.Logic.SetIntervalAction.ExecuteForScript(Key2Joy.Contracts.Mapping.CallbackAction,System.Int64,System.Object[])">
       <markdown-doc>
         <parent-name>Logic</parent-name>
         <path>Api/Logic</path>
@@ -3128,7 +3092,7 @@
       <returns>An interval id that can be removed with clearInterval</returns>
       <name>SetInterval</name>
     </member>
-    <member name="M:Key2Joy.Mapping.Actions.Logic.SetTimeoutAction.ExecuteForScript(Key2Joy.Contracts.Plugins.CallbackAction,System.Int64,System.Object[])">
+    <member name="M:Key2Joy.Mapping.Actions.Logic.SetTimeoutAction.ExecuteForScript(Key2Joy.Contracts.Mapping.CallbackAction,System.Int64,System.Object[])">
       <markdown-doc>
         <parent-name>Logic</parent-name>
         <path>Api/Logic</path>
@@ -3228,14 +3192,6 @@
       <summary>
         Lua iterator 'Next' implementation. Gets the collection and current index
       </summary>
-      <example>
-        <![CDATA[
-            local devices = Midi.InputDeviceGetAll() -- Requires Key2Joy.Plugin.Midi
-            for k, v in collection(devices) do
-                print(v)
-            end
-            ]]>
-      </example>
       <param name="collection">Collection to be iterated (always null? :/)</param>
       <param name="currentIndex">Null if first call, the current index otherwise</param>
       <param name="value"></param>
@@ -3436,12 +3392,6 @@
       <param name="mapping"></param>
       <param name="dontSetParent">Optionally dont set the parent, useful to get a reverse that wont be saved.</param>
       <returns></returns>
-    </member>
-    <member name="M:Key2Joy.Mapping.MappingControlRepository.Buffer(System.Collections.Generic.IReadOnlyList{Key2Joy.Plugins.MappingControlFactory})">
-      <summary>
-        Check all types for the MappingControl attribute and store them for later use. Optionally merging it with additional Mapping Controls.
-      </summary>
-      <param name="additionalMappingControlFactories"></param>
     </member>
     <member name="M:Key2Joy.Mapping.MappingControlRepository.GetAllMappingControls">
       <summary>
@@ -3775,12 +3725,6 @@
     <member name="M:Key2Joy.Mapping.Triggers.PressReleaseTriggerListener`1.AddMappedOption(Key2Joy.Contracts.Mapping.AbstractMappedOption)">
       <inheritdoc />
     </member>
-    <member name="M:Key2Joy.Mapping.Triggers.TriggersRepository.Buffer(System.Collections.Generic.IReadOnlyList{Key2Joy.Plugins.MappingTypeFactory{Key2Joy.Contracts.Mapping.Triggers.AbstractTrigger}})">
-      <summary>
-        Loads all triggers in the assembly, optionally merging it with additional trigger types.
-      </summary>
-      <param name="additionalTriggerTypeFactories"></param>
-    </member>
     <member name="M:Key2Joy.Mapping.Triggers.TriggersRepository.GetAllTriggers">
       <summary>
         Gets all trigger types and their attribute annotations
@@ -3801,131 +3745,6 @@
       </summary>
       <param name="trigger"></param>
       <returns></returns>
-    </member>
-    <member name="T:Key2Joy.Plugins.MappingControlFactory">
-      <summary>
-        Creates instances of the Control, simply using Activator.CreateInstance
-      </summary>
-    </member>
-    <member name="T:Key2Joy.Plugins.TypeMappingControlFactory">
-      <summary>
-        Creates instances of the Control, simply using Activator.CreateInstance
-      </summary>
-    </member>
-    <member name="T:Key2Joy.Plugins.PluginMappingControlFactory">
-      <summary>
-        Creates the Control by commanding the PluginHostProxy to create it.
-      </summary>
-    </member>
-    <member name="M:Key2Joy.Plugins.PluginMappingControlFactory.ToType">
-      <summary>
-        Since we can't get the Type in the other appdomain, we return the host/contract class it derives from instead.
-      </summary>
-      <returns></returns>
-    </member>
-    <member name="T:Key2Joy.Plugins.MappingTypeFactory">
-      <summary>
-        Creates instances of types, simply using Activator.CreateInstance
-      </summary>
-    </member>
-    <member name="T:Key2Joy.Plugins.MappingTypeFactory`1">
-      <summary>
-        Creates instances of types, simply using Activator.CreateInstance
-      </summary>
-    </member>
-    <member name="T:Key2Joy.Plugins.PluginMappingTypeFactory`1">
-      <summary>
-        Creates the type by commanding the PluginHostProxy to create it.
-      </summary>
-    </member>
-    <member name="M:Key2Joy.Plugins.PluginMappingTypeFactory`1.ToType">
-      <summary>
-        Since we can't get the Type in the other appdomain, we return the host/contract class it derives from instead.
-      </summary>
-      <returns></returns>
-    </member>
-    <member name="M:Key2Joy.Plugins.MappingTypeHelper.EnsureSimpleTypeName(System.String)">
-      <summary>
-        Ensures the typename is valid, splitting the long variant into its short form
-      </summary>
-      <param name="typeInfoTypeName"></param>
-      <returns></returns>
-    </member>
-    <member name="M:Key2Joy.Plugins.MappingTypeHelper.GetTypeFullName``1(System.Collections.Generic.IDictionary{System.String,Key2Joy.Plugins.MappingTypeFactory{``0}},Key2Joy.Contracts.Mapping.AbstractMappingAspect)">
-      <summary>
-        Gets the typename, even if the object is a proxy
-      </summary>
-      <param name="typeFactories"></param>
-      <param name="instance"></param>
-      <returns></returns>
-      <exception cref="T:System.ArgumentException"></exception>
-    </member>
-    <member name="M:Key2Joy.Plugins.MappingTypeHelper.GetTypeFullName(System.Collections.Generic.IDictionary{System.String,Key2Joy.Plugins.MappingTypeFactory},Key2Joy.Contracts.Mapping.AbstractMappingAspect)">
-      <summary>
-        Gets the typename, even if the object is a proxy
-      </summary>
-      <param name="typeFactories"></param>
-      <param name="instance"></param>
-      <returns></returns>
-      <exception cref="T:System.ArgumentException"></exception>
-    </member>
-    <member name="F:Key2Joy.Plugins.PluginHostProxy.actionFactories">
-      Plugin customizations
-    </member>
-    <member name="M:Key2Joy.Plugins.PluginHostProxy.Start">
-      <summary>
-        Starts the plugin host process, setting up for communication:
-        - A named pipe for signalling from the plugin (child) to the host (parent)
-        - An IPC channel for communication towards the plugin (with authority)
-      </summary>
-    </member>
-    <member name="M:Key2Joy.Plugins.PluginHostProxy.LoadPlugin(System.String@,System.String)">
-      <summary>
-      </summary>
-      <param name="loadedChecksum"></param>
-      <param name="expectedChecksum"></param>
-      <exception cref="T:Key2Joy.Contracts.Plugins.PluginLoadException"></exception>
-    </member>
-    <member name="M:Key2Joy.Plugins.PluginHostProxy.DiscoverPluginType_ExposedEnumeration(Mono.Cecil.TypeDefinition,Mono.Cecil.CustomAttribute)">
-      <summary>
-        Gets the plugin types' enumeration names and values, and adds them to the list of exposed enumerations.
-      </summary>
-      <param name="type"></param>
-      <param name="customAttribute"></param>
-    </member>
-    <member name="M:Key2Joy.Plugins.PluginHostProxy.CreateControl(System.String)">
-      <summary>
-        Asks the plugin to construct the WPF FrameworkElement. Then places it inside an ElementHost for use in WinForms.
-        Can return null if the plugin crashes during creation.
-      </summary>
-      <param name="controlTypeName"></param>
-      <returns></returns>
-    </member>
-    <member name="M:Key2Joy.Plugins.PluginHostProxy.CreateAspectInstance``1(System.String,System.Object[])">
-      <summary>
-        Asks the plugin to construct the given type.
-      </summary>
-      <param name="fullTypeName"></param>
-      <param name="constructorArguments"></param>
-      <returns></returns>
-    </member>
-    <member name="F:Key2Joy.Plugins.PluginSet.actionFactories">
-      Plugin customizations
-    </member>
-    <member name="M:Key2Joy.Plugins.PluginSet.#ctor(System.String)">
-      <summary>
-        Loads plugins from the specified directory
-      </summary>
-      <param name="pluginDirectoriesPaths">The absolute path to the directory containing the plugins</param>
-      <returns></returns>
-    </member>
-    <member name="M:Key2Joy.Plugins.PluginSet.DisablePlugin(System.String)">
-      <summary>
-        Disables the plugin for next load. Note that this doesnt unload resources already
-        started by the plugin
-        TODO: Fully unload plugin
-      </summary>
-      <param name="pluginAssemblyPath"></param>
     </member>
     <member name="T:Key2Joy.Properties.Resources">
       <summary>

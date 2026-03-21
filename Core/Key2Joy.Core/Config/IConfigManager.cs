@@ -9,10 +9,4 @@ public interface IConfigManager
     void LoadOrCreate();
 
     ConfigState GetConfigState();
-
-    bool IsPluginEnabled(string pluginAssemblyPath);
-
-    string GetExpectedPluginChecksum(string pluginAssemblyPath);
-
-    void SetPluginEnabled(string pluginAssemblyPath, string loadedChecksum);
 }

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Key2Joy.Contracts.Mapping.Actions;
+using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions;
-using Key2Joy.Plugins;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

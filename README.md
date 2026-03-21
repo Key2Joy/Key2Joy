@@ -1,8 +1,8 @@
 > [!WARNING]
 > Due to critical bugs impacting input processing in the 0.7.x releases, it's recommended to use [version 0.6.0](https://github.com/luttje/Key2Joy/releases/tag/0.6.0) or 0.8.0 and later.
-> 
+>
 > Contributions are welcome! If you'd like to help, feel free to submit a [Pull Request](https://github.com/luttje/Key2Joy/pulls).
-> 
+>
 > Thanks for your understanding.
 >
 
@@ -35,7 +35,7 @@ In addition to simply simulating a button being pressed on the Joystick, you can
 ## Usage
 
 > [!WARNING]
-> **Use at your own risk!** Incorrect driver (un)installation may cause a blue screen. 
+> **Use at your own risk!** Incorrect driver (un)installation may cause a blue screen.
 > *Read the [`Uninstalling` section](#uninstalling) below to find out how to uninstall the driver.*
 
 ### Using Key2Joy with a Graphical User Interface
@@ -53,9 +53,9 @@ In addition to simply simulating a button being pressed on the Joystick, you can
 
    **An action** is what will happen when that trigger occurs. *E.g: simulating a joystick button being pressed, a keyboard button being released, or executing a Lua/Javascript script.*
 
-4. Click the *Connect* button for Key2Joy to start listening for triggers that will execute the configured actions.
+1. Click the *Connect* button for Key2Joy to start listening for triggers that will execute the configured actions.
 
-5. When you're done using Key2Joy, click the *Disconnect* button to stop listening for triggers.
+2. When you're done using Key2Joy, click the *Disconnect* button to stop listening for triggers.
 
    *In the default profile there is also a mapping that stops Key2Joy from listening using the `Escape`-key. Don't forget to include such a mapping for your custom profiles.*
 
@@ -75,7 +75,6 @@ In addition to simply simulating a button being pressed on the Joystick, you can
 
 2. Running `Key2Joy.Cmd.exe disable` will disable the active profile
 
-
 ---
 
 ## Scripting
@@ -83,6 +82,7 @@ In addition to simply simulating a button being pressed on the Joystick, you can
 You can create scripts in Lua or Javascript that perform a sequence of actions with more complex logic.
 
 Here is a simple example of a script that holds the "A" button on a gamepad for 500 ms and then stops simulating input:
+
 ```lua
 Print("Hello World!")
 
@@ -101,11 +101,11 @@ Full scripting reference is available in [Docs/Scripting.md](Docs/Scripting.md)
 
 ## Known Issues and Limitations
 
-- Windows wont let you click if you release a mouse key that hasn't been pressed before.
+* Windows wont let you click if you release a mouse key that hasn't been pressed before.
 
-- Keyboard triggers do not activate when the app is in the foreground.
+* Keyboard triggers do not activate when the app is in the foreground.
 
-- If you run another app as administrator, Key2Joy can only simulate input in that app if Key2Joy is also running as administrator.
+* If you run another app as administrator, Key2Joy can only simulate input in that app if Key2Joy is also running as administrator.
 
 ---
 
@@ -131,15 +131,14 @@ Please do not hesitate to [create an issue](/../../issues/new/) when you find a 
 Originally inspired by [JoyToKey](https://joytokey.net/en/), this project has since evolved to offer so much more. Our gratitude goes out to the following resources:
 
 **NuGet Packages**:
-- [📦 DavidRieman/SimWinInput](https://github.com/DavidRieman/SimWinInput) - Simulate gamepads from .NET.
-- [📦 nefarius/ScpVBus](https://github.com/nefarius/ScpVBus) - The foundational driver enabling GamePad simulation.
-- [📦 NLua](https://github.com/NLua/NLua) - Enables Lua scripting for actions.
-- [📦 Jint](https://github.com/sebastienros/jint) - Supports JavaScript scripting for actions.
-- [📦 ObjectListView](https://objectlistview.sourceforge.net) - Used for mapping listings in the GUI.
-- [📦 Mono.Cecil](https://github.com/jbevain/cecil) - Reads attributes from plugin assemblies, underpinning the plugin system.
+* [📦 DavidRieman/SimWinInput](https://github.com/DavidRieman/SimWinInput) - Simulate gamepads from .NET.
+* [📦 nefarius/ScpVBus](https://github.com/nefarius/ScpVBus) - The foundational driver enabling GamePad simulation.
+* [📦 NLua](https://github.com/NLua/NLua) - Enables Lua scripting for actions.
+* [📦 Jint](https://github.com/sebastienros/jint) - Supports JavaScript scripting for actions.
+* [📦 ObjectListView](https://objectlistview.sourceforge.net) - Used for mapping listings in the GUI.
 
 **Iconography**:
-- [Silk Icons pack by Mark James](https://github.com/legacy-icons/famfamfam-silk/blob/master/LICENSE.md) - Provides the GUI icons.
+* [Silk Icons pack by Mark James](https://github.com/legacy-icons/famfamfam-silk/blob/master/LICENSE.md) - Provides the GUI icons.
 
 ---
 

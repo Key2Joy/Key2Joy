@@ -12,7 +12,6 @@ internal class FunctionMember : Member
     public Example[] MarkdownExamples { get; set; }
     public Parameter[] Parameters { get; set; }
     public ReturnType ReturnType { get; set; }
-    public bool IsPlugin { get; set; }
 
     public string GetParametersSignature()
     {
@@ -25,7 +24,7 @@ internal class FunctionMember : Member
                 .Select(p => $"```{p.GetTypeName()}```"));
     }
 
-    internal static Member FromXml(XElement element, bool isPlugin = false)
+    internal static Member FromXml(XElement element)
     {
         // Get the parameter types from member attribute, e.g: <member name="M:Key2Joy.Mapping.KeyboardAction.ExecuteForScript(System.Windows.Forms.Keys,Key2Joy.Input.PressState)">
         var memberName = element.Attribute("name").Value;
@@ -99,7 +98,6 @@ internal class FunctionMember : Member
 
         var markdownMeta = element.Element("markdown-doc");
 
-        member.IsPlugin = isPlugin;
         member.Parent = MarkdownMeta.FromXml(markdownMeta);
         member.MarkdownExamples = element.Elements("markdown-example")
             .Select(Example.FromXml)
@@ -141,6 +139,5 @@ internal class FunctionMember : Member
         }
 
         replacements.Add("Examples", examples);
-        replacements.Add("IsPlugin", this.IsPlugin ? "true" : "");
     }
 }

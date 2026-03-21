@@ -6,7 +6,6 @@ using Key2Joy.Extensions;
 using Key2Joy.LowLevelInput.SimulatedGamePad;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions.Logic;
-using Key2Joy.Plugins;
 using SimWinInput;
 
 namespace Key2Joy.Gui;
@@ -14,7 +13,6 @@ namespace Key2Joy.Gui;
 public static class Program
 {
     public static Form ActiveForm { get; set; }
-    public static PluginSet Plugins { get; private set; }
 
     private static bool shouldStartMinimized;
 
@@ -26,11 +24,9 @@ public static class Program
     {
         Key2JoyManager.InitSafely(
             OnRunAppCommand,
-            (plugins) =>
+            () =>
             {
                 var args = Environment.GetCommandLineArgs();
-
-                Plugins = plugins;
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
@@ -52,8 +48,6 @@ public static class Program
                 }
             }
         );
-
-        Plugins.Dispose();
     }
 
     private static Form GetStartupForm()

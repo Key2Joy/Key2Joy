@@ -45,12 +45,12 @@ public class MarkdownService
         var loader = new AssemblyHelper(assemblyDirectory, assemblyName);
         loader.LoadAssemblyWithRelated();
 
-        this.ProcessXmlMembers(xmlMembers, outputParents, loader.IsPlugin, filter, outputDirectory, templateFile);
+        this.ProcessXmlMembers(xmlMembers, outputParents, filter, outputDirectory, templateFile);
 
         this.WriteOutputParentToIndex(outputParents, indexBuilder);
     }
 
-    private void ProcessXmlMembers(IEnumerable<XElement> xmlMembers, SortedDictionary<MarkdownMeta, List<Member>> outputParents, bool isPlugin, string filter, string outputDirectory, string templateFile)
+    private void ProcessXmlMembers(IEnumerable<XElement> xmlMembers, SortedDictionary<MarkdownMeta, List<Member>> outputParents, string filter, string outputDirectory, string templateFile)
     {
         MarkdownMeta enumParent;
         List<Member> enumerations;
@@ -59,7 +59,7 @@ public class MarkdownService
             {
                 Name = "Enumerations",
                 Path = "Api/Enumerations/",
-                LevelModifier = isPlugin ? 1 : 0
+                LevelModifier = 0
             },
             enumerations = new List<Member>()
         );
@@ -71,7 +71,7 @@ public class MarkdownService
                 continue;
             }
 
-            var member = (FunctionMember)FunctionMember.FromXml(xmlMember, isPlugin);
+            var member = (FunctionMember)FunctionMember.FromXml(xmlMember);
 
             if (member.Parameters != null)
             {

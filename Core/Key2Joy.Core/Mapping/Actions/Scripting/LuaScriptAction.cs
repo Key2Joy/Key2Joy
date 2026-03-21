@@ -9,7 +9,6 @@ using Key2Joy.Contracts;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Contracts.Mapping.Triggers;
-using Key2Joy.Contracts.Plugins;
 using NLua;
 
 namespace Key2Joy.Mapping.Actions.Scripting;

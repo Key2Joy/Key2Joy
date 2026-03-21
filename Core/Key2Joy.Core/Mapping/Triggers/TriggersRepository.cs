@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Triggers;
-using Key2Joy.Plugins;
 
 namespace Key2Joy.Mapping.Triggers;
 

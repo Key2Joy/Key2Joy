@@ -41,11 +41,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Key2Joy.Contracts\Key2Joy.Contracts.csproj" />
     <ProjectReference Include="..\..\Core\Key2Joy.Core\Key2Joy.Core.csproj" />
-    <ProjectReference Include="..\..\Core\Key2Joy.PluginHost\Key2Joy.PluginHost.csproj" />
     <ProjectReference Include="..\..\Key2Joy.Cmd\Key2Joy.Cmd.csproj" />
     <ProjectReference Include="..\..\Key2Joy.Gui\Key2Joy.Gui.csproj" />
     <ProjectReference Include="..\BuildMarkdownDocs\BuildMarkdownDocs.csproj" />
-    <ProjectReference Include="..\Key2Joy.Tests.Stubs\TestPlugin\Key2Joy.Tests.Stubs.TestPlugin.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,5 +78,9 @@
     <None Update="Core\Config\Stubs\old-default-profile.k2j.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Contracts\Mappings\Actions\" />
   </ItemGroup>
 </Project>

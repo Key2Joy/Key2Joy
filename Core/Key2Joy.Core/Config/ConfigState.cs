@@ -130,8 +130,6 @@ public class ConfigState
 
     private string lastLoadedProfile;
 
-    public Dictionary<string, string> EnabledPlugins { get; set; } = new Dictionary<string, string>();
-
     private void SaveIfInitialized(object changedValue = null)
     {
         if (this.configManager == null || !this.configManager.IsInitialized)

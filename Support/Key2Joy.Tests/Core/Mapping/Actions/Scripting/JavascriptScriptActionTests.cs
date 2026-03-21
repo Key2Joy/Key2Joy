@@ -1,10 +1,10 @@
 using Jint;
-using Key2Joy.Contracts.Plugins;
 using Key2Joy.Mapping.Actions;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions.Scripting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Key2Joy.Contracts.Mapping.Actions;
+using Key2Joy.Contracts.Mapping;
 
 namespace Key2Joy.Tests.Core.Mapping.Actions.Scripting;
 

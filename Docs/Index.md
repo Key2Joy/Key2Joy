@@ -50,13 +50,3 @@
 * [`Window.GetClass` (```IntPtr```)](Api/Windows/Window.GetClass.md)
 * [`Window.GetForeground` ()](Api/Windows/Window.GetForeground.md)
 * [`Window.GetTitle` (```IntPtr```)](Api/Windows/Window.GetTitle.md)
-
-## Ffmpeg
-
-* [`Ffmpeg.AnimationFromImages` (```String```, ```Double```, ```String[]```)](Api/Plugins/Ffmpeg/Ffmpeg.AnimationFromImages.md)
-
-## Midi
-
-* [`Midi.InputDeviceGetAll` ()](Api/Plugins/Midi/Midi.InputDeviceGetAll.md)
-* [`Midi.InputDeviceListenForEvent` ()](Api/Plugins/Midi/Midi.InputDeviceListenForEvent.md)
-

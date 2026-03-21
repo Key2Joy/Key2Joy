@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Key2Joy.Contracts.Plugins;
+using Key2Joy.Contracts.Mapping;
 
 namespace Key2Joy.Contracts.Util;
 
@@ -100,8 +100,6 @@ public static class TypeConverter
         else if (value is object[] objectArrayParameter && desiredType.IsArray)
         {
             // TODO: This breaks the reference to the original array
-            // TODO: Inform plugin creators that if they want to keep the original reference, they should
-            //       use the 'object' type and cast the array to the correct type themselves.
             value = objectArrayParameter.CopyArrayToNewType(desiredType.GetElementType());
         }
         // If a local action is using a callback, it'll use CallbackAction instead of the wrapper,
