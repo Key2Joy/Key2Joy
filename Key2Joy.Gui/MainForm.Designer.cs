@@ -95,7 +95,7 @@ namespace Key2Joy.Gui
             this.chkArmed = new System.Windows.Forms.CheckBox();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.lblDevices = new System.Windows.Forms.Label();
-            this.viewControllerDiagramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewGamePadDiagramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.olvMappings)).BeginInit();
             this.pnlActionManagement.SuspendLayout();
             this.pnlProfileManagement.SuspendLayout();
@@ -313,7 +313,7 @@ namespace Key2Joy.Gui
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.groupMappingsByToolStripMenuItem,
             this.viewScriptOutputToolStripMenuItem,
-            this.viewControllerDiagramToolStripMenuItem,
+            this.viewGamePadDiagramToolStripMenuItem,
             this.toolStripSeparator5,
             this.pluginsToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
@@ -615,7 +615,7 @@ namespace Key2Joy.Gui
             this.splitContainer.Panel1.Controls.Add(this.pnlNotificationsParent);
             this.splitContainer.Panel1.Controls.Add(this.pnlProfileManagement);
             this.splitContainer.Panel1.Controls.Add(this.pnlMainMenu);
-            this.splitContainer.Panel1MinSize = 760;
+            this.splitContainer.Panel1MinSize = 550;
             // 
             // splitContainer.Panel2
             // 
@@ -726,12 +726,12 @@ namespace Key2Joy.Gui
             this.lblDevices.Text = "Devices";
             this.lblDevices.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // viewControllerDiagramToolStripMenuItem
+            // viewGamePadDiagramToolStripMenuItem
             // 
-            this.viewControllerDiagramToolStripMenuItem.Name = "viewControllerDiagramToolStripMenuItem";
-            this.viewControllerDiagramToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
-            this.viewControllerDiagramToolStripMenuItem.Text = "View Controller Diagram";
-            this.viewControllerDiagramToolStripMenuItem.Click += new System.EventHandler(this.ViewControllerDiagramToolStripMenuItem_Click);
+            this.viewGamePadDiagramToolStripMenuItem.Name = "viewGamePadDiagramToolStripMenuItem";
+            this.viewGamePadDiagramToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
+            this.viewGamePadDiagramToolStripMenuItem.Text = "View GamePad Diagram";
+            this.viewGamePadDiagramToolStripMenuItem.Click += new System.EventHandler(this.ViewGamePadDiagramToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -837,7 +837,7 @@ namespace Key2Joy.Gui
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Label lblDevices;
         private System.Windows.Forms.Panel pnlDeviceListActions;
-        private System.Windows.Forms.ToolStripMenuItem viewControllerDiagramToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewGamePadDiagramToolStripMenuItem;
     }
 }
 

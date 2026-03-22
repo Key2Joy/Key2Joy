@@ -7,11 +7,11 @@ namespace Key2Joy.Gui.Diagram;
 
 /// <summary>
 /// Computes overlap-free wire routes for every button in a
-/// <see cref="ControllerDiagramDefinition"/>.
+/// <see cref="GamePadDiagramDefinition"/>.
 ///
 /// Routing rules
 /// 1. Each button is assigned to the LEFT or RIGHT side based on whether its
-///    dot centre is in the left or right half of the controller image rect.
+///    dot centre is in the left or right half of the GamePad image rect.
 /// 2. Buttons on the same side are sorted by their dot's Y coordinate and
 ///    assigned connector Y positions at the vertical midpoint of each button's
 ///    label block, spaced proportionally so that the total block height fills
@@ -41,8 +41,8 @@ internal static class WireRouter
     /// Each button's wire connector is placed at the vertical midpoint of its
     /// label block so the horizontal wire segment aligns with the block centre.
     /// </summary>
-    /// <param name="definition">The controller definition (image + buttons).</param>
-    /// <param name="imgDest">The destination rectangle of the controller image inside the control.</param>
+    /// <param name="definition">The GamePad definition (image + buttons).</param>
+    /// <param name="imgDest">The destination rectangle of the GamePad image inside the control.</param>
     /// <param name="controlHeight">Total height of the <see cref="MappingDiagramControl"/>.</param>
     /// <param name="leftPanelRight">X coordinate of the right edge of the left label panel.</param>
     /// <param name="rightPanelLeft">X coordinate of the left edge of the right label panel.</param>
@@ -50,15 +50,26 @@ internal static class WireRouter
     /// Per-button block heights in the same order as <paramref name="definition"/>.Buttons.
     /// When <see langword="null"/> all blocks are treated as equal height.
     /// </param>
+    /// <param name="topOffset">
+    /// Y offset (px) from the top of the control to the start of the drawable area
+    /// (e.g. the height of a toolbar docked at the top).
+    /// </param>
+    /// <param name="connectorInset">
+    /// Distance (px) from the top of each label block to the point where the wire
+    /// connects. Pass half the name-row height to aim the wire at the name label.
+    /// Defaults to block midpoint when negative.
+    /// </param>
     public static IReadOnlyList<ButtonWire> Build(
-        ControllerDiagramDefinition definition,
-        Rectangle imgDest,
-        int controlHeight,
-        int leftPanelRight,
-        int rightPanelLeft,
-        IReadOnlyList<int> blockHeights = null)
+    GamePadDiagramDefinition definition,
+    Rectangle imgDest,
+    int controlHeight,
+    int leftPanelRight,
+    int rightPanelLeft,
+    IReadOnlyList<int> blockHeights = null,
+    int topOffset = 0,
+    float connectorInset = -1)
     {
-        var img = definition.ControllerImage;
+        var img = definition.GamePadImage;
         var scaleX = (float)imgDest.Width / img.Width;
         var scaleY = (float)imgDest.Height / img.Height;
 
@@ -89,8 +100,8 @@ internal static class WireRouter
         var leftHeights = left.Select(t => blockHeights != null ? blockHeights[t.idx] : 1).ToList();
         var rightHeights = right.Select(t => blockHeights != null ? blockHeights[t.idx] : 1).ToList();
 
-        var leftConnectorYs = MidpointYs(leftHeights, controlHeight, PanelVerticalMargin);
-        var rightConnectorYs = MidpointYs(rightHeights, controlHeight, PanelVerticalMargin);
+        var leftConnectorYs = MidpointYs(leftHeights, controlHeight, PanelVerticalMargin, topOffset, connectorInset);
+        var rightConnectorYs = MidpointYs(rightHeights, controlHeight, PanelVerticalMargin, topOffset, connectorInset);
 
         var wires = new List<ButtonWire>(definition.Buttons.Count);
 
@@ -132,7 +143,11 @@ internal static class WireRouter
     /// Returns the Y coordinate of the vertical midpoint of each block, distributed
     /// so that the blocks (separated by equal gaps) fill the usable height.
     /// </summary>
-    private static float[] MidpointYs(IList<int> heights, int totalHeight, int margin)
+    /// <param name="connectorInset">
+    /// Distance (px) from the top of each block to the point where the wire connects.
+    /// Pass half the name-row height to aim the wire at the name label's vertical centre.
+    /// </param>
+    private static float[] MidpointYs(IList<int> heights, int totalHeight, int margin, int topOffset = 0, float connectorInset = -1)
     {
         if (heights.Count == 0)
         {
@@ -140,7 +155,7 @@ internal static class WireRouter
         }
 
         var ys = new float[heights.Count];
-        float usable = totalHeight - margin * 2;
+        float usable = totalHeight - topOffset - margin * 2;
         var totalBlockHeight = heights.Sum();
 
         // Gap between consecutive blocks (evenly distributed remaining space).
@@ -154,10 +169,11 @@ internal static class WireRouter
             gap = 0f;
         }
 
-        float y = margin;
+        float y = topOffset + margin;
         for (var i = 0; i < heights.Count; i++)
         {
-            ys[i] = y + heights[i] / 2f;
+            var inset = connectorInset >= 0 ? connectorInset : heights[i] / 2f;
+            ys[i] = y + inset;
             y += heights[i] + gap;
         }
 

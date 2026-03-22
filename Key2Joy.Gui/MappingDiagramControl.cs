@@ -1,20 +1,21 @@
 using System;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using Key2Joy.Contracts.Mapping;
+using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Gui.Diagram;
+using Key2Joy.Mapping.Actions.Input;
 
 namespace Key2Joy.Gui;
 
 /// <summary>
-/// Renders a controller diagram.
+/// Renders a GamePad diagram.
 ///
 /// Layout (left to right):
-///   [ left label panel ] [ controller image ] [ right label panel ]
+///   [ left label panel ] [ GamePad image ] [ right label panel ]
 ///
 /// Each button gets:
 ///   - A filled dot drawn on the image at its mapped position.
@@ -27,6 +28,9 @@ public partial class MappingDiagramControl : UserControl
 {
     /// <summary>Minimum width (px) of each label panel when no mappings are loaded.</summary>
     public const int MinLabelPanelWidth = 80;
+
+    /// <summary>Height (px) of the toolbar strip docked at the top.</summary>
+    private const int ToolbarHeight = 28;
 
     /// <summary>Horizontal padding (px) added on each side of the widest measured label.</summary>
     private const int LabelPanelPadding = 8;
@@ -49,10 +53,12 @@ public partial class MappingDiagramControl : UserControl
 
     private readonly Panel _leftPanel;
     private readonly Panel _rightPanel;
+    private readonly ComboBox _gamePadIndexComboBox;
 
-    private ControllerDiagramDefinition _definition;
+    private GamePadDiagramDefinition _definition;
     private IReadOnlyList<AbstractMappedOption> _mappings = [];
     private IReadOnlyList<ButtonWire> _wires = [];
+    private int? _selectedGamePadIndex;
     private bool _rebuilding;
 
     public MappingDiagramControl()
@@ -68,16 +74,35 @@ public partial class MappingDiagramControl : UserControl
         this._leftPanel = CreateSidePanel(dockLeft: true);
         this._rightPanel = CreateSidePanel(dockLeft: false);
 
+        this._gamePadIndexComboBox = new ComboBox
+        {
+            DropDownStyle = ComboBoxStyle.DropDownList,
+            Width = 120,
+            Visible = false,
+        };
+        this._gamePadIndexComboBox.SelectedIndexChanged += this.OnGamePadIndexComboBoxSelectedIndexChanged;
+
+        var toolStrip = new Panel
+        {
+            Dock = DockStyle.Top,
+            Height = ToolbarHeight,
+            Padding = new Padding(4, 3, 4, 2),
+        };
+        toolStrip.Controls.Add(this._gamePadIndexComboBox);
+        this._gamePadIndexComboBox.Left = 1;
+        this._gamePadIndexComboBox.Top = 1;
+
         // Right panel must be added before left so DockStyle.Right claims space first.
         this.Controls.Add(this._rightPanel);
         this.Controls.Add(this._leftPanel);
+        this.Controls.Add(toolStrip);
     }
 
     /// <summary>
-    /// Assign a <see cref="ControllerDiagramDefinition"/> to drive what is rendered.
-    /// Use <see cref="XboxSeriesXControllerDiagram.Create"/> for the Xbox Series X preset.
+    /// Assign a <see cref="GamePadDiagramDefinition"/> to drive what is rendered.
+    /// Use <see cref="XboxSeriesXGamePadDiagram.Create"/> for the Xbox Series X preset.
     /// </summary>
-    public ControllerDiagramDefinition Definition
+    public GamePadDiagramDefinition Definition
     {
         get => this._definition;
         set
@@ -89,9 +114,9 @@ public partial class MappingDiagramControl : UserControl
 
     /// <summary>
     /// The active mappings to annotate on the diagram. Each entry whose action matches
-    /// a <see cref="ControllerButtonDefinition.ActionMatcher"/> will have its trigger's
+    /// a <see cref="GamePadButtonDefinition.ActionMatcher"/> will have its trigger's
     /// display name shown as the label for that button, indicating which keyboard or
-    /// mouse input is mapped to that controller button.
+    /// mouse input is mapped to that GamePad button.
     /// </summary>
     public IReadOnlyList<AbstractMappedOption> Mappings
     {
@@ -99,8 +124,85 @@ public partial class MappingDiagramControl : UserControl
         set
         {
             this._mappings = value ?? [];
+            this.RefreshGamePadIndexComboBox();
             this.ScheduleRebuild();
         }
+    }
+
+    private void RefreshGamePadIndexComboBox()
+    {
+        if (this._mappings == null || this._mappings.Count == 0)
+        {
+            this._gamePadIndexComboBox.Visible = false;
+            this._selectedGamePadIndex = null;
+            return;
+        }
+
+        var indices = this._mappings
+            .Select(m => GetGamePadIndex(m.Action))
+            .Where(i => i.HasValue)
+            .Select(i => i.Value)
+            .Distinct()
+            .OrderBy(i => i)
+            .ToList();
+
+        if (indices.Count == 0)
+        {
+            this._gamePadIndexComboBox.Visible = false;
+            this._selectedGamePadIndex = null;
+            return;
+        }
+
+        this._gamePadIndexComboBox.SelectedIndexChanged -= this.OnGamePadIndexComboBoxSelectedIndexChanged;
+        this._gamePadIndexComboBox.Items.Clear();
+        foreach (var idx in indices)
+        {
+            this._gamePadIndexComboBox.Items.Add($"GamePad #{idx}");
+        }
+        this._gamePadIndexComboBox.SelectedIndex = 0;
+        this._selectedGamePadIndex = indices[0];
+        this._gamePadIndexComboBox.SelectedIndexChanged += this.OnGamePadIndexComboBoxSelectedIndexChanged;
+
+        this._gamePadIndexComboBox.Visible = indices.Count > 1;
+    }
+
+    private static int? GetGamePadIndex(AbstractAction action)
+    {
+        if (action is GamePadButtonAction btn)
+        {
+            return btn.GamePadIndex;
+        }
+
+        if (action is GamePadStickAction stick)
+        {
+            return stick.GamePadIndex;
+        }
+
+        if (action is GamePadTriggerAction trigger)
+        {
+            return trigger.GamePadIndex;
+        }
+
+        return null;
+    }
+
+    private void OnGamePadIndexComboBoxSelectedIndexChanged(object sender, EventArgs e)
+    {
+        var indices = this._mappings
+            .Select(m => GetGamePadIndex(m.Action))
+            .Where(i => i.HasValue)
+            .Select(i => i.Value)
+            .Distinct()
+            .OrderBy(i => i)
+            .ToList();
+
+        var selectedIdx = this._gamePadIndexComboBox.SelectedIndex;
+        if (selectedIdx >= 0 && selectedIdx < indices.Count)
+        {
+            this._selectedGamePadIndex = indices[selectedIdx];
+        }
+
+        this.ScheduleRebuild();
     }
 
     private static Panel CreateSidePanel(bool dockLeft) => new()
@@ -133,7 +235,7 @@ public partial class MappingDiagramControl : UserControl
     /// Recomputes all wires via <see cref="WireRouter"/> and rebuilds the
     /// absolutely-positioned label block controls inside both side panels.
     /// Each block shows the button name in bold on the first line, followed by
-    /// one line per trigger that fires that controller button.
+    /// one line per trigger that fires that GamePad button.
     /// </summary>
     private void Rebuild()
     {
@@ -202,7 +304,9 @@ public partial class MappingDiagramControl : UserControl
                 this.ClientSize.Height,
                 leftPanelRight: this._leftPanel.Right,
                 rightPanelLeft: this._rightPanel.Left,
-                blockHeights: blockHeights);
+                blockHeights: blockHeights,
+                topOffset: ToolbarHeight,
+                connectorInset: LabelHeight / 2f);
 
             this.SuspendLayout();
             this._leftPanel.SuspendLayout();
@@ -219,7 +323,10 @@ public partial class MappingDiagramControl : UserControl
                     .First(x => ReferenceEquals(x.b, wire.Button)).i;
                 var triggers = triggersByButton[idx];
                 var blockH = blockHeights[idx];
-                var blockTop = (int)wire.PanelConnector.Y - (blockH / 2);
+                // PanelConnector.Y is in control client coordinates and aligns with the
+                // name-row midpoint (LabelHeight/2 from block top). Convert to panel-local
+                // coordinates by subtracting the panel's Top, then shift up by that inset.
+                var blockTop = (int)wire.PanelConnector.Y - panel.Top - (LabelHeight / 2);
                 var innerWidth = panel.Width - (LabelPanelPadding * 2);
                 var isRight = wire.IsRight;
 
@@ -292,22 +399,22 @@ public partial class MappingDiagramControl : UserControl
         => LabelHeight * (1 + Math.Max(1, triggerLines.Count));
 
     /// <summary>
-    /// Destination rectangle for the controller image: centred in the space
+    /// Destination rectangle for the GamePad image: centred in the space
     /// between the two side panels with aspect ratio preserved.
     /// </summary>
     private Rectangle GetImageDestRect()
     {
-        if (this._definition?.ControllerImage == null)
+        if (this._definition?.GamePadImage == null)
         {
             return Rectangle.Empty;
         }
 
-        var img = this._definition.ControllerImage;
+        var img = this._definition.GamePadImage;
         var canvas = new Rectangle(
             this._leftPanel.Right,
-            0,
+            ToolbarHeight,
             this._rightPanel.Left - this._leftPanel.Right,
-            this.ClientSize.Height);
+            this.ClientSize.Height - ToolbarHeight);
 
         if (canvas.Width <= 0 || canvas.Height <= 0)
         {
@@ -329,9 +436,9 @@ public partial class MappingDiagramControl : UserControl
     /// <summary>
     /// Returns the trigger display name for every mapping whose action targets
     /// <paramref name="button"/>. Returns an empty list when there is no match
-    /// or the button has no <see cref="ControllerButtonDefinition.ActionMatcher"/>.
+    /// or the button has no <see cref="GamePadButtonDefinition.ActionMatcher"/>.
     /// </summary>
-    private IReadOnlyList<string> FindTriggerLabels(ControllerButtonDefinition button)
+    private IReadOnlyList<string> FindTriggerLabels(GamePadButtonDefinition button)
     {
         if (button.ActionMatcher == null || this._mappings == null)
         {
@@ -339,7 +446,24 @@ public partial class MappingDiagramControl : UserControl
         }
 
         return this._mappings
-            .Where(m => m.Action != null && button.ActionMatcher(m.Action))
+            .Where(m =>
+            {
+                if (m.Action == null || !button.ActionMatcher(m.Action))
+                {
+                    return false;
+                }
+
+                if (this._selectedGamePadIndex.HasValue)
+                {
+                    var idx = GetGamePadIndex(m.Action);
+                    if (idx.HasValue && idx.Value != this._selectedGamePadIndex.Value)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            })
             .Select(m => m.Trigger?.GetNameDisplay() ?? string.Empty)
             .Where(s => s.Length > 0)
             .ToList();
@@ -353,7 +477,7 @@ public partial class MappingDiagramControl : UserControl
         g.SmoothingMode = SmoothingMode.AntiAlias;
         g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-        if (this._definition?.ControllerImage == null)
+        if (this._definition?.GamePadImage == null)
         {
             return;
         }
@@ -364,8 +488,8 @@ public partial class MappingDiagramControl : UserControl
             return;
         }
 
-        // 1. Controller image.
-        g.DrawImage(this._definition.ControllerImage, imgDest);
+        // 1. GamePad image.
+        g.DrawImage(this._definition.GamePadImage, imgDest);
 
         if (this._wires == null || this._wires.Count == 0)
         {

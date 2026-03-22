@@ -7,11 +7,11 @@ using SimWinInput;
 namespace Key2Joy.Gui.Diagram;
 
 /// <summary>
-/// Pre-configured <see cref="ControllerDiagramDefinition"/> for the Xbox Series X controller.
+/// Pre-configured <see cref="GamePadDiagramDefinition"/> for the Xbox Series X GamePad.
 /// All button coordinates are pixel-accurate for the 1452 × 940 source image
 /// (<c>Resources.xbox_series_x</c>).
 /// </summary>
-public static class XboxSeriesXControllerDiagram
+public static class XboxSeriesXGamePadDiagram
 {
     // ---------------------------------------------------------------------------
     // Image dimensions of Resources.xbox_series_x: 1452 × 940
@@ -21,7 +21,7 @@ public static class XboxSeriesXControllerDiagram
     //   All values were measured on the unscaled 1452 × 940 PNG.
     // ---------------------------------------------------------------------------
 
-    private static readonly IReadOnlyList<ControllerButtonDefinition> Buttons =
+    private static readonly IReadOnlyList<GamePadButtonDefinition> Buttons =
         [
             // Face buttons (right cluster)
             new("A",      1088, 494, a => a is GamePadButtonAction b && b.Control == GamePadControl.A),
@@ -53,9 +53,9 @@ public static class XboxSeriesXControllerDiagram
         ];
 
     /// <summary>
-    /// Creates a new <see cref="ControllerDiagramDefinition"/> backed by the Xbox Series X
+    /// Creates a new <see cref="GamePadDiagramDefinition"/> backed by the Xbox Series X
     /// artwork and button layout.
     /// </summary>
-    public static ControllerDiagramDefinition Create()
+    public static GamePadDiagramDefinition Create()
         => new(Resources.xbox_series_x, Buttons);
 }

@@ -12,7 +12,7 @@ public partial class MappingDiagramForm : Form
     {
         InitializeComponent();
 
-        mappingDiagramControl.Definition = XboxSeriesXControllerDiagram.Create();
+        mappingDiagramControl.Definition = XboxSeriesXGamePadDiagram.Create();
 
         if (profile != null)
         {

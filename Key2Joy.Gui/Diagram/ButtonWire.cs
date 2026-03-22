@@ -9,7 +9,7 @@ namespace Key2Joy.Gui.Diagram;
 internal class ButtonWire
 {
     /// <summary>The button this wire belongs to.</summary>
-    public ControllerButtonDefinition Button { get; }
+    public GamePadButtonDefinition Button { get; }
 
     /// <summary>Centre of the dot drawn on the controller image (control-client coords).</summary>
     public PointF DotCenter { get; }
@@ -28,7 +28,7 @@ internal class ButtonWire
     public bool IsRight { get; }
 
     public ButtonWire(
-        ControllerButtonDefinition button,
+        GamePadButtonDefinition button,
         PointF dotCenter,
         PointF elbow,
         PointF panelConnector,

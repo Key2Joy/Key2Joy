@@ -42,7 +42,7 @@ partial class MappingDiagramForm
         this.ClientSize = new System.Drawing.Size(1100, 740);
         this.Name = "MappingDiagramForm";
         this.ShowIcon = false;
-        this.Text = "Controller Diagram";
+        this.Text = "GamePad Diagram";
         this.TopMost = true;
         this.ResumeLayout(false);
         //
