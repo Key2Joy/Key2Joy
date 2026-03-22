@@ -41,21 +41,23 @@ In addition to simply simulating a button being pressed on the Joystick, you can
 ### Using Key2Joy with a Graphical User Interface
 
 1. Start **![](Key2Joy.Gui/Graphics/Icons/icon16.png?raw=true) Key2Joy.exe**
+
 2. *(First time only)* Accept installation of the Scp Virtual Bus Driver
+
 3. Use the default mappings, modify them by double-clicking a row in the mapping-list, or add new mappings.
 
    ![Screenshot showing the overview window. Off to the side the mapping dialog is showing all available actions.](Docs/screenshot.png)
 
    **A trigger** is something that Key2Joy will listen for. *E.g: a mouse move, key press, key release, etc...*
 
-> [!NOTE]
-> **Default behaviour of a trigger is disabled by default**. This means setting the left mouse button as a trigger will make it so you can't left-click anymore until you abort this app.
+    > [!NOTE]
+    > **Default behaviour of a trigger is disabled by default**. This means setting the left mouse button as a trigger will make it so you can't left-click anymore until you abort this app.
 
    **An action** is what will happen when that trigger occurs. *E.g: simulating a joystick button being pressed, a keyboard button being released, or executing a Lua/Javascript script.*
 
-1. Click the *Connect* button for Key2Joy to start listening for triggers that will execute the configured actions.
+4. Click the *Connect* button for Key2Joy to start listening for triggers that will execute the configured actions.
 
-2. When you're done using Key2Joy, click the *Disconnect* button to stop listening for triggers.
+5. When you're done using Key2Joy, click the *Disconnect* button to stop listening for triggers.
 
    *In the default profile there is also a mapping that stops Key2Joy from listening using the `Escape`-key. Don't forget to include such a mapping for your custom profiles.*
 
@@ -131,6 +133,7 @@ Please do not hesitate to [create an issue](/../../issues/new/) when you find a 
 Originally inspired by [JoyToKey](https://joytokey.net/en/), this project has since evolved to offer so much more. Our gratitude goes out to the following resources:
 
 **NuGet Packages**:
+
 * [📦 DavidRieman/SimWinInput](https://github.com/DavidRieman/SimWinInput) - Simulate gamepads from .NET.
 * [📦 nefarius/ScpVBus](https://github.com/nefarius/ScpVBus) - The foundational driver enabling GamePad simulation.
 * [📦 NLua](https://github.com/NLua/NLua) - Enables Lua scripting for actions.
@@ -138,6 +141,7 @@ Originally inspired by [JoyToKey](https://joytokey.net/en/), this project has si
 * [📦 ObjectListView](https://objectlistview.sourceforge.net) - Used for mapping listings in the GUI.
 
 **Iconography**:
+
 * [Silk Icons pack by Mark James](https://github.com/legacy-icons/famfamfam-silk/blob/master/LICENSE.md) - Provides the GUI icons.
 
 ---
