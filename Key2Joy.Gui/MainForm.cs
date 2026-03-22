@@ -887,6 +887,8 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
     private void ViewSourceCodeToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("https://github.com/luttje/Key2Joy");
 
+    private void ViewControllerDiagramToolStripMenuItem_Click(object sender, EventArgs e) => new MappingDiagramForm().ShowDialog();
+
     private void AboutToolStripMenuItem_Click(object sender, EventArgs e) => new AboutForm().ShowDialog();
 
     private void NtfIndicator_MouseDoubleClick(object sender, MouseEventArgs e)

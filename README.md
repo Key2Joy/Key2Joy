@@ -140,6 +140,7 @@ Originally inspired by [JoyToKey](https://joytokey.net/en/), this project has si
 
 **Iconography**:
 - [Silk Icons pack by Mark James](https://github.com/legacy-icons/famfamfam-silk/blob/master/LICENSE.md) - Provides the GUI icons.
+- [Xelu's Free Controllers & Keyboard Prompts](https://thoseawesomeguys.com/prompts/) - Images of the Controllers by Nicolae (Xelu) Berbece
 
 ---
 
