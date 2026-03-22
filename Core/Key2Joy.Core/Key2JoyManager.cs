@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using CommonServiceLocator;
 using Key2Joy.Config;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
@@ -59,6 +58,16 @@ public class Key2JoyManager : IKey2JoyManager
     { }
 
     /// <summary>
+    /// Registers the minimal services required by a thin client (e.g. the CLI) that interops
+    /// with a running Key2Joy instance rather than hosting one itself.
+    /// </summary>
+    public static void InitForClient()
+    {
+        ServiceContainer.Register<IConfigManager>(new ConfigManager());
+        ServiceContainer.Register<ICommandRepository>(new CommandRepository());
+    }
+
+    /// <summary>
     /// Ensures Key2Joy is running and ready to accept commands as long as the main loop does not end.
     /// </summary>
     /// <param name="commandRunner"></param>
@@ -66,25 +75,21 @@ public class Key2JoyManager : IKey2JoyManager
     /// <param name="configManager">Optionally a custom config manager (probably only useful for unit testing)</param>
     public static void InitSafely(AppCommandRunner commandRunner, Action mainLoop, IConfigManager configManager = null)
     {
-        // Setup dependency injection and services
-        var serviceLocator = new DependencyServiceLocator();
-        ServiceLocator.SetLocatorProvider(() => serviceLocator);
-        
         instance = new Key2JoyManager();
-        serviceLocator.Register<IKey2JoyManager>(instance);
+        ServiceContainer.Register<IKey2JoyManager>(instance);
 
 #pragma warning disable IDE0001 // Simplify Names
-        serviceLocator.Register<IConfigManager>(configManager ??= new ConfigManager());
+        ServiceContainer.Register<IConfigManager>(configManager ??= new ConfigManager());
 #pragma warning restore IDE0001 // Simplify Names
 
         var gamePadService = new SimulatedGamePadService();
-        serviceLocator.Register<ISimulatedGamePadService>(gamePadService);
+        ServiceContainer.Register<ISimulatedGamePadService>(gamePadService);
 
         var xInputService = new XInputService();
-        serviceLocator.Register<IXInputService>(xInputService);
+        ServiceContainer.Register<IXInputService>(xInputService);
 
         var commandRepository = new CommandRepository();
-        serviceLocator.Register<ICommandRepository>(commandRepository);
+        ServiceContainer.Register<ICommandRepository>(commandRepository);
 
         DiscoverTypes();
 
@@ -158,7 +163,7 @@ public class Key2JoyManager : IKey2JoyManager
 
         var allActions = (IList<AbstractAction>)profile.MappedOptions.Select(m => m.Action).ToList();
 
-        var xInputService = ServiceLocator.Current.GetInstance<IXInputService>();
+        var xInputService = ServiceContainer.Get<IXInputService>();
         // We must recognize physical devices before any simulated ones are added.
         // Otherwise we wont be able to tell the difference.
         xInputService.RecognizePhysicalDevices();
@@ -232,10 +237,10 @@ public class Key2JoyManager : IKey2JoyManager
             listener.StopListening();
         }
 
-        var xInputService = ServiceLocator.Current.GetInstance<IXInputService>();
+        var xInputService = ServiceContainer.Get<IXInputService>();
         xInputService.StopPolling();
 
-        var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
+        var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
         gamePadService.EnsureAllUnplugged();
 
         this.armedProfile = null;
@@ -251,7 +256,7 @@ public class Key2JoyManager : IKey2JoyManager
     /// </summary>
     public static void StartKey2Joy(bool startMinimized = true, bool pauseUntilReady = true)
     {
-        var configManager = ServiceLocator.Current.GetInstance<IConfigManager>();
+        var configManager = ServiceContainer.Get<IConfigManager>();
         var executablePath = configManager.GetConfigState().LastInstallPath;
 
         if (executablePath == null)

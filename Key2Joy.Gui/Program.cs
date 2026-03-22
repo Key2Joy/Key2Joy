@@ -1,11 +1,11 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using CommonServiceLocator;
 using Key2Joy.Extensions;
 using Key2Joy.LowLevelInput.SimulatedGamePad;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions.Logic;
+using Key2Joy.Util;
 using SimWinInput;
 
 namespace Key2Joy.Gui;
@@ -64,7 +64,7 @@ public static class Program
         if (form is MainForm)
         {
             MappingProfile.ExtractDefaultIfNotExists();
-            var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
+            var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
 
             try
             {

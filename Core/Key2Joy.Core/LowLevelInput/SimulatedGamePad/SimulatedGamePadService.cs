@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CommonServiceLocator;
 using Key2Joy.LowLevelInput.XInput;
+using Key2Joy.Util;
 using SimWinInput;
 
 namespace Key2Joy.LowLevelInput.SimulatedGamePad;
@@ -67,7 +67,7 @@ public class SimulatedGamePadService : ISimulatedGamePadService
             throw new ArgumentOutOfRangeException(nameof(gamePadIndex));
         }
 
-        var xInputService = ServiceLocator.Current.GetInstance<IXInputService>();
+        var xInputService = ServiceContainer.Get<IXInputService>();
         var physicalDeviceIndexes = xInputService.GetActiveDevicesInfo();
 
         // If the physical device is active at the index, then we can't use that index
@@ -95,7 +95,7 @@ public class SimulatedGamePadService : ISimulatedGamePadService
             throw new ArgumentOutOfRangeException(nameof(gamePadIndex));
         }
 
-        var xInputService = ServiceLocator.Current.GetInstance<IXInputService>();
+        var xInputService = ServiceContainer.Get<IXInputService>();
         var physicalDeviceIndexes = xInputService.GetActiveDevicesInfo();
 
         // If the physical device is active at the index, then we can't use that index

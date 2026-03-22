@@ -8,11 +8,11 @@ using System.Media;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
 using CommandLine;
-using CommonServiceLocator;
 using Key2Joy.Config;
 using Key2Joy.Contracts;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Util;
+using Key2Joy.Util;
 using Key2Joy.Gui.Properties;
 using Key2Joy.Gui.Util;
 using Key2Joy.LowLevelInput;
@@ -36,8 +36,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
     public MainForm(bool shouldStartMinimized = false)
     {
-        this.configState = ServiceLocator.Current
-            .GetInstance<IConfigManager>()
+        this.configState = ServiceContainer.Get<IConfigManager>()
             .GetConfigState();
 
         this.InitializeComponent();
@@ -62,7 +61,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
     {
         var menu = this.groupMappingsByToolStripMenuItem.DropDown;
         var groupTypes = Enum.GetValues(typeof(ViewMappingGroupType));
-        var configManager = ServiceLocator.Current.GetInstance<IConfigManager>();
+        var configManager = ServiceContainer.Get<IConfigManager>();
         var current = configManager.GetConfigState().SelectedViewMappingGroupType;
 
         menu.Items.Clear();
@@ -470,7 +469,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
             if (result == DialogResult.Cancel)
             {
-                var configManager = ServiceLocator.Current.GetInstance<IConfigManager>();
+                var configManager = ServiceContainer.Get<IConfigManager>();
                 configManager.GetConfigState().SelectedViewMappingGroupType = ViewMappingGroupType.None;
                 this.RefreshMappingsAfterGroupChange();
                 return;
@@ -584,7 +583,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
         MappingAttribute attribute = null;
 
-        var configManager = ServiceLocator.Current.GetInstance<IConfigManager>();
+        var configManager = ServiceContainer.Get<IConfigManager>();
         var mappingGroupType = configManager.GetConfigState().SelectedViewMappingGroupType;
 
         switch (mappingGroupType)

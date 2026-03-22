@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CommonServiceLocator;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Contracts.Mapping.Triggers;
@@ -9,6 +8,7 @@ using Key2Joy.LowLevelInput.SimulatedGamePad;
 using Key2Joy.LowLevelInput.XInput;
 using Key2Joy.Mapping.Triggers.GamePad;
 using Key2Joy.Mapping.Triggers.Mouse;
+using Key2Joy.Util;
 
 namespace Key2Joy.Mapping.Actions.Input;
 
@@ -95,7 +95,7 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     {
         base.OnStartListening(listener, ref otherActions);
 
-        var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
+        var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
         gamePadService.EnsurePluggedIn(this.GamePadIndex);
     }
 
@@ -134,7 +134,7 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
         this.Side = side;
         this.GamePadIndex = gamepadIndex;
 
-        var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
+        var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
         gamePadService.EnsurePluggedIn(this.GamePadIndex);
 
         await this.Execute();
@@ -157,7 +157,7 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     /// <inheritdoc/>
     public override async Task Execute(AbstractInputBag inputBag = null)
     {
-        var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
+        var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
         var gamePad = gamePadService.GetGamePad(this.GamePadIndex);
 
         if (!gamePad.GetIsPluggedIn())
@@ -242,7 +242,7 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     /// <param name="e"></param>
     private void NoInputTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
     {
-        var gamePad = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>().GetGamePad(this.GamePadIndex);
+        var gamePad = ServiceContainer.Get<ISimulatedGamePadService>().GetGamePad(this.GamePadIndex);
         var state = gamePad.GetState();
 
         if (this.Side == GamePadSide.Left)

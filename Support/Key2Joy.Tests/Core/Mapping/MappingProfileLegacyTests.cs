@@ -1,5 +1,4 @@
 using System.IO;
-using CommonServiceLocator;
 using Key2Joy.Config;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions;
@@ -13,17 +12,12 @@ namespace Key2Joy.Tests.Core.Mapping;
 [TestClass]
 public class MappingProfileLegacyTests
 {
-    private DependencyServiceLocator serviceLocator;
-
     [TestInitialize]
     public void Initialize()
     {
         ActionsRepository.Buffer();
         TriggersRepository.Buffer();
         ExposedEnumerationRepository.Buffer();
-
-        this.serviceLocator = new DependencyServiceLocator();
-        ServiceLocator.SetLocatorProvider(() => this.serviceLocator);
     }
 
     [TestCleanup]
@@ -34,7 +28,7 @@ public class MappingProfileLegacyTests
     {
         var mappingProfilePath = MockConfigManager.GetMockMappingProfilePath("default-profile.k2j.json");
         MockConfigManager.CopyStubCurrentDefaultProfile(mappingProfilePath);
-        this.serviceLocator.Register<IConfigManager>(MockConfigManager.LoadOrCreateMock());
+        ServiceContainer.Register<IConfigManager>(MockConfigManager.LoadOrCreateMock());
 
         var mappingProfile = MappingProfile.Load(mappingProfilePath);
 
@@ -47,7 +41,7 @@ public class MappingProfileLegacyTests
     {
         var mappingProfilePath = MockConfigManager.GetMockMappingProfilePath("default-profile.k2j.json");
         var oldProfileContents = MockConfigManager.CopyStub("old-default-profile.k2j.json", mappingProfilePath);
-        this.serviceLocator.Register<IConfigManager>(MockConfigManager.LoadOrCreateMock());
+        ServiceContainer.Register<IConfigManager>(MockConfigManager.LoadOrCreateMock());
 
         var mappingProfile = MappingProfile.Load(mappingProfilePath, suppressMessageBox: true);
 

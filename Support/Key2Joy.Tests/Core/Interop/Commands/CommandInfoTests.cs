@@ -2,7 +2,6 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using Key2Joy.Interop.Commands;
-using CommonServiceLocator;
 using Key2Joy.Util;
 
 namespace Key2Joy.Tests.Core.Interop.Commands;
@@ -29,11 +28,8 @@ public class CommandInfoTests
     [TestInitialize]
     public void Initialize()
     {
-        // Setup dependency injection and config manager service locator
-        var serviceLocator = new DependencyServiceLocator();
-        ServiceLocator.SetLocatorProvider(() => serviceLocator);
-        serviceLocator.Register<ICommandRepository>(new CommandRepository());
-        this.commandRepository = ServiceLocator.Current.GetInstance<ICommandRepository>();
+        this.commandRepository = new CommandRepository();
+        ServiceContainer.Register<ICommandRepository>(this.commandRepository);
         this.commandRepository.Register(TestCommand.Id, typeof(TestCommand));
     }
 

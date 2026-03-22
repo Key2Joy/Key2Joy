@@ -1,5 +1,4 @@
 using System.IO;
-using CommonServiceLocator;
 using Key2Joy.Config;
 using Key2Joy.Mapping;
 using Key2Joy.Tests.Core.Config;
@@ -17,12 +16,8 @@ public class MappingProfileTests
     [TestInitialize]
     public void Initialize()
     {
-        // Setup dependency injection and config manager service locator
-        var serviceLocator = new DependencyServiceLocator();
-        ServiceLocator.SetLocatorProvider(() => serviceLocator);
-
         this.configManager = MockConfigManager.LoadOrCreateMock();
-        serviceLocator.Register<IConfigManager>(this.configManager);
+        ServiceContainer.Register<IConfigManager>(this.configManager);
     }
 
     [TestCleanup]

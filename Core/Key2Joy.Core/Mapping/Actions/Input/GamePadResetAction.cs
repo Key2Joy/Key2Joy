@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CommonServiceLocator;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.LowLevelInput.SimulatedGamePad;
+using Key2Joy.Util;
 
 namespace Key2Joy.Mapping.Actions.Input;
 
@@ -28,7 +28,7 @@ public class GamePadResetAction : CoreAction
     {
         base.OnStartListening(listener, ref otherActions);
 
-        var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
+        var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
         gamePadService.EnsurePluggedIn(this.GamePadIndex);
     }
 
@@ -57,7 +57,7 @@ public class GamePadResetAction : CoreAction
     {
         this.GamePadIndex = gamepadIndex;
 
-        var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
+        var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
         var gamePad = gamePadService.GetGamePad(this.GamePadIndex);
 
         if (!gamePad.GetIsPluggedIn())
@@ -72,7 +72,7 @@ public class GamePadResetAction : CoreAction
 
     public override async Task Execute(AbstractInputBag inputBag = null)
     {
-        var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
+        var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
         var gamePad = gamePadService.GetGamePad(this.GamePadIndex);
         var state = gamePad.GetState();
         state.Reset();
