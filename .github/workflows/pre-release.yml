@@ -18,7 +18,7 @@ jobs:
           path: ${{ github.workspace }}
           key: ${{ runner.os }}-build-${{ github.sha }}
       - name: Archive Pre-release
-        uses: thedoctor0/zip-release@0.7.1
+        uses: thedoctor0/zip-release@0.7.6
         with:
           type: "zip"
           directory: 'bin\Key2Joy.Gui\Release'
@@ -31,7 +31,7 @@ jobs:
           tag: ${{ inputs.versionid }}
           prerelease: true
           generateReleaseNotes: true
-          artifacts: "pre-release.zip"
+          artifacts: "bin/Key2Joy.Gui/Release/pre-release.zip"
           body: |
             # 🔧 ${{ inputs.versionid }}
             This release was automatically generated based on the last successful test run.

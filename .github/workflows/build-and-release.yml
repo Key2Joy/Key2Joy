@@ -52,7 +52,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ github.sha }}
 
       - name: Archive Release
-        uses: thedoctor0/zip-release@0.7.1
+        uses: thedoctor0/zip-release@0.7.6
         with:
           type: "zip"
           directory: 'bin\Key2Joy.Gui\Release'
@@ -122,5 +122,5 @@ jobs:
           name: "${{ inputs.emoji }} ${{ inputs.title }}"
           tag: ${{ inputs.version_tag }}
           prerelease: false
-          artifacts: "Key2Joy-${{ inputs.version_tag }}.zip"
+          artifacts: "bin/Key2Joy.Gui/Release/Key2Joy-${{ inputs.version_tag }}.zip"
           body: ${{ env.RELEASE_NOTES }}
