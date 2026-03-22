@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace Key2Joy.Util;
 
@@ -8,7 +8,7 @@ namespace Key2Joy.Util;
 /// </summary>
 public static class ServiceContainer
 {
-    private static readonly Dictionary<Type, object> services = new();
+    private static ConcurrentDictionary<Type, object> services = new();
 
     public static void Register<T>(T service) => services[typeof(T)] = service;
 
@@ -19,4 +19,6 @@ public static class ServiceContainer
 
         throw new InvalidOperationException($"No registered service of type {typeof(T).FullName}");
     }
+
+    public static void Reset() => services = new ConcurrentDictionary<Type, object>();
 }
