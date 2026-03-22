@@ -55,7 +55,7 @@ jobs:
         uses: thedoctor0/zip-release@0.7.1
         with:
           type: "zip"
-          path: 'bin\Key2Joy.Gui\Release'
+          directory: 'bin\Key2Joy.Gui\Release'
           filename: "Key2Joy-${{ inputs.version_tag }}.zip"
 
       - name: Build release notes

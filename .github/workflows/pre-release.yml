@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       versionid:
-        description: 'The version ID of the pre-release'
+        description: "The version ID of the pre-release"
         required: true
         type: string
 jobs:
@@ -20,9 +20,9 @@ jobs:
       - name: Archive Pre-release
         uses: thedoctor0/zip-release@0.7.1
         with:
-          type: 'zip'
-          path: 'bin\Key2Joy.Gui\Release'
-          filename: 'pre-release.zip'
+          type: "zip"
+          directory: 'bin\Key2Joy.Gui\Release'
+          filename: "pre-release.zip"
       - name: Create GitHub Pre-release
         uses: ncipollo/release-action@v1
         with:
@@ -31,7 +31,7 @@ jobs:
           tag: ${{ inputs.versionid }}
           prerelease: true
           generateReleaseNotes: true
-          artifacts: 'pre-release.zip'
+          artifacts: "pre-release.zip"
           body: |
             # 🔧 ${{ inputs.versionid }}
             This release was automatically generated based on the last successful test run.
