@@ -47,9 +47,19 @@ public class SetCursorAction : CoreAction
         { "UPARROW",     32516 },
         { "WAIT",        32514 },
 
-        // Special internal ID used to reset the cursor to the default arrow, allowing the system
+        //
+        // Special internal IDs:
+        //
+
+        // Used to reset the cursor to the default arrow, allowing the system
         // to take back control of cursor display and automatically switch between different cursor types as needed.
         { "RESET",       0 },
+
+        // Used to hide the cursor entirely by replacing it with a transparent bitmap.
+        { "HIDDEN",      1 },
+
+        // Used to indicate a custom cursor file path, which is handled separately from the built-in named cursors.
+        { "FILE",        2 },
     };
 
     /// <summary>
@@ -207,6 +217,12 @@ public class SetCursorAction : CoreAction
         if (!string.IsNullOrEmpty(this.CursorFilePath))
         {
             SetCursorFromFile(this.CursorFilePath, this.Width, this.Height);
+            return;
+        }
+
+        if (this.CursorName.Equals("HIDDEN", StringComparison.OrdinalIgnoreCase))
+        {
+            HideCursor();
             return;
         }
 

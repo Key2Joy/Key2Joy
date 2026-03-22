@@ -19,6 +19,8 @@ public partial class SetCursorActionControl : UserControl, IActionOptionsControl
     {
         this.InitializeComponent();
 
+        this.pnlFileInput.Enabled = false;
+
         List<string> cursors = new();
 
         foreach (var entry in SetCursorAction.SystemCursorIds)
@@ -33,6 +35,7 @@ public partial class SetCursorActionControl : UserControl, IActionOptionsControl
     {
         var thisAction = (SetCursorAction)action;
 
+        this.txtFilePath.Text = thisAction.CursorFilePath;
         this.cmbCursor.SelectedItem = thisAction.CursorName;
     }
 
@@ -40,9 +43,36 @@ public partial class SetCursorActionControl : UserControl, IActionOptionsControl
     {
         var thisAction = (SetCursorAction)action;
 
+        thisAction.CursorFilePath = this.txtFilePath.Text;
         thisAction.CursorName = (string)this.cmbCursor.SelectedItem;
     }
     public bool CanMappingSave(AbstractAction action) => true;
 
-    private void CmbCursor_SelectedIndexChanged(object sender, EventArgs e) => OptionsChanged?.Invoke(this, EventArgs.Empty);
+    private void CmbCursor_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        OptionsChanged?.Invoke(this, EventArgs.Empty);
+
+        switch (this.cmbCursor.SelectedItem)
+        {
+            case "FILE":
+                this.pnlFileInput.Enabled = true;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void btnBrowseFile_Click(object sender, EventArgs e)
+    {
+        OpenFileDialog filePicker = new();
+
+        if (filePicker.ShowDialog() != DialogResult.OK)
+        {
+            return;
+        }
+
+        var file = filePicker.FileName;
+        this.txtFilePath.Text = file;
+        OptionsChanged?.Invoke(this, EventArgs.Empty);
+    }
 }
