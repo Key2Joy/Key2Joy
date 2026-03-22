@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using Key2Joy.Gui.Properties;
+using Key2Joy.Mapping.Actions.Input;
+using Key2Joy.Mapping.Triggers.GamePad;
+using SimWinInput;
 
 namespace Key2Joy.Gui.Diagram;
 
@@ -21,32 +24,32 @@ public static class XboxSeriesXControllerDiagram
     private static readonly IReadOnlyList<ControllerButtonDefinition> Buttons =
         [
             // Face buttons (right cluster)
-            new("A",      1088, 494),
-            new("B",      1188, 400),
-            new("X",      996, 405),
-            new("Y",      1092, 318),
+            new("A",      1088, 494, a => a is GamePadButtonAction b && b.Control == GamePadControl.A),
+            new("B",      1188, 400, a => a is GamePadButtonAction b && b.Control == GamePadControl.B),
+            new("X",      996,  405, a => a is GamePadButtonAction b && b.Control == GamePadControl.X),
+            new("Y",      1092, 318, a => a is GamePadButtonAction b && b.Control == GamePadControl.Y),
 
             // Bumpers / Triggers
-            new("LB",      440, 150),
-            new("RB",     1020, 150),
-            new("LT",      360, 75),
-            new("RT",     1100, 75),
+            new("LB",  440, 150, a => a is GamePadButtonAction b && b.Control == GamePadControl.LeftShoulder),
+            new("RB", 1020, 150, a => a is GamePadButtonAction b && b.Control == GamePadControl.RightShoulder),
+            new("LT",  360,  75, a => a is GamePadTriggerAction t && t.Side == GamePadSide.Left),
+            new("RT", 1100,  75, a => a is GamePadTriggerAction t && t.Side == GamePadSide.Right),
 
             // D-Pad
-            new("DPad Up",    550, 550),
-            new("DPad Down",  550, 675),
-            new("DPad Left",  480, 620),
-            new("DPad Right", 620, 620),
+            new("DPad Up",    550, 550, a => a is GamePadButtonAction b && b.Control == GamePadControl.DPadUp),
+            new("DPad Down",  550, 675, a => a is GamePadButtonAction b && b.Control == GamePadControl.DPadDown),
+            new("DPad Left",  480, 620, a => a is GamePadButtonAction b && b.Control == GamePadControl.DPadLeft),
+            new("DPad Right", 620, 620, a => a is GamePadButtonAction b && b.Control == GamePadControl.DPadRight),
 
             // Analog sticks
-            new("Left Stick",  375, 445),
-            new("Right Stick", 915, 650),
+            new("Left Stick",  375, 445, a => a is GamePadStickAction s && s.Side == GamePadSide.Left),
+            new("Right Stick", 915, 650, a => a is GamePadStickAction s && s.Side == GamePadSide.Right),
 
             // Center buttons
-            new("View",   630, 410),
-            new("Menu",   830, 410),
-            // new("Xbox",   730, 315),
-            // new("Share",  730, 435),
+            new("View",  630, 410, a => a is GamePadButtonAction b && b.Control == GamePadControl.Back),
+            new("Menu",  830, 410, a => a is GamePadButtonAction b && b.Control == GamePadControl.Start),
+            // new("Xbox",  730, 315),
+            // new("Share", 730, 435),
         ];
 
     /// <summary>

@@ -1,8 +1,11 @@
 using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
+using Key2Joy.Contracts.Mapping;
 using Key2Joy.Gui.Diagram;
 
 namespace Key2Joy.Gui;
@@ -22,11 +25,20 @@ namespace Key2Joy.Gui;
 /// </summary>
 public partial class MappingDiagramControl : UserControl
 {
-    /// <summary>Width (px) of each label panel.</summary>
-    public const int LabelPanelWidth = 160;
+    /// <summary>Minimum width (px) of each label panel when no mappings are loaded.</summary>
+    public const int MinLabelPanelWidth = 80;
+
+    /// <summary>Horizontal padding (px) added on each side of the widest measured label.</summary>
+    private const int LabelPanelPadding = 8;
 
     /// <summary>Height (px) of each label row.</summary>
-    private const int LabelHeight = 16;
+    private const int LabelHeight = 22;
+
+    /// <summary>Font used for the button name (bold) in each label block.</summary>
+    private static readonly Font LabelFontBold = new Font("Segoe UI", 7.5f, FontStyle.Bold);
+
+    /// <summary>Font used for trigger lines in each label block.</summary>
+    private static readonly Font LabelFont = new Font("Segoe UI", 7.5f);
 
     /// <summary>Radius (px) of the filled dot drawn on each button.</summary>
     private const int DotRadius = 5;
@@ -35,19 +47,11 @@ public partial class MappingDiagramControl : UserControl
     private static readonly Color LineColor = Color.FromArgb(220, 50, 50);
     private static readonly Pen LinePen = new(LineColor, 1.5f) { DashStyle = DashStyle.Dot };
 
-    // Cycle through these suffixes so each label gets a different text length,
-    // proving that between 1-4 labels per side all fit without overlap.
-    private static readonly string[] TestSuffixes = {
-        "Action A",
-        "Hold",
-        "Tap + Shift",
-        "Long Press"
-    };
-
     private readonly Panel _leftPanel;
     private readonly Panel _rightPanel;
 
     private ControllerDiagramDefinition _definition;
+    private IReadOnlyList<AbstractMappedOption> _mappings = [];
     private IReadOnlyList<ButtonWire> _wires = [];
     private bool _rebuilding;
 
@@ -83,9 +87,25 @@ public partial class MappingDiagramControl : UserControl
         }
     }
 
-    private static Panel CreateSidePanel(bool dockLeft) => new Panel
+    /// <summary>
+    /// The active mappings to annotate on the diagram. Each entry whose action matches
+    /// a <see cref="ControllerButtonDefinition.ActionMatcher"/> will have its trigger's
+    /// display name shown as the label for that button, indicating which keyboard or
+    /// mouse input is mapped to that controller button.
+    /// </summary>
+    public IReadOnlyList<AbstractMappedOption> Mappings
     {
-        Width = LabelPanelWidth,
+        get => this._mappings;
+        set
+        {
+            this._mappings = value ?? [];
+            this.ScheduleRebuild();
+        }
+    }
+
+    private static Panel CreateSidePanel(bool dockLeft) => new()
+    {
+        Width = MinLabelPanelWidth,
         Dock = dockLeft ? DockStyle.Left : DockStyle.Right,
         BackColor = Color.Transparent,
         Padding = Padding.Empty,
@@ -111,7 +131,9 @@ public partial class MappingDiagramControl : UserControl
 
     /// <summary>
     /// Recomputes all wires via <see cref="WireRouter"/> and rebuilds the
-    /// absolutely-positioned label controls inside both side panels.
+    /// absolutely-positioned label block controls inside both side panels.
+    /// Each block shows the button name in bold on the first line, followed by
+    /// one line per trigger that fires that controller button.
     /// </summary>
     private void Rebuild()
     {
@@ -123,6 +145,51 @@ public partial class MappingDiagramControl : UserControl
         this._rebuilding = true;
         try
         {
+            // 1. Collect trigger labels and compute block height for every button.
+            var triggersByButton = this._definition.Buttons
+                .Select(this.FindTriggerLabels)
+                .ToList();
+
+            var blockHeights = new List<int>(this._definition.Buttons.Count);
+            using (var g = this.CreateGraphics())
+            {
+                for (var i = 0; i < this._definition.Buttons.Count; i++)
+                {
+                    blockHeights.Add(MeasureBlockHeight(g, triggersByButton[i]));
+                }
+            }
+
+            // 2. Measure widest line across all buttons to size both panels.
+            var requiredWidth = MinLabelPanelWidth;
+            using (var g = this.CreateGraphics())
+            {
+                for (var i = 0; i < this._definition.Buttons.Count; i++)
+                {
+                    var button = this._definition.Buttons[i];
+                    var nameWidth = (int)Math.Ceiling(g.MeasureString(button.Name, LabelFontBold).Width);
+                    requiredWidth = Math.Max(requiredWidth, nameWidth + (LabelPanelPadding * 2));
+
+                    foreach (var line in triggersByButton[i])
+                    {
+                        var lineWidth = (int)Math.Ceiling(g.MeasureString(line, LabelFont).Width);
+                        requiredWidth = Math.Max(requiredWidth, lineWidth + (LabelPanelPadding * 2));
+                    }
+                }
+            }
+
+            this.SuspendLayout();
+            this._leftPanel.SuspendLayout();
+            this._rightPanel.SuspendLayout();
+
+            this._leftPanel.Width = requiredWidth;
+            this._rightPanel.Width = requiredWidth;
+
+            this._leftPanel.ResumeLayout(false);
+            this._rightPanel.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+            // 3. Now that panels have their final widths, compute wire geometry.
             var imgDest = this.GetImageDestRect();
             if (imgDest.IsEmpty)
             {
@@ -134,7 +201,8 @@ public partial class MappingDiagramControl : UserControl
                 imgDest,
                 this.ClientSize.Height,
                 leftPanelRight: this._leftPanel.Right,
-                rightPanelLeft: this._rightPanel.Left);
+                rightPanelLeft: this._rightPanel.Left,
+                blockHeights: blockHeights);
 
             this.SuspendLayout();
             this._leftPanel.SuspendLayout();
@@ -143,32 +211,65 @@ public partial class MappingDiagramControl : UserControl
             this._leftPanel.Controls.Clear();
             this._rightPanel.Controls.Clear();
 
-            var si = 0;
             foreach (var wire in this._wires)
             {
                 var panel = wire.IsRight ? this._rightPanel : this._leftPanel;
-                var text = wire.Button.Name + ": " + TestSuffixes[si % TestSuffixes.Length];
-                si++;
+                var idx = this._definition.Buttons
+                    .Select((b, i) => (b, i))
+                    .First(x => ReferenceEquals(x.b, wire.Button)).i;
+                var triggers = triggersByButton[idx];
+                var blockH = blockHeights[idx];
+                var blockTop = (int)wire.PanelConnector.Y - (blockH / 2);
+                var innerWidth = panel.Width - (LabelPanelPadding * 2);
+                var isRight = wire.IsRight;
 
-                var labelY = (int)wire.PanelConnector.Y - LabelHeight / 2;
-
-                var lbl = new Label
+                // Outer panel that clips and positions the whole block.
+                var block = new Panel
                 {
-                    Text = text,
+                    Left = LabelPanelPadding,
+                    Top = blockTop,
+                    Width = innerWidth,
+                    Height = blockH,
+                    BackColor = Color.Transparent,
+                    Padding = Padding.Empty,
+                };
+
+                // Bold button name on the first line.
+                var nameLabel = new Label
+                {
+                    Text = wire.Button.Name,
                     AutoSize = false,
-                    Left = 2,
-                    Top = labelY,
+                    Left = 0,
+                    Top = 0,
+                    Width = innerWidth,
                     Height = LabelHeight,
-                    Width = panel.Width - 4,
-                    TextAlign = wire.IsRight
-                        ? ContentAlignment.MiddleLeft
-                        : ContentAlignment.MiddleRight,
-                    Font = new Font("Segoe UI", 7.5f),
+                    TextAlign = isRight ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleRight,
+                    Font = LabelFontBold,
                     ForeColor = Color.FromArgb(30, 30, 30),
                     BackColor = Color.Transparent,
                 };
+                block.Controls.Add(nameLabel);
 
-                panel.Controls.Add(lbl);
+                // One trigger line per mapping.
+                for (var t = 0; t < triggers.Count; t++)
+                {
+                    var triggerLabel = new Label
+                    {
+                        Text = triggers[t],
+                        AutoSize = false,
+                        Left = 0,
+                        Top = LabelHeight + (t * LabelHeight),
+                        Width = innerWidth,
+                        Height = LabelHeight,
+                        TextAlign = isRight ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleRight,
+                        Font = LabelFont,
+                        ForeColor = Color.FromArgb(80, 80, 80),
+                        BackColor = Color.Transparent,
+                    };
+                    block.Controls.Add(triggerLabel);
+                }
+
+                panel.Controls.Add(block);
             }
 
             this._leftPanel.ResumeLayout(false);
@@ -182,6 +283,13 @@ public partial class MappingDiagramControl : UserControl
 
         this.Invalidate();
     }
+
+    /// <summary>
+    /// Returns the total pixel height of a label block: one bold name row plus
+    /// one row per trigger line (or one "Unbound" row when there are none).
+    /// </summary>
+    private static int MeasureBlockHeight(Graphics g, IReadOnlyList<string> triggerLines)
+        => LabelHeight * (1 + Math.Max(1, triggerLines.Count));
 
     /// <summary>
     /// Destination rectangle for the controller image: centred in the space
@@ -212,10 +320,29 @@ public partial class MappingDiagramControl : UserControl
 
         var w = (int)(img.Width * scale);
         var h = (int)(img.Height * scale);
-        var x = canvas.X + (canvas.Width - w) / 2;
-        var y = canvas.Y + (canvas.Height - h) / 2;
+        var x = canvas.X + ((canvas.Width - w) / 2);
+        var y = canvas.Y + ((canvas.Height - h) / 2);
 
         return new Rectangle(x, y, w, h);
+    }
+
+    /// <summary>
+    /// Returns the trigger display name for every mapping whose action targets
+    /// <paramref name="button"/>. Returns an empty list when there is no match
+    /// or the button has no <see cref="ControllerButtonDefinition.ActionMatcher"/>.
+    /// </summary>
+    private IReadOnlyList<string> FindTriggerLabels(ControllerButtonDefinition button)
+    {
+        if (button.ActionMatcher == null || this._mappings == null)
+        {
+            return [];
+        }
+
+        return this._mappings
+            .Where(m => m.Action != null && button.ActionMatcher(m.Action))
+            .Select(m => m.Trigger?.GetNameDisplay() ?? string.Empty)
+            .Where(s => s.Length > 0)
+            .ToList();
     }
 
     protected override void OnPaint(PaintEventArgs e)
