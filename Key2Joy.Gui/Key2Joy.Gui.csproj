@@ -126,6 +126,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Mapping\Actions\Windows\WindowActionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Mapping\Actions\Input\GamePadTriggerActionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
