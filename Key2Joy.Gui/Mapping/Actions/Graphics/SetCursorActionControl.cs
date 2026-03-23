@@ -58,6 +58,7 @@ public partial class SetCursorActionControl : UserControl, IActionOptionsControl
                 this.pnlFileInput.Enabled = true;
                 break;
             default:
+                this.pnlFileInput.Enabled = false;
                 break;
         }
     }
