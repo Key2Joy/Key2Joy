@@ -7,7 +7,6 @@ using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.Gui.Mapping;
 using Key2Joy.Mapping;
-using Key2Joy.Plugins;
 
 namespace Key2Joy.Gui;
 
@@ -112,11 +111,6 @@ public partial class MappingForm : Form
         {
             MessageBox.Show("Could not create options control for " + selectedTypeFactory.FullTypeName + ". \n\nPlease report this issue to the developer.\n\nThe app will now crash.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             throw new NotImplementedException("Could not create options control for " + selectedTypeFactory.FullTypeName);
-        }
-
-        if (optionsUserControl is ElementHostProxy pluginUserControl)
-        {
-            optionsUserControl = new ActionPluginHostControl(pluginUserControl);
         }
 
         optionsPanel.Controls.Add(optionsUserControl);

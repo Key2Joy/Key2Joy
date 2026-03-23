@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using CommonServiceLocator;
 using Key2Joy.Config;
+using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.Interop;
@@ -13,11 +14,12 @@ using Key2Joy.Interop.Commands;
 using Key2Joy.LowLevelInput.SimulatedGamePad;
 using Key2Joy.LowLevelInput.XInput;
 using Key2Joy.Mapping;
+using Key2Joy.Mapping.Actions;
 using Key2Joy.Mapping.Actions.Logic;
+using Key2Joy.Mapping.Triggers;
 using Key2Joy.Mapping.Triggers.GamePad;
 using Key2Joy.Mapping.Triggers.Keyboard;
 using Key2Joy.Mapping.Triggers.Mouse;
-using Key2Joy.Plugins;
 using Key2Joy.Util;
 
 namespace Key2Joy;
@@ -26,11 +28,6 @@ public delegate bool AppCommandRunner(AppCommand command);
 
 public class Key2JoyManager : IKey2JoyManager
 {
-    /// <summary>
-    /// Directory where plugins are located
-    /// </summary>
-    public const string PluginsDirectory = "Plugins";
-
     public event EventHandler<StatusChangedEventArgs> StatusChanged;
 
     public static Key2JoyManager instance;
@@ -53,6 +50,10 @@ public class Key2JoyManager : IKey2JoyManager
     private MappingProfile armedProfile;
     private List<AbstractTriggerListener> armedListeners;
     private IHaveHandleAndInvoke handleAndInvoker;
+    private static readonly List<MappingTypeFactory<AbstractAction>> actionFactories = new();
+    private static readonly List<MappingTypeFactory<AbstractTrigger>> triggerFactories = new();
+    private static readonly List<MappingControlFactory> mappingControlFactories = new();
+    private static readonly List<ExposedEnumeration> exposedEnumerations = new();
 
     private Key2JoyManager()
     { }
@@ -63,7 +64,7 @@ public class Key2JoyManager : IKey2JoyManager
     /// <param name="commandRunner"></param>
     /// <param name="mainLoop"></param>
     /// <param name="configManager">Optionally a custom config manager (probably only useful for unit testing)</param>
-    public static void InitSafely(AppCommandRunner commandRunner, Action<PluginSet> mainLoop, IConfigManager configManager = null)
+    public static void InitSafely(AppCommandRunner commandRunner, Action mainLoop, IConfigManager configManager = null)
     {
         // Setup dependency injection and services
         var serviceLocator = new DependencyServiceLocator();
@@ -85,27 +86,7 @@ public class Key2JoyManager : IKey2JoyManager
         var commandRepository = new CommandRepository();
         serviceLocator.Register<ICommandRepository>(commandRepository);
 
-        // Load plugins
-        var pluginDirectoriesPaths = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        pluginDirectoriesPaths = Path.Combine(pluginDirectoriesPaths, PluginsDirectory);
-
-        PluginSet plugins = new(pluginDirectoriesPaths);
-        plugins.LoadAll();
-        plugins.RefreshPluginTypes();
-
-        foreach (var loadState in plugins.AllPluginLoadStates.Values)
-        {
-            if (loadState.LoadState == PluginLoadStates.FailedToLoad)
-            {
-                System.Windows.MessageBox.Show(
-                    $"One of your plugins located at {loadState.AssemblyPath} failed to load. This was the error: " +
-                    loadState.LoadErrorMessage,
-                    "Failed to load plugin!",
-                    System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Warning
-                );
-            }
-        }
+        DiscoverTypes();
 
         Key2JoyManager.commandRunner = commandRunner;
 
@@ -114,13 +95,21 @@ public class Key2JoyManager : IKey2JoyManager
         try
         {
             interopServer.RestartListening();
-            mainLoop(plugins);
+            mainLoop();
         }
         finally
         {
             interopServer.StopListening();
             gamePadService.ShutDown();
         }
+    }
+
+    private static void DiscoverTypes()
+    {
+        ActionsRepository.Buffer(actionFactories);
+        TriggersRepository.Buffer(triggerFactories);
+        MappingControlRepository.Buffer(mappingControlFactories);
+        ExposedEnumerationRepository.Buffer(exposedEnumerations);
     }
 
     // Run the event on the same thread as the main control/form

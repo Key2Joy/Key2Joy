@@ -8,7 +8,6 @@ namespace Key2Joy.Tests.BuildMarkdownDocs.Util;
 public class AssemblyHelperTests
 {
     private const string TestDirectoryPath = "mockDirectory";
-    private static readonly string TestPluginDirectoryPath = Path.Combine(TestDirectoryPath, "Plugins", "mockPluginAssembly");
 
     [TestInitialize]
     public void Initialize()
@@ -18,13 +17,7 @@ public class AssemblyHelperTests
             Directory.CreateDirectory(TestDirectoryPath);
         }
 
-        if (!Directory.Exists(TestPluginDirectoryPath))
-        {
-            Directory.CreateDirectory(TestPluginDirectoryPath);
-        }
-
         File.WriteAllText(Path.Combine(TestDirectoryPath, "mockAssembly.dll"), "this content doesn't matter, since we wont load it");
-        File.WriteAllText(Path.Combine(TestPluginDirectoryPath, "mockPluginAssembly.dll"), "this content doesn't matter, since we wont load it");
     }
 
     [TestCleanup]
@@ -42,15 +35,6 @@ public class AssemblyHelperTests
         var helper = new AssemblyHelper(TestDirectoryPath, "mockAssembly");
         var result = helper.DetermineAssemblyPath();
         Assert.AreEqual(Path.Combine(TestDirectoryPath, "mockAssembly.dll"), result);
-    }
-
-    [TestMethod]
-    public void DetermineAssemblyPath_PluginsDirectory_ReturnsPluginPath()
-    {
-        var helper = new AssemblyHelper(TestDirectoryPath, "mockPluginAssembly");
-        var result = helper.DetermineAssemblyPath();
-        Assert.AreEqual(Path.Combine(TestPluginDirectoryPath, "mockPluginAssembly.dll"), result);
-        Assert.IsTrue(helper.IsPlugin);
     }
 
     [TestMethod]

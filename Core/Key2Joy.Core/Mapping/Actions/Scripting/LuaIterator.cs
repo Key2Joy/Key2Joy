@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 
 namespace Key2Joy.Mapping.Actions.Scripting;
 
@@ -18,14 +18,6 @@ public class LuaIterator
     /// <summary>
     /// Lua iterator 'Next' implementation. Gets the collection and current index
     /// </summary>
-    /// <example>
-    /// <![CDATA[
-    /// local devices = Midi.InputDeviceGetAll() -- Requires Key2Joy.Plugin.Midi
-    /// for k, v in collection(devices) do
-    ///     print(v)
-    /// end
-    /// ]]>
-    /// </example>
     /// <param name="collection">Collection to be iterated (always null? :/)</param>
     /// <param name="currentIndex">Null if first call, the current index otherwise</param>
     /// <param name="value"></param>

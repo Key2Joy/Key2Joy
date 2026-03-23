@@ -920,9 +920,6 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
     private void GamepadtestercomToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("https://gamepad-tester.com/");
 
-    private void OpenPluginsFolderToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start(Program.Plugins.PluginsFolder);
-
-    private void ManagePluginsToolStripMenuItem_Click(object sender, EventArgs e) => new PluginsForm().ShowDialog();
     private void TxtFilter_TextChanged(object sender, EventArgs e)
         => this.olvMappings.ModelFilter = new ModelFilter(
             x =>

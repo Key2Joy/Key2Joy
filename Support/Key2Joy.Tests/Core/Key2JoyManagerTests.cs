@@ -69,7 +69,7 @@ public class Key2JoyManagerTests
         var configContents = MockConfigManager.CopyStub("current-config.json", MockConfigManager.GetMockConfigPath());
         var configManager = MockConfigManager.LoadOrCreateMock();
 
-        Key2JoyManager.InitSafely(null, (pluginSet) =>
+        Key2JoyManager.InitSafely(null, () =>
         {
             var allListenersActivated = new List<AbstractTriggerListener>();
             var allActionsActivated = new List<AbstractAction>();

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Key2Joy.Contracts.Util;
-using Key2Joy.Plugins;
 
 namespace Key2Joy.Mapping.Actions.Scripting;
 
@@ -180,25 +179,4 @@ public class TypeExposedMethod : ExposedMethod
 
     public override object InvokeMethod(object[] transformedParameters)
         => this.cachedMethodInfo.Invoke(this.Instance, transformedParameters);
-}
-
-public class PluginExposedMethod : ExposedMethod
-{
-    public string TypeName { get; protected set; }
-
-    public PluginExposedMethod(string typeName, string functionName, string methodName)
-        : base(functionName, methodName)
-        => this.TypeName = typeName;
-
-    public override IList<Type> GetParameterTypes(out IList<object> parameterDefaultValues, out bool isLastParameterParams)
-    {
-        var instance = (PluginActionProxy)this.Instance;
-        return instance.GetMethodParameterTypes(this.MethodName, out parameterDefaultValues, out isLastParameterParams);
-    }
-
-    public override object InvokeMethod(object[] transformedParameters)
-    {
-        var instance = (PluginActionProxy)this.Instance;
-        return instance.InvokeScriptMethod(this.MethodName, transformedParameters);
-    }
 }

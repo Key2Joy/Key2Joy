@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Contracts.Mapping.Triggers;
-using Key2Joy.Contracts.Plugins;
 
 namespace Key2Joy.Mapping.Actions.Logic;
 
