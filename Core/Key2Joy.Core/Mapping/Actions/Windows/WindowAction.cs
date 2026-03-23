@@ -1,29 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Key2Joy.Gui.Util;
+namespace Key2Joy.Mapping.Actions.Windows;
 
-internal delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-
-internal class WindowUtilities
+public abstract class WindowAction : CoreAction
 {
-    // Chosen because it is not able to appear in the executable name.
-    internal const string TITLE_SEPARATOR = " | ";
-
     [DllImport("user32.dll")]
     private static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
 
     [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-
-    [DllImport("user32.dll")]
-    private static extern bool IsWindowVisible(IntPtr hWnd);
-
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern long GetWindowLong(IntPtr hWnd, int nIndex);
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
@@ -37,24 +25,24 @@ internal class WindowUtilities
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern bool QueryFullProcessImageName(IntPtr hProcess, uint dwFlags, StringBuilder lpExeName, ref uint lpdwSize);
 
-    private const int GWL_EXSTYLE = -20;
-    private const long WS_EX_TOOLWINDOW = 0x00000080L;
-    private const long WS_EX_NOACTIVATE = 0x08000000L;
+    private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
     private const uint PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
 
-    public static List<WindowInfo> GetTopLevelWindows()
+    public string WindowTitle { get; set; }
+    public string ClassName { get; set; }
+    public string Executable { get; set; }
+
+    protected WindowAction(string name)
+        : base(name)
+    { }
+
+    protected IntPtr FindMatchingWindow()
     {
-        var windows = new List<WindowInfo>();
+        var result = IntPtr.Zero;
 
         EnumWindows((hWnd, lParam) =>
         {
-            // Must be visible
-            if (!IsWindowVisible(hWnd))
-            {
-                return true;
-            }
-
-            // Must have a title
             const int nChars = 256;
             var titleBuilder = new StringBuilder(nChars);
             if (GetWindowText(hWnd, titleBuilder, nChars) <= 0)
@@ -62,22 +50,28 @@ internal class WindowUtilities
                 return true;
             }
 
-            // Skip tool windows (system tray popups, floating toolbars, etc.)
-            // Skip non-activatable windows (overlays, always-on-top HUDs, etc.)
-            var exStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
-            if ((exStyle & WS_EX_TOOLWINDOW) != 0 || (exStyle & WS_EX_NOACTIVATE) != 0)
+            if (titleBuilder.ToString() != this.WindowTitle)
             {
                 return true;
             }
 
-            windows.Add(new WindowInfo(hWnd, titleBuilder.ToString(), GetExecutableFileName(hWnd)));
-            return true;
+            if (!string.IsNullOrEmpty(this.Executable))
+            {
+                var exeFileName = GetExecutableFileName(hWnd);
+                if (!string.Equals(exeFileName, this.Executable, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            result = hWnd;
+            return false;
         }, IntPtr.Zero);
 
-        return windows;
+        return result;
     }
 
-    private static string GetExecutableFileName(IntPtr hWnd)
+    public static string GetExecutableFileName(IntPtr hWnd)
     {
         GetWindowThreadProcessId(hWnd, out var processId);
         if (processId == 0)
@@ -108,29 +102,17 @@ internal class WindowUtilities
         }
     }
 
-    public static string FormatExecutableAndTitle(string executable, string title)
+    public override string GetNameDisplay() => this.Name.Replace("{0}", this.WindowTitle);
+
+    public override bool Equals(object obj)
     {
-        if (string.IsNullOrEmpty(executable))
+        if (obj is not WindowAction action)
         {
-            return title;
+            return false;
         }
 
-        return string.Format("{0}{1}{2}", executable, TITLE_SEPARATOR, title);
-    }
-
-    public class WindowInfo
-    {
-        public IntPtr Handle { get; }
-        public string Title { get; }
-        public string Executable { get; }
-
-        public WindowInfo(IntPtr handle, string title, string executable)
-        {
-            this.Handle = handle;
-            this.Title = title;
-            this.Executable = executable;
-        }
-
-        public override string ToString() => FormatExecutableAndTitle(this.Executable, this.Title);
+        return action.WindowTitle == this.WindowTitle
+            && action.ClassName == this.ClassName
+            && action.Executable == this.Executable;
     }
 }

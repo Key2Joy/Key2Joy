@@ -12,18 +12,12 @@ namespace Key2Joy.Mapping.Actions.Windows;
     GroupName = "Windows",
     GroupImage = "application_xp_terminal"
 )]
-public class WindowMinimizeAction : CoreAction
+public class WindowMinimizeAction : WindowAction
 {
-    [DllImport("user32.dll", EntryPoint = "FindWindow")]
-    private static extern IntPtr FindWindow(string className, string windowTitle);
-
     [DllImport("user32.dll")]
     private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
     private const int SW_MINIMIZE = 6;
-
-    public string WindowTitle { get; set; }
-    public string ClassName { get; set; }
 
     public WindowMinimizeAction(string name)
         : base(name)
@@ -50,28 +44,16 @@ public class WindowMinimizeAction : CoreAction
 
     public override Task Execute(AbstractInputBag inputBag = null)
     {
-        var hWnd = FindWindow(this.ClassName, this.WindowTitle);
+        var hWnd = this.FindMatchingWindow();
 
         if (hWnd == IntPtr.Zero)
         {
-            throw new InvalidOperationException($"Window '{this.WindowTitle}' not found.");
+            // Fail silently
+            return Task.CompletedTask;
         }
 
         ShowWindow(hWnd, SW_MINIMIZE);
 
         return Task.CompletedTask;
-    }
-
-    public override string GetNameDisplay() => this.Name.Replace("{0}", this.WindowTitle);
-
-    public override bool Equals(object obj)
-    {
-        if (obj is not WindowMinimizeAction action)
-        {
-            return false;
-        }
-
-        return action.WindowTitle == this.WindowTitle
-            && action.ClassName == this.ClassName;
     }
 }
