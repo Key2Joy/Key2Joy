@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows.Forms;
-using CommonServiceLocator;
 using Key2Joy.Config;
 using Key2Joy.Contracts;
 using Key2Joy.Contracts.Mapping.Actions;
@@ -130,8 +129,7 @@ public class MappingProfile
             writer.Write(GetDefaultProfileContents());
         }
 
-        var configState = ServiceLocator.Current
-            .GetInstance<IConfigManager>()
+        var configState = ServiceContainer.Get<IConfigManager>()
             .GetConfigState();
         if (configState.LastLoadedProfile == null)
         {
@@ -165,8 +163,7 @@ public class MappingProfile
 
     public static string ResolveLastLoadedProfilePath()
     {
-        var configState = ServiceLocator.Current
-            .GetInstance<IConfigManager>()
+        var configState = ServiceContainer.Get<IConfigManager>()
             .GetConfigState();
         var lastLoadedPath = configState.LastLoadedProfile ?? GetDefaultPath();
         if (!File.Exists(lastLoadedPath))

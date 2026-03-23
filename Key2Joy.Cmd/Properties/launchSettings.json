@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Key2Joy.Cmd": {
+      "commandName": "Project",
+      "commandLineArgs": "enable"
+    }
+  }
+}

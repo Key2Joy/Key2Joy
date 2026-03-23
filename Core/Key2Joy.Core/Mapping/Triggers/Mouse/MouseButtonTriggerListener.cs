@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using CommonServiceLocator;
 using Key2Joy.Config;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.LowLevelInput;
+using Key2Joy.Util;
 
 namespace Key2Joy.Mapping.Triggers.Mouse;
 
@@ -26,7 +26,7 @@ public class MouseButtonTriggerListener : PressReleaseTriggerListener<MouseButto
     /// <inheritdoc/>
     public bool ShouldListenerOverrideDefault(bool executedAny)
     {
-        var configManager = ServiceLocator.Current.GetInstance<IConfigManager>();
+        var configManager = ServiceContainer.Get<IConfigManager>();
         var config = configManager.GetConfigState();
         var listenerOverrideDefaultAll = config.ListenerOverrideDefaultMouseAll;
 

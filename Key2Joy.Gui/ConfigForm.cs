@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
-using CommonServiceLocator;
 using Key2Joy.Config;
 using Key2Joy.Contracts.Util;
+using Key2Joy.Util;
 
 namespace Key2Joy.Gui;
 
@@ -15,8 +15,7 @@ public partial class ConfigForm : Form
 
     public ConfigForm()
     {
-        this.configState = ServiceLocator.Current
-            .GetInstance<IConfigManager>()
+        this.configState = ServiceContainer.Get<IConfigManager>()
             .GetConfigState();
 
         this.InitializeComponent();

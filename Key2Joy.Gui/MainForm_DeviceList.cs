@@ -1,7 +1,7 @@
 using System.Windows.Forms;
-using CommonServiceLocator;
 using Key2Joy.LowLevelInput.SimulatedGamePad;
 using Key2Joy.LowLevelInput.XInput;
+using Key2Joy.Util;
 
 namespace Key2Joy.Gui;
 
@@ -15,7 +15,7 @@ partial class MainForm
 
     private void RefreshPhysicalDevices()
     {
-        var xInputService = ServiceLocator.Current.GetInstance<IXInputService>();
+        var xInputService = ServiceContainer.Get<IXInputService>();
         xInputService.RecognizePhysicalDevices();
         var deviceIndexes = xInputService.GetActiveDevicesInfo();
 
@@ -27,7 +27,7 @@ partial class MainForm
 
     private void RefreshSimulatedDevices()
     {
-        var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
+        var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
         var simulatedGamePads = gamePadService.GetActiveDevicesInfo();
 
         foreach (var gamePad in simulatedGamePads)

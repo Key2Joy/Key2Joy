@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using CommonServiceLocator;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.LowLevelInput.SimulatedGamePad;
 using Key2Joy.Mapping.Actions.Input;
 using Key2Joy.Mapping.Triggers.GamePad;
+using Key2Joy.Util;
 
 namespace Key2Joy.Gui.Mapping;
 
@@ -22,7 +22,7 @@ public partial class GamePadTriggerActionControl : UserControl, IActionOptionsCo
     {
         this.InitializeComponent();
 
-        var gamePadService = ServiceLocator.Current.GetInstance<ISimulatedGamePadService>();
+        var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
         var allGamePads = gamePadService.GetAllGamePads(false);
         var allGamePadIndices = allGamePads.Select(gp => gp.Index).ToArray();
 

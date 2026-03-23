@@ -1,13 +1,13 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using CommonServiceLocator;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.LowLevelInput;
 using Key2Joy.LowLevelInput.XInput;
 using Key2Joy.Mapping.Triggers;
 using Key2Joy.Mapping.Triggers.GamePad;
+using Key2Joy.Util;
 
 namespace Key2Joy.Gui.Mapping;
 
@@ -30,7 +30,7 @@ public partial class GamePadButtonTriggerControl : UserControl, ITriggerOptionsC
     {
         this.InitializeComponent();
 
-        this.xInputService = ServiceLocator.Current.GetInstance<IXInputService>();
+        this.xInputService = ServiceContainer.Get<IXInputService>();
         this.xInputService.StateChanged += this.XInputService_StateChanged;
 
         this.cmbPressState.DataSource = PressStates.ALL;

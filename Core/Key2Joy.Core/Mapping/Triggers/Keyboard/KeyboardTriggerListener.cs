@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
-using CommonServiceLocator;
 using Key2Joy.Config;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.LowLevelInput;
+using Key2Joy.Util;
 
 namespace Key2Joy.Mapping.Triggers.Keyboard;
 
@@ -31,7 +31,7 @@ public class KeyboardTriggerListener : PressReleaseTriggerListener<KeyboardTrigg
     /// <inheritdoc/>
     public bool ShouldListenerOverrideDefault(bool executedAny)
     {
-        var configManager = ServiceLocator.Current.GetInstance<IConfigManager>();
+        var configManager = ServiceContainer.Get<IConfigManager>();
         var config = configManager.GetConfigState();
         var listenerOverrideDefaultAll = config.ListenerOverrideDefaultKeyboardAll;
 

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using CommonServiceLocator;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.LowLevelInput.XInput;
+using Key2Joy.Util;
 
 namespace Key2Joy.Mapping.Triggers.GamePad;
 
@@ -25,7 +25,7 @@ public class GamePadTriggerTriggerListener : CoreTriggerListener
 
     private GamePadTriggerTriggerListener()
     {
-        this.xInputService = ServiceLocator.Current.GetInstance<IXInputService>();
+        this.xInputService = ServiceContainer.Get<IXInputService>();
 
         this.triggerLookup = new()
         {
