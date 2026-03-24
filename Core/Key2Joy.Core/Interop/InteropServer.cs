@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using Key2Joy.Interop.Commands;
@@ -61,7 +62,13 @@ public class InteropServer : IInteropServer, IDisposable
         }
         catch (ObjectDisposedException)
         {
-            // Ignore when pipe is closed
+            // Pipe was disposed during shutdown
+            return;
+        }
+        catch (IOException)
+        {
+            // On .NET 9, disposing the pipe while BeginWaitForConnection is pending
+            // raises IOException ("The pipe has been ended.").
             return;
         }
 
