@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using Key2Joy.Mapping.Actions.Windows;
 
 namespace Key2Joy.Gui.Util;
 
@@ -10,9 +11,6 @@ internal delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
 internal class WindowUtilities
 {
-    // Chosen because it is not able to appear in the executable name.
-    internal const string TITLE_SEPARATOR = " | ";
-
     [DllImport("user32.dll")]
     private static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
 
@@ -70,7 +68,7 @@ internal class WindowUtilities
                 return true;
             }
 
-            windows.Add(new WindowInfo(hWnd, titleBuilder.ToString(), GetExecutableFileName(hWnd)));
+            windows.Add(new WindowInfo(hWnd, WindowAction.BuildIdentifier(GetExecutableFileName(hWnd), titleBuilder.ToString())));
             return true;
         }, IntPtr.Zero);
 
@@ -108,29 +106,17 @@ internal class WindowUtilities
         }
     }
 
-    public static string FormatExecutableAndTitle(string executable, string title)
-    {
-        if (string.IsNullOrEmpty(executable))
-        {
-            return title;
-        }
-
-        return string.Format("{0}{1}{2}", executable, TITLE_SEPARATOR, title);
-    }
-
     public class WindowInfo
     {
         public IntPtr Handle { get; }
-        public string Title { get; }
-        public string Executable { get; }
+        public string Identifier { get; }
 
-        public WindowInfo(IntPtr handle, string title, string executable)
+        public WindowInfo(IntPtr handle, string identifier)
         {
             this.Handle = handle;
-            this.Title = title;
-            this.Executable = executable;
+            this.Identifier = identifier;
         }
 
-        public override string ToString() => FormatExecutableAndTitle(this.Executable, this.Title);
+        public override string ToString() => this.Identifier;
     }
 }

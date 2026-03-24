@@ -36,7 +36,7 @@ public class WindowMinimizeAction : WindowAction
     [ExposesScriptingMethod("Window.Minimize")]
     public async void ExecuteForScript(string windowTitle, string className = null)
     {
-        this.WindowTitle = windowTitle;
+        this.WindowIdentifier = windowTitle;
         this.ClassName = className;
 
         await this.Execute();

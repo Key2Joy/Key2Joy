@@ -39,7 +39,7 @@ public class WindowFocusAction : WindowAction
     [ExposesScriptingMethod("Window.Focus")]
     public async void ExecuteForScript(string windowTitle, string className = null)
     {
-        this.WindowTitle = windowTitle;
+        this.WindowIdentifier = windowTitle;
         this.ClassName = className;
 
         await this.Execute();

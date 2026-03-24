@@ -29,13 +29,24 @@ public abstract class WindowAction : CoreAction
 
     private const uint PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
 
-    public string WindowTitle { get; set; }
+    public string WindowIdentifier { get; set; }
     public string ClassName { get; set; }
-    public string Executable { get; set; }
 
     protected WindowAction(string name)
         : base(name)
     { }
+
+    public const string IdentifierSeparator = " - ";
+
+    public static string BuildIdentifier(string executable, string title)
+    {
+        if (string.IsNullOrEmpty(executable))
+        {
+            return title;
+        }
+
+        return $"{executable}{IdentifierSeparator}{title}";
+    }
 
     protected IntPtr FindMatchingWindow()
     {
@@ -50,18 +61,14 @@ public abstract class WindowAction : CoreAction
                 return true;
             }
 
-            if (titleBuilder.ToString() != this.WindowTitle)
+            var title = titleBuilder.ToString();
+            var exeFileName = GetExecutableFileName(hWnd);
+            var identifier = BuildIdentifier(exeFileName, title);
+
+            if (!string.Equals(identifier, this.WindowIdentifier, StringComparison.OrdinalIgnoreCase)
+                && !string.Equals(title, this.WindowIdentifier, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
-            }
-
-            if (!string.IsNullOrEmpty(this.Executable))
-            {
-                var exeFileName = GetExecutableFileName(hWnd);
-                if (!string.Equals(exeFileName, this.Executable, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
             }
 
             result = hWnd;
@@ -102,7 +109,7 @@ public abstract class WindowAction : CoreAction
         }
     }
 
-    public override string GetNameDisplay() => this.Name.Replace("{0}", this.WindowTitle);
+    public override string GetNameDisplay() => this.Name.Replace("{0}", this.WindowIdentifier);
 
     public override bool Equals(object obj)
     {
@@ -111,8 +118,7 @@ public abstract class WindowAction : CoreAction
             return false;
         }
 
-        return action.WindowTitle == this.WindowTitle
-            && action.ClassName == this.ClassName
-            && action.Executable == this.Executable;
+        return action.WindowIdentifier == this.WindowIdentifier
+            && action.ClassName == this.ClassName;
     }
 }

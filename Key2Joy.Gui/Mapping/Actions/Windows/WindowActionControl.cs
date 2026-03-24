@@ -44,8 +44,7 @@ public partial class WindowActionControl : UserControl, IActionOptionsControl
                 continue;
             }
 
-            if (window.Title == windowAction.WindowTitle
-                && window.Executable == windowAction.Executable)
+            if (window.Identifier == windowAction.WindowIdentifier)
             {
                 // Assign before setting Text so TxtWindowTitle_TextChanged does not clear it
                 this.selectedWindow = window;
@@ -53,10 +52,7 @@ public partial class WindowActionControl : UserControl, IActionOptionsControl
             }
         }
 
-        this.txtWindowTitle.Text = WindowUtilities.FormatExecutableAndTitle(
-            windowAction.Executable,
-            windowAction.WindowTitle
-        );
+        this.txtWindowTitle.Text = windowAction.WindowIdentifier;
     }
 
     public void Setup(AbstractAction action)
@@ -66,26 +62,7 @@ public partial class WindowActionControl : UserControl, IActionOptionsControl
             return;
         }
 
-        if (this.selectedWindow != null)
-        {
-            windowAction.WindowTitle = this.selectedWindow.Title;
-            windowAction.Executable = this.selectedWindow.Executable;
-            return;
-        }
-
-        var text = this.txtWindowTitle.Text;
-        var separatorIndex = text.IndexOf(WindowUtilities.TITLE_SEPARATOR, StringComparison.Ordinal);
-
-        if (separatorIndex > 0)
-        {
-            windowAction.Executable = text.Substring(0, separatorIndex);
-            windowAction.WindowTitle = text.Substring(separatorIndex + WindowUtilities.TITLE_SEPARATOR.Length);
-        }
-        else
-        {
-            windowAction.Executable = null;
-            windowAction.WindowTitle = text;
-        }
+        windowAction.WindowIdentifier = this.selectedWindow?.Identifier ?? this.txtWindowTitle.Text;
     }
 
     public bool CanMappingSave(AbstractAction action) => !string.IsNullOrWhiteSpace(this.txtWindowTitle.Text);
@@ -104,6 +81,6 @@ public partial class WindowActionControl : UserControl, IActionOptionsControl
         }
 
         this.selectedWindow = item;
-        this.txtWindowTitle.Text = WindowUtilities.FormatExecutableAndTitle(item.Executable, item.Title);
+        this.txtWindowTitle.Text = item.Identifier;
     }
 }
