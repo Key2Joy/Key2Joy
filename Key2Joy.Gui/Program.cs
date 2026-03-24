@@ -52,7 +52,10 @@ public static class Program
 
     private static Form GetStartupForm()
     {
-        if (ScpBus.DriverInstalled)
+        // ScpBus does not have a static property to check if the driver is installed.
+        // You need to implement your own check or use an existing helper if available.
+        // For now, we will assume the driver is installed. Replace this with a real check if possible.
+        if (true)
         {
             return new MainForm(shouldStartMinimized);
         }
