@@ -8,22 +8,17 @@
     <Copyright>Copyright © 2026 luttje</Copyright>
     <PackageProjectUrl>https://github.com/luttje/Key2Joy</PackageProjectUrl>
     <VersionPrefix>0.8.0</VersionPrefix>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFramework>NET48</TargetFramework>
-	  <LangVersion>latest</LangVersion>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <RootNamespace>Key2Joy.Contracts</RootNamespace>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <SignAssembly>False</SignAssembly>
-    <AssemblyOriginatorKeyFile></AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile />
     <BaseOutputPath>bin\$(MSBuildProjectName)</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json">
-      <Version>10.0.5</Version>
-    </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="10.0.5" />
   </ItemGroup>
 
   <ItemGroup>
