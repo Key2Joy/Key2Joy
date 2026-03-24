@@ -2,6 +2,7 @@ using System.Linq;
 using CommandLine;
 using Key2Joy.Setup.Installation;
 using Key2Joy.Setup.AppReleases;
+using System.Windows.Forms;
 
 namespace Key2Joy.Setup.Cmd;
 
