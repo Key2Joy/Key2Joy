@@ -29,7 +29,7 @@
     <PackageReference Include="Jint" Version="3.0.0" />
     <PackageReference Include="KeraLua" Version="1.3.4" />
     <PackageReference Include="NLua" Version="1.6.3" />
-    <PackageReference Include="SimWinGamePad" Version="1.0.0" />
+    <PackageReference Include="SimWinGamePad" Version="1.2.0-alpha" />
     <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.5" />
   </ItemGroup>
