@@ -873,9 +873,17 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.RefreshMappings();
     }
 
-    private void TestKeyboardToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("https://devicetests.com/keyboard-tester");
+    private void TestKeyboardToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start(new ProcessStartInfo
+    {
+        FileName = "https://devicetests.com/keyboard-tester",
+        UseShellExecute = true
+    });
 
-    private void TestMouseToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("https://devicetests.com/mouse-test");
+    private void TestMouseToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start(new ProcessStartInfo
+    {
+        FileName = "https://devicetests.com/mouse-test",
+        UseShellExecute = true
+    });
 
     private void UserConfigurationsToolStripMenuItem_Click(object sender, EventArgs e)
     {
@@ -885,9 +893,15 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.RefreshMappingsAfterGroupChange();
     }
 
-    private void ReportAProblemToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("https://github.com/luttje/Key2Joy/issues");
+    private void ReportAProblemToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start(new ProcessStartInfo {
+        FileName = "https://github.com/Key2Joy/Key2Joy/issues",
+        UseShellExecute = true
+    });
 
-    private void ViewSourceCodeToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("https://github.com/luttje/Key2Joy");
+    private void ViewSourceCodeToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start(new ProcessStartInfo {
+        FileName = "https://github.com/Key2Joy/Key2Joy",
+        UseShellExecute = true
+    });
 
     private void AboutToolStripMenuItem_Click(object sender, EventArgs e) => new AboutForm().ShowDialog();
 
@@ -918,9 +932,17 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
     private void ViewEventViewerToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("eventvwr.exe", "/c:Application");
 
-    private void DevicetestscomToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("https://devicetests.com/controller-tester");
+    private void DevicetestscomToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start(new ProcessStartInfo
+    {
+        FileName = "https://devicetests.com/controller-tester",
+        UseShellExecute = true
+    });
 
-    private void GamepadtestercomToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("https://gamepad-tester.com/");
+    private void GamepadtestercomToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start(new ProcessStartInfo
+    {
+        FileName = "https://gamepad-tester.com/",
+        UseShellExecute = true
+    });
 
     private void TxtFilter_TextChanged(object sender, EventArgs e)
         => this.olvMappings.ModelFilter = new ModelFilter(
