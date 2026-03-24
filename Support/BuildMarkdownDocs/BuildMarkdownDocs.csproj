@@ -9,11 +9,8 @@
     <Copyright>Copyright © 2026 luttje</Copyright>
     <PackageProjectUrl>https://github.com/luttje/Key2Joy</PackageProjectUrl>
     <VersionPrefix>0.8.0</VersionPrefix>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFramework>NET48</TargetFramework>
-	  <LangVersion>latest</LangVersion>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputType>Exe</OutputType>
     <BaseOutputPath>bin\$(MSBuildProjectName)</BaseOutputPath>
