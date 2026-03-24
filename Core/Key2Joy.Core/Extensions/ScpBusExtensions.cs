@@ -8,7 +8,6 @@ namespace Key2Joy.Extensions;
 /// </summary>
 public static class ScpBusExtensions
 {
-    extension(ScpBus scpBus)
     {
         /// <summary>
         /// Checks if the necessary driver for simulated gamepads is installed.
