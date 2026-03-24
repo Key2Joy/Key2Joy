@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://github.com/luttje/Key2Joy</PackageProjectUrl>
     <VersionPrefix>0.8.0</VersionPrefix>
     <TargetFramework>net9.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
     <LangVersion>latest</LangVersion>
     <ApplicationIcon>Graphics\Icons\app-icons.ico</ApplicationIcon>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -27,6 +28,7 @@
     <None Remove="bin\**" />
     <None Remove="obj\**" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
     <PackageReference Include="System.Text.Json" Version="9.0.14" />
   </ItemGroup>
 
