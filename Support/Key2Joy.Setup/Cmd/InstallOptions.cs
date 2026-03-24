@@ -2,7 +2,7 @@ using System.Linq;
 using CommandLine;
 using Key2Joy.Setup.Installation;
 using Key2Joy.Setup.AppReleases;
-using System.Windows.Forms;
+using System;
 
 namespace Key2Joy.Setup.Cmd;
 
@@ -41,7 +41,7 @@ internal class InstallOptions : Options
 
         if (release == null)
         {
-            MessageBox.Show($"The version {this.Version} is not available. Please select a version from the list.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Console.WriteLine($"Error: The version {this.Version} is not available. Please select a version from the list.");
             return;
         }
 
