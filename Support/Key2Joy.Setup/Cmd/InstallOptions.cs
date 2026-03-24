@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Windows.Forms;
 using CommandLine;
 using Key2Joy.Setup.Installation;
 using Key2Joy.Setup.AppReleases;
