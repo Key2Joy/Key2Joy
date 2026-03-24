@@ -79,7 +79,7 @@ public static class Output
         using (EventLog eventLog = new("Application"))
         {
             eventLog.Source = "Application";
-            eventLog.WriteEntry(outputLine, System.Diagnostics.TraceEventType.Information.ToString(), 101, 1);
+            eventLog.WriteEntry(outputLine, EventLogEntryType.Information, 101, 1);
         }
 
         Debug.WriteLine(outputLine);
