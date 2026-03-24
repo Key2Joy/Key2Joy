@@ -100,11 +100,11 @@ public partial class MappingPropertyEditorForm : Form
             var nud = new NumericUpDown
             {
                 DecimalPlaces = 0,
-                Minimum = TypeExtensions.ToDecimalSafe(minValue),
-                Maximum = TypeExtensions.ToDecimalSafe(maxValue)
+                Minimum = Key2Joy.Util.TypeExtensions.ToDecimalSafe(minValue),
+                Maximum = Key2Joy.Util.TypeExtensions.ToDecimalSafe(maxValue)
             };
 
-            nud.Value = commonValue == null ? 0 : TypeExtensions.ToDecimalSafe(commonValue);
+            nud.Value = commonValue == null ? 0 : Key2Joy.Util.TypeExtensions.ToDecimalSafe(commonValue);
 
             this.ctrlValueInput = nud;
         }
@@ -115,11 +115,11 @@ public partial class MappingPropertyEditorForm : Form
             var nud = new NumericUpDown
             {
                 DecimalPlaces = 2,  // Assuming 2 decimal places
-                Minimum = TypeExtensions.ToDecimalSafe(minValue),
-                Maximum = TypeExtensions.ToDecimalSafe(maxValue)
+                Minimum = Key2Joy.Util.TypeExtensions.ToDecimalSafe(minValue),
+                Maximum = Key2Joy.Util.TypeExtensions.ToDecimalSafe(maxValue)
             };
 
-            nud.Value = commonValue == null ? 0 : TypeExtensions.ToDecimalSafe(commonValue);
+            nud.Value = commonValue == null ? 0 : Key2Joy.Util.TypeExtensions.ToDecimalSafe(commonValue);
 
             this.ctrlValueInput = nud;
         }
