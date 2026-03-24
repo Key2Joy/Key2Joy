@@ -118,18 +118,19 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
     private void SetupNotificationIndicator()
     {
-        // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
-        var items = new MenuItem[]{
-            new MenuItem("Show", (s, e) => {
+        // Updated: MenuItem/ContextMenu replaced with ToolStripMenuItem/ContextMenuStrip for .NET compatibility
+        var items = new System.Windows.Forms.ToolStripMenuItem[]{
+            new System.Windows.Forms.ToolStripMenuItem("Show", null, (s, e) => {
                 this.Show();
                 this.BringToFront();
 
                 if (this.WindowState == FormWindowState.Minimized) { this.WindowState = FormWindowState.Normal; } }),
-            new MenuItem("Exit", this.ExitProgramToolStripMenuItem_Click)
+            new System.Windows.Forms.ToolStripMenuItem("Exit", null, this.ExitProgramToolStripMenuItem_Click)
         };
 
-        // TODO ContextMenu is no longer supported. Use ContextMenuStrip instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
-        this.ntfIndicator.ContextMenu = new ContextMenu(items);
+        var contextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
+        contextMenuStrip.Items.AddRange(items);
+        this.ntfIndicator.ContextMenuStrip = contextMenuStrip;
     }
 
     private void PopulateGroupImages()
