@@ -169,7 +169,7 @@ namespace Key2Joy.Gui
             this.btnCreateMapping.Size = new System.Drawing.Size(149, 29);
             this.btnCreateMapping.TabIndex = 0;
             this.btnCreateMapping.Text = "Create New Mapping";
-            this.btnCreateMapping.UseVisualStyleBackColor = true;
+            this.btnCreateMapping.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnCreateMapping.Click += new System.EventHandler(this.BtnCreateMapping_Click);
             // 
             // txtFilter
@@ -666,7 +666,7 @@ namespace Key2Joy.Gui
             this.chkArmed.Text = "Connect";
             this.chkArmed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.chkArmed.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.chkArmed.UseVisualStyleBackColor = true;
+            this.chkArmed.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.chkArmed.CheckedChanged += new System.EventHandler(this.ChkEnabled_CheckedChanged);
             // 
             // btnRefresh
@@ -679,7 +679,7 @@ namespace Key2Joy.Gui
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(28, 31);
             this.btnRefresh.TabIndex = 2;
-            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // lblDevices

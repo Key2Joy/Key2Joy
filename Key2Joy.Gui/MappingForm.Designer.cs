@@ -93,7 +93,7 @@ namespace Key2Joy.Gui
             this.btnSaveMapping.Size = new System.Drawing.Size(571, 51);
             this.btnSaveMapping.TabIndex = 91;
             this.btnSaveMapping.Text = "Save Mapping";
-            this.btnSaveMapping.UseVisualStyleBackColor = true;
+            this.btnSaveMapping.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnSaveMapping.Click += new System.EventHandler(this.BtnSaveMapping_Click);
             // 
             // grpTrigger

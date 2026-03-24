@@ -1,4 +1,4 @@
-﻿using Key2Joy.Contracts.Mapping.Triggers;
+using Key2Joy.Contracts.Mapping.Triggers;
 
 namespace Key2Joy.Gui.Mapping
 {
@@ -67,7 +67,7 @@ namespace Key2Joy.Gui.Mapping
             this.btnRemove.Size = new System.Drawing.Size(82, 23);
             this.btnRemove.TabIndex = 2;
             this.btnRemove.Text = "Remove";
-            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnRemove.Click += new System.EventHandler(this.BtnRemove_Click);
             // 
             // CombinedTriggerControl

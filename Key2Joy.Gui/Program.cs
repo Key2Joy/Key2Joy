@@ -30,6 +30,7 @@ public static class Program
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+                Application.SetColorMode(SystemColorMode.System);
 
                 foreach (var arg in args)
                 {

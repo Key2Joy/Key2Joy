@@ -1,4 +1,4 @@
-﻿namespace Key2Joy.Gui.Mapping
+namespace Key2Joy.Gui.Mapping
 {
     partial class ScriptActionControl
     {
@@ -113,7 +113,7 @@
             this.btnBrowseFile.Size = new System.Drawing.Size(64, 21);
             this.btnBrowseFile.TabIndex = 1;
             this.btnBrowseFile.Text = "Browse...";
-            this.btnBrowseFile.UseVisualStyleBackColor = true;
+            this.btnBrowseFile.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnBrowseFile.Click += new System.EventHandler(this.BtnBrowseFile_Click);
             // 
             // ScriptActionControl
