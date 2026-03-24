@@ -27,7 +27,7 @@
     <EmbeddedResource Remove="obj\**" />
     <None Remove="obj\**" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="System.Resources.Extensions" Version="7.0.0" />
+    <PackageReference Include="System.Resources.Extensions" Version="9.0.14" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,10 +36,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Key2Joy.Core\Key2Joy.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
   <ItemGroup>
