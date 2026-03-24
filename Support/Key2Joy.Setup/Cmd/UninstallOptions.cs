@@ -1,4 +1,3 @@
-﻿using System.Windows.Forms;
 using CommandLine;
 using Key2Joy.Setup.Installation;
 
