@@ -118,6 +118,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
 
     private void SetupNotificationIndicator()
     {
+        // TODO MenuItem is no longer supported. Use ToolStripMenuItem instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
         var items = new MenuItem[]{
             new MenuItem("Show", (s, e) => {
                 this.Show();
@@ -127,6 +128,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
             new MenuItem("Exit", this.ExitProgramToolStripMenuItem_Click)
         };
 
+        // TODO ContextMenu is no longer supported. Use ContextMenuStrip instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
         this.ntfIndicator.ContextMenu = new ContextMenu(items);
     }
 
