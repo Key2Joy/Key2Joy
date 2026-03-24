@@ -14,12 +14,6 @@ Execute steps below sequentially one by one in the order they are listed.
 8. Upgrade Support\BuildMarkdownDocs\BuildMarkdownDocs.csproj
 9. Upgrade Support\Key2Joy.Tests\Key2Joy.Tests.csproj
 10. Upgrade Support\Key2Joy.Setup\Key2Joy.Setup.csproj
-4. Upgrade Core\Key2Joy.Core\Key2Joy.Core.csproj
-5. Upgrade Key2Joy.Cmd\Key2Joy.Cmd.csproj
-6. Upgrade Key2Joy.Gui\Key2Joy.Gui.csproj
-7. Upgrade Support\BuildMarkdownDocs\BuildMarkdownDocs.csproj
-8. Upgrade Support\Key2Joy.Tests\Key2Joy.Tests.csproj
-9. Upgrade Support\Key2Joy.Setup\Key2Joy.Setup.csproj
 
 ## Settings
 
