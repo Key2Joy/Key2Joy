@@ -9,7 +9,7 @@
     <Copyright>Copyright © 2026 luttje</Copyright>
     <PackageProjectUrl>https://github.com/luttje/Key2Joy</PackageProjectUrl>
     <VersionPrefix>0.8.0</VersionPrefix>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net9.0-windows7.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputType>Exe</OutputType>
