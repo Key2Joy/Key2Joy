@@ -27,13 +27,7 @@
     <None Remove="bin\**" />
     <None Remove="obj\**" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
-    <PackageReference Include="System.Text.Json" Version="10.0.5" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
+    <PackageReference Include="System.Text.Json" Version="9.0.14" />
   </ItemGroup>
 
 </Project>
