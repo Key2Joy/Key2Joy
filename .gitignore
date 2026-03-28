@@ -395,3 +395,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# TEMPORARY exception for custom nuget package while we test.
+!SimWinGamePad.1.2.0-alpha.nupkg

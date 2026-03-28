@@ -52,10 +52,11 @@ public static class Program
 
     private static Form GetStartupForm()
     {
-        if (ScpBus.IsDriverInstalled())
+        if (ScpBusExtensions.IsDriverInstalled())
         {
             return new MainForm(shouldStartMinimized);
         }
+
         return new SetupForm();
     }
 

@@ -8,26 +8,24 @@ namespace Key2Joy.Extensions;
 /// </summary>
 public static class ScpBusExtensions
 {
-    extension(ScpBus scpBus)
+    /// <summary>
+    /// Checks if the necessary driver for simulated gamepads is installed.
+    /// </summary>
+    /// <returns>
+    /// True if the driver is installed; otherwise, false.
+    /// </returns>
+    public static bool IsDriverInstalled()
     {
-        /// <summary>
-        /// Checks if the necessary driver for simulated gamepads is installed.
-        /// </summary>
-        /// <returns>
-        /// True if the driver is installed; otherwise, false.
-        /// </returns>
-        public static bool IsDriverInstalled()
+        try
         {
-            try
-            {
-                var bus = new ScpBus();
-                bus.Dispose();
-                return true;
-            }
-            catch (IOException)
-            {
-                return false;
-            }
+            var bus = new ScpBus();
+            bus.Dispose();
+            return true;
+        }
+        catch (IOException)
+        {
+            return false;
         }
     }
 }
+

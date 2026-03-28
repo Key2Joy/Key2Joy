@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Contracts.Mapping.Triggers;
+using System.Windows.Forms;
 
 namespace Key2Joy.Mapping.Actions.Logic;
 
@@ -32,9 +33,9 @@ public class MessageBoxAction : CoreAction
     /// <param name="content">The text to display</param>
     /// <name>MessageBox.Show</name>
     [ExposesScriptingMethod("MessageBox.Show")]
-    public void ExecuteForScript(string content) => System.Windows.MessageBox.Show(content);
+    public void ExecuteForScript(string content) => System.Windows.Forms.MessageBox.Show(content);
 
-    public override async Task Execute(AbstractInputBag inputBag = null) => System.Windows.MessageBox.Show(this.Content);
+    public override async Task Execute(AbstractInputBag inputBag = null) => System.Windows.Forms.MessageBox.Show(this.Content);
 
     public override string GetNameDisplay() => this.Name.Replace("{0}", this.Content);
 
