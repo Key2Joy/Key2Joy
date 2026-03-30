@@ -1,4 +1,4 @@
-﻿namespace Key2Joy.Gui
+namespace Key2Joy.Gui
 {
     partial class AboutForm
     {
@@ -122,6 +122,7 @@
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 22);
             this.okButton.TabIndex = 24;
+            this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.okButton.Text = "&OK";
             // 
             // pnl

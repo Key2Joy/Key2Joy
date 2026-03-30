@@ -130,7 +130,8 @@ public partial class ConfigForm : Form
                 {
                     AutoSize = true,
                     Text = value.ToString(),
-                    MaxLength = textConfigControlAttribute.MaxLength
+                    MaxLength = textConfigControlAttribute.MaxLength,
+                    BorderStyle = BorderStyle.FixedSingle,
                 };
 
                 return control;

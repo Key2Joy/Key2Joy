@@ -53,7 +53,7 @@ namespace Key2Joy.Gui
             this.btnSave.Size = new System.Drawing.Size(104, 26);
             this.btnSave.TabIndex = 0;
             this.btnSave.Text = "Save";
-            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnSave.Click += new System.EventHandler(this.BtnSave_Click);
             // 
             // pnlSave

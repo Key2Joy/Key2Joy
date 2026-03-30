@@ -27,6 +27,10 @@
     <ProjectGuid>{808BA609-806D-4D55-857B-6FB4E16E13F1}</ProjectGuid>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);WFO5001</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="bin\**" />
     <Compile Remove="obj\**" />
@@ -77,5 +81,4 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-
 </Project>

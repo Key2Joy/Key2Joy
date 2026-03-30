@@ -84,7 +84,7 @@ namespace Key2Joy.Gui.Mapping
             this.btnRemove.Size = new System.Drawing.Size(339, 29);
             this.btnRemove.TabIndex = 18;
             this.btnRemove.Text = "Remove";
-            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnRemove.Click += new System.EventHandler(this.BtnRemove_Click);
             // 
             // pnlPadding
@@ -154,7 +154,7 @@ namespace Key2Joy.Gui.Mapping
             this.btnAdd.Size = new System.Drawing.Size(339, 29);
             this.btnAdd.TabIndex = 17;
             this.btnAdd.Text = "Add";
-            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnAdd.Click += new System.EventHandler(this.BtnAdd_Click);
             // 
             // SequenceActionControl

@@ -1,4 +1,4 @@
-﻿namespace Key2Joy.Gui.Mapping
+namespace Key2Joy.Gui.Mapping
 {
     partial class ScriptActionControl
     {
@@ -41,6 +41,7 @@
             // 
             // txtScript
             // 
+            this.txtScript.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtScript.Dock = System.Windows.Forms.DockStyle.Top;
             this.txtScript.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtScript.Location = new System.Drawing.Point(5, 25);
@@ -81,7 +82,7 @@
             this.lblInfo.Dock = System.Windows.Forms.DockStyle.Left;
             this.lblInfo.Location = new System.Drawing.Point(0, 0);
             this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(254, 20);
+            this.lblInfo.Size = new System.Drawing.Size(264, 20);
             this.lblInfo.TabIndex = 13;
             this.lblInfo.Text = "Script:";
             this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -97,7 +98,8 @@
             this.pnlFileInput.TabIndex = 16;
             // 
             // txtFilePath
-            // 
+            //
+            this.txtFilePath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtFilePath.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtFilePath.Location = new System.Drawing.Point(0, 0);
             this.txtFilePath.Name = "txtFilePath";
@@ -113,7 +115,7 @@
             this.btnBrowseFile.Size = new System.Drawing.Size(64, 21);
             this.btnBrowseFile.TabIndex = 1;
             this.btnBrowseFile.Text = "Browse...";
-            this.btnBrowseFile.UseVisualStyleBackColor = true;
+            this.btnBrowseFile.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnBrowseFile.Click += new System.EventHandler(this.BtnBrowseFile_Click);
             // 
             // ScriptActionControl

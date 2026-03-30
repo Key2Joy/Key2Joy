@@ -1,4 +1,4 @@
-﻿namespace Key2Joy.Gui.Mapping
+namespace Key2Joy.Gui.Mapping
 {
     partial class CombinedTriggerControl
     {
@@ -55,7 +55,7 @@
             this.btnAddTrigger.Size = new System.Drawing.Size(341, 27);
             this.btnAddTrigger.TabIndex = 1;
             this.btnAddTrigger.Text = "Add Trigger";
-            this.btnAddTrigger.UseVisualStyleBackColor = true;
+            this.btnAddTrigger.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnAddTrigger.Click += new System.EventHandler(this.BtnAddTrigger_Click);
             // 
             // pnlTriggers
