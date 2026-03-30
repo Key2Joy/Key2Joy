@@ -28,9 +28,6 @@ public static class Program
             {
                 var args = Environment.GetCommandLineArgs();
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-
                 foreach (var arg in args)
                 {
                     if (arg == "--minimized")
@@ -39,8 +36,8 @@ public static class Program
                     }
                 }
 
+                ApplicationConfiguration.Initialize();
                 ShowForm(GetStartupForm());
-
 
                 while (ActiveForm != null && !ActiveForm.IsDisposed)
                 {
