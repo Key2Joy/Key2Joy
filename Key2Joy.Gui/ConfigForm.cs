@@ -127,7 +127,8 @@ public partial class ConfigForm : Form
                 TextBox control = new()
                 {
                     Text = value.ToString(),
-                    MaxLength = textConfigControlAttribute.MaxLength
+                    MaxLength = textConfigControlAttribute.MaxLength,
+                    BorderStyle = BorderStyle.FixedSingle,
                 };
 
                 return control;

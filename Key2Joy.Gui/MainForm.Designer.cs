@@ -29,10 +29,10 @@ namespace Key2Joy.Gui
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.olvMappings = new BrightIdeasSoftware.ObjectListView();
-            this.olvColumnAction = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumnTrigger = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnAction = new BrightIdeasSoftware.OLVColumn();
+            this.olvColumnTrigger = new BrightIdeasSoftware.OLVColumn();
             this.pnlActionManagement = new System.Windows.Forms.Panel();
             this.btnCreateMapping = new System.Windows.Forms.Button();
             this.txtFilter = new System.Windows.Forms.TextBox();
@@ -92,12 +92,12 @@ namespace Key2Joy.Gui
             this.chkArmed = new System.Windows.Forms.CheckBox();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.lblDevices = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.olvMappings)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)this.olvMappings).BeginInit();
             this.pnlActionManagement.SuspendLayout();
             this.pnlProfileManagement.SuspendLayout();
             this.menMainMenu.SuspendLayout();
             this.pnlMainMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)this.splitContainer).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
@@ -111,21 +111,17 @@ namespace Key2Joy.Gui
             this.olvMappings.AllColumns.Add(this.olvColumnAction);
             this.olvMappings.AllColumns.Add(this.olvColumnTrigger);
             this.olvMappings.CellEditUseWholeCell = false;
-            this.olvMappings.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.olvColumnAction,
-            this.olvColumnTrigger});
-            this.olvMappings.Cursor = System.Windows.Forms.Cursors.Default;
+            this.olvMappings.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { this.olvColumnAction, this.olvColumnTrigger });
             this.olvMappings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.olvMappings.EmptyListMsg = "No mappings found.\nTry another search query or add a mapping if there are none.";
             this.olvMappings.EmptyListMsgFont = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.olvMappings.FullRowSelect = true;
-            this.olvMappings.HideSelection = false;
             this.olvMappings.LabelWrap = false;
-            this.olvMappings.Location = new System.Drawing.Point(0, 54);
-            this.olvMappings.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.olvMappings.Location = new System.Drawing.Point(0, 63);
+            this.olvMappings.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.olvMappings.Name = "olvMappings";
             this.olvMappings.RowHeight = 25;
-            this.olvMappings.Size = new System.Drawing.Size(667, 466);
+            this.olvMappings.Size = new System.Drawing.Size(881, 537);
             this.olvMappings.TabIndex = 84;
             this.olvMappings.UseCellFormatEvents = true;
             this.olvMappings.UseCompatibleStateImageBehavior = false;
@@ -153,33 +149,34 @@ namespace Key2Joy.Gui
             // 
             this.pnlActionManagement.Controls.Add(this.btnCreateMapping);
             this.pnlActionManagement.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlActionManagement.Location = new System.Drawing.Point(0, 520);
-            this.pnlActionManagement.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlActionManagement.Location = new System.Drawing.Point(0, 600);
+            this.pnlActionManagement.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.pnlActionManagement.Name = "pnlActionManagement";
-            this.pnlActionManagement.Padding = new System.Windows.Forms.Padding(5, 6, 5, 6);
-            this.pnlActionManagement.Size = new System.Drawing.Size(667, 41);
+            this.pnlActionManagement.Padding = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this.pnlActionManagement.Size = new System.Drawing.Size(881, 47);
             this.pnlActionManagement.TabIndex = 0;
             // 
             // btnCreateMapping
             // 
             this.btnCreateMapping.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCreateMapping.Location = new System.Drawing.Point(513, 6);
-            this.btnCreateMapping.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnCreateMapping.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btnCreateMapping.Location = new System.Drawing.Point(701, 7);
+            this.btnCreateMapping.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.btnCreateMapping.Name = "btnCreateMapping";
-            this.btnCreateMapping.Size = new System.Drawing.Size(149, 29);
+            this.btnCreateMapping.Size = new System.Drawing.Size(174, 33);
             this.btnCreateMapping.TabIndex = 0;
             this.btnCreateMapping.Text = "Create New Mapping";
-            this.btnCreateMapping.UseVisualStyleBackColor = true;
-            this.btnCreateMapping.Click += new System.EventHandler(this.BtnCreateMapping_Click);
+            this.btnCreateMapping.Click += this.BtnCreateMapping_Click;
             // 
             // txtFilter
             // 
-            this.txtFilter.Location = new System.Drawing.Point(83, 5);
-            this.txtFilter.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txtFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtFilter.Location = new System.Drawing.Point(97, 6);
+            this.txtFilter.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.txtFilter.Name = "txtFilter";
-            this.txtFilter.Size = new System.Drawing.Size(210, 20);
+            this.txtFilter.Size = new System.Drawing.Size(244, 23);
             this.txtFilter.TabIndex = 1;
-            this.txtFilter.TextChanged += new System.EventHandler(this.TxtFilter_TextChanged);
+            this.txtFilter.TextChanged += this.TxtFilter_TextChanged;
             // 
             // pnlProfileManagement
             // 
@@ -189,42 +186,43 @@ namespace Key2Joy.Gui
             this.pnlProfileManagement.Controls.Add(this.txtProfileName);
             this.pnlProfileManagement.Controls.Add(this.lblProfileName);
             this.pnlProfileManagement.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlProfileManagement.Location = new System.Drawing.Point(0, 23);
-            this.pnlProfileManagement.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlProfileManagement.Location = new System.Drawing.Point(0, 27);
+            this.pnlProfileManagement.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.pnlProfileManagement.Name = "pnlProfileManagement";
-            this.pnlProfileManagement.Padding = new System.Windows.Forms.Padding(5, 6, 5, 6);
-            this.pnlProfileManagement.Size = new System.Drawing.Size(667, 31);
+            this.pnlProfileManagement.Padding = new System.Windows.Forms.Padding(6, 7, 6, 7);
+            this.pnlProfileManagement.Size = new System.Drawing.Size(881, 36);
             this.pnlProfileManagement.TabIndex = 82;
             // 
             // txtFilterLabel
             // 
-            this.txtFilterLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFilterLabel.Image = global::Key2Joy.Gui.Properties.Resources.magnifier;
+            this.txtFilterLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            this.txtFilterLabel.Image = Properties.Resources.magnifier;
             this.txtFilterLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.txtFilterLabel.Location = new System.Drawing.Point(14, 0);
-            this.txtFilterLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.txtFilterLabel.Location = new System.Drawing.Point(16, 0);
+            this.txtFilterLabel.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.txtFilterLabel.Name = "txtFilterLabel";
-            this.txtFilterLabel.Size = new System.Drawing.Size(61, 30);
+            this.txtFilterLabel.Size = new System.Drawing.Size(71, 35);
             this.txtFilterLabel.TabIndex = 89;
             this.txtFilterLabel.Text = "Search";
             this.txtFilterLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtProfileName
             // 
-            this.txtProfileName.Location = new System.Drawing.Point(360, 5);
-            this.txtProfileName.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txtProfileName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtProfileName.Location = new System.Drawing.Point(420, 6);
+            this.txtProfileName.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.txtProfileName.Name = "txtProfileName";
-            this.txtProfileName.Size = new System.Drawing.Size(158, 20);
+            this.txtProfileName.Size = new System.Drawing.Size(184, 23);
             this.txtProfileName.TabIndex = 85;
-            this.txtProfileName.TextChanged += new System.EventHandler(this.TxtProfileName_TextChanged);
+            this.txtProfileName.TextChanged += this.TxtProfileName_TextChanged;
             // 
             // lblProfileName
             // 
-            this.lblProfileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblProfileName.Location = new System.Drawing.Point(310, 0);
-            this.lblProfileName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblProfileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            this.lblProfileName.Location = new System.Drawing.Point(362, 0);
+            this.lblProfileName.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblProfileName.Name = "lblProfileName";
-            this.lblProfileName.Size = new System.Drawing.Size(44, 30);
+            this.lblProfileName.Size = new System.Drawing.Size(51, 35);
             this.lblProfileName.TabIndex = 88;
             this.lblProfileName.Text = "Profile";
             this.lblProfileName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -232,27 +230,17 @@ namespace Key2Joy.Gui
             // menMainMenu
             // 
             this.menMainMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.viewToolStripMenuItem,
-            this.toolsToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.menMainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.fileToolStripMenuItem, this.viewToolStripMenuItem, this.toolsToolStripMenuItem, this.helpToolStripMenuItem });
             this.menMainMenu.Location = new System.Drawing.Point(0, 0);
             this.menMainMenu.Name = "menMainMenu";
-            this.menMainMenu.Size = new System.Drawing.Size(667, 24);
+            this.menMainMenu.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this.menMainMenu.Size = new System.Drawing.Size(881, 24);
             this.menMainMenu.TabIndex = 81;
             this.menMainMenu.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newProfileToolStripMenuItem,
-            this.loadProfileToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.openProfileFolderToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.closeToolStripMenuItem,
-            this.exitProgramToolStripMenuItem});
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.newProfileToolStripMenuItem, this.loadProfileToolStripMenuItem, this.toolStripSeparator3, this.openProfileFolderToolStripMenuItem, this.toolStripSeparator2, this.closeToolStripMenuItem, this.exitProgramToolStripMenuItem });
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -260,56 +248,53 @@ namespace Key2Joy.Gui
             // newProfileToolStripMenuItem
             // 
             this.newProfileToolStripMenuItem.Name = "newProfileToolStripMenuItem";
-            this.newProfileToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
+            this.newProfileToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.newProfileToolStripMenuItem.Text = "New Profile";
-            this.newProfileToolStripMenuItem.Click += new System.EventHandler(this.NewProfileToolStripMenuItem_Click);
+            this.newProfileToolStripMenuItem.Click += this.NewProfileToolStripMenuItem_Click;
             // 
             // loadProfileToolStripMenuItem
             // 
             this.loadProfileToolStripMenuItem.Name = "loadProfileToolStripMenuItem";
-            this.loadProfileToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
+            this.loadProfileToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.loadProfileToolStripMenuItem.Text = "Load Profile";
-            this.loadProfileToolStripMenuItem.Click += new System.EventHandler(this.LoadProfileToolStripMenuItem_Click);
+            this.loadProfileToolStripMenuItem.Click += this.LoadProfileToolStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(181, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(173, 6);
             // 
             // openProfileFolderToolStripMenuItem
             // 
             this.openProfileFolderToolStripMenuItem.Name = "openProfileFolderToolStripMenuItem";
-            this.openProfileFolderToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
+            this.openProfileFolderToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.openProfileFolderToolStripMenuItem.Text = "Open Profile Folder";
-            this.openProfileFolderToolStripMenuItem.Click += new System.EventHandler(this.OpenProfileFolderToolStripMenuItem_Click);
+            this.openProfileFolderToolStripMenuItem.Click += this.OpenProfileFolderToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(181, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(173, 6);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.closeToolStripMenuItem.Text = "Close to Tray";
-            this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItem_Click);
+            this.closeToolStripMenuItem.Click += this.CloseToolStripMenuItem_Click;
             // 
             // exitProgramToolStripMenuItem
             // 
-            this.exitProgramToolStripMenuItem.Image = global::Key2Joy.Gui.Properties.Resources.door_out;
+            this.exitProgramToolStripMenuItem.Image = Properties.Resources.door_out;
             this.exitProgramToolStripMenuItem.Name = "exitProgramToolStripMenuItem";
-            this.exitProgramToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitProgramToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
+            this.exitProgramToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4;
+            this.exitProgramToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.exitProgramToolStripMenuItem.Text = "Exit";
-            this.exitProgramToolStripMenuItem.Click += new System.EventHandler(this.ExitProgramToolStripMenuItem_Click);
+            this.exitProgramToolStripMenuItem.Click += this.ExitProgramToolStripMenuItem_Click;
             // 
             // viewToolStripMenuItem
             // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.groupMappingsByToolStripMenuItem,
-            this.viewScriptOutputToolStripMenuItem,
-            this.toolStripSeparator5});
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.groupMappingsByToolStripMenuItem, this.viewScriptOutputToolStripMenuItem, this.toolStripSeparator5 });
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -322,9 +307,7 @@ namespace Key2Joy.Gui
             // 
             // viewScriptOutputToolStripMenuItem
             // 
-            this.viewScriptOutputToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.viewLogFileToolStripMenuItem,
-            this.viewEventViewerToolStripMenuItem});
+            this.viewScriptOutputToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.viewLogFileToolStripMenuItem, this.viewEventViewerToolStripMenuItem });
             this.viewScriptOutputToolStripMenuItem.Name = "viewScriptOutputToolStripMenuItem";
             this.viewScriptOutputToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.viewScriptOutputToolStripMenuItem.Text = "View Script Output";
@@ -334,14 +317,14 @@ namespace Key2Joy.Gui
             this.viewLogFileToolStripMenuItem.Name = "viewLogFileToolStripMenuItem";
             this.viewLogFileToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.viewLogFileToolStripMenuItem.Text = "View Log File";
-            this.viewLogFileToolStripMenuItem.Click += new System.EventHandler(this.ViewLogFileToolStripMenuItem_Click);
+            this.viewLogFileToolStripMenuItem.Click += this.ViewLogFileToolStripMenuItem_Click;
             // 
             // viewEventViewerToolStripMenuItem
             // 
             this.viewEventViewerToolStripMenuItem.Name = "viewEventViewerToolStripMenuItem";
             this.viewEventViewerToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.viewEventViewerToolStripMenuItem.Text = "View Event Viewer";
-            this.viewEventViewerToolStripMenuItem.Click += new System.EventHandler(this.ViewEventViewerToolStripMenuItem_Click);
+            this.viewEventViewerToolStripMenuItem.Click += this.ViewEventViewerToolStripMenuItem_Click;
             // 
             // toolStripSeparator5
             // 
@@ -350,13 +333,7 @@ namespace Key2Joy.Gui
             // 
             // toolsToolStripMenuItem
             // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createNewMappingToolStripMenuItem,
-            this.toolStripSeparator6,
-            this.fillProfileWithToolStripMenuItem,
-            this.testMappingsToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.userConfigurationsToolStripMenuItem});
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.createNewMappingToolStripMenuItem, this.toolStripSeparator6, this.fillProfileWithToolStripMenuItem, this.testMappingsToolStripMenuItem, this.toolStripSeparator4, this.userConfigurationsToolStripMenuItem });
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -364,30 +341,25 @@ namespace Key2Joy.Gui
             // createNewMappingToolStripMenuItem
             // 
             this.createNewMappingToolStripMenuItem.Name = "createNewMappingToolStripMenuItem";
-            this.createNewMappingToolStripMenuItem.Size = new System.Drawing.Size(253, 26);
+            this.createNewMappingToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
             this.createNewMappingToolStripMenuItem.Text = "Create New Mapping";
-            this.createNewMappingToolStripMenuItem.Click += new System.EventHandler(this.CreateNewMappingToolStripMenuItem_Click);
+            this.createNewMappingToolStripMenuItem.Click += this.CreateNewMappingToolStripMenuItem_Click;
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(250, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(246, 6);
             // 
             // fillProfileWithToolStripMenuItem
             // 
-            this.fillProfileWithToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.allGamePadJoystickActionsToolStripMenuItem,
-            this.allKeyboardActionsToolStripMenuItem});
+            this.fillProfileWithToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.allGamePadJoystickActionsToolStripMenuItem, this.allKeyboardActionsToolStripMenuItem });
             this.fillProfileWithToolStripMenuItem.Name = "fillProfileWithToolStripMenuItem";
-            this.fillProfileWithToolStripMenuItem.Size = new System.Drawing.Size(253, 26);
+            this.fillProfileWithToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
             this.fillProfileWithToolStripMenuItem.Text = "Fill Profile With...";
             // 
             // allGamePadJoystickActionsToolStripMenuItem
             // 
-            this.allGamePadJoystickActionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pressToolStripMenuItem,
-            this.releaseToolStripMenuItem,
-            this.pressAndReleaseToolStripMenuItem});
+            this.allGamePadJoystickActionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.pressToolStripMenuItem, this.releaseToolStripMenuItem, this.pressAndReleaseToolStripMenuItem });
             this.allGamePadJoystickActionsToolStripMenuItem.Name = "allGamePadJoystickActionsToolStripMenuItem";
             this.allGamePadJoystickActionsToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.allGamePadJoystickActionsToolStripMenuItem.Text = "All GamePad/Joystick Actions";
@@ -397,28 +369,25 @@ namespace Key2Joy.Gui
             this.pressToolStripMenuItem.Name = "pressToolStripMenuItem";
             this.pressToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.pressToolStripMenuItem.Text = "Press";
-            this.pressToolStripMenuItem.Click += new System.EventHandler(this.GamePadPressToolStripMenuItem_Click);
+            this.pressToolStripMenuItem.Click += this.GamePadPressToolStripMenuItem_Click;
             // 
             // releaseToolStripMenuItem
             // 
             this.releaseToolStripMenuItem.Name = "releaseToolStripMenuItem";
             this.releaseToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.releaseToolStripMenuItem.Text = "Release";
-            this.releaseToolStripMenuItem.Click += new System.EventHandler(this.GamePadReleaseToolStripMenuItem_Click);
+            this.releaseToolStripMenuItem.Click += this.GamePadReleaseToolStripMenuItem_Click;
             // 
             // pressAndReleaseToolStripMenuItem
             // 
             this.pressAndReleaseToolStripMenuItem.Name = "pressAndReleaseToolStripMenuItem";
             this.pressAndReleaseToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.pressAndReleaseToolStripMenuItem.Text = "Both Press and Release";
-            this.pressAndReleaseToolStripMenuItem.Click += new System.EventHandler(this.GamePadPressAndReleaseToolStripMenuItem_Click);
+            this.pressAndReleaseToolStripMenuItem.Click += this.GamePadPressAndReleaseToolStripMenuItem_Click;
             // 
             // allKeyboardActionsToolStripMenuItem
             // 
-            this.allKeyboardActionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pressToolStripMenuItem1,
-            this.releaseToolStripMenuItem1,
-            this.pressAndReleaseToolStripMenuItem1});
+            this.allKeyboardActionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.pressToolStripMenuItem1, this.releaseToolStripMenuItem1, this.pressAndReleaseToolStripMenuItem1 });
             this.allKeyboardActionsToolStripMenuItem.Name = "allKeyboardActionsToolStripMenuItem";
             this.allKeyboardActionsToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
             this.allKeyboardActionsToolStripMenuItem.Text = "All Keyboard Actions";
@@ -428,37 +397,32 @@ namespace Key2Joy.Gui
             this.pressToolStripMenuItem1.Name = "pressToolStripMenuItem1";
             this.pressToolStripMenuItem1.Size = new System.Drawing.Size(194, 22);
             this.pressToolStripMenuItem1.Text = "Press";
-            this.pressToolStripMenuItem1.Click += new System.EventHandler(this.KeyboardPressToolStripMenuItem_Click);
+            this.pressToolStripMenuItem1.Click += this.KeyboardPressToolStripMenuItem_Click;
             // 
             // releaseToolStripMenuItem1
             // 
             this.releaseToolStripMenuItem1.Name = "releaseToolStripMenuItem1";
             this.releaseToolStripMenuItem1.Size = new System.Drawing.Size(194, 22);
             this.releaseToolStripMenuItem1.Text = "Release";
-            this.releaseToolStripMenuItem1.Click += new System.EventHandler(this.KeyboardReleaseToolStripMenuItem_Click);
+            this.releaseToolStripMenuItem1.Click += this.KeyboardReleaseToolStripMenuItem_Click;
             // 
             // pressAndReleaseToolStripMenuItem1
             // 
             this.pressAndReleaseToolStripMenuItem1.Name = "pressAndReleaseToolStripMenuItem1";
             this.pressAndReleaseToolStripMenuItem1.Size = new System.Drawing.Size(194, 22);
             this.pressAndReleaseToolStripMenuItem1.Text = "Both Press and Release";
-            this.pressAndReleaseToolStripMenuItem1.Click += new System.EventHandler(this.KeyboardPressAndReleaseToolStripMenuItem_Click);
+            this.pressAndReleaseToolStripMenuItem1.Click += this.KeyboardPressAndReleaseToolStripMenuItem_Click;
             // 
             // testMappingsToolStripMenuItem
             // 
-            this.testMappingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.testGamePadJoystickToolStripMenuItem,
-            this.testKeyboardToolStripMenuItem,
-            this.testMouseToolStripMenuItem});
+            this.testMappingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.testGamePadJoystickToolStripMenuItem, this.testKeyboardToolStripMenuItem, this.testMouseToolStripMenuItem });
             this.testMappingsToolStripMenuItem.Name = "testMappingsToolStripMenuItem";
-            this.testMappingsToolStripMenuItem.Size = new System.Drawing.Size(253, 26);
+            this.testMappingsToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
             this.testMappingsToolStripMenuItem.Text = "Test Mappings";
             // 
             // testGamePadJoystickToolStripMenuItem
             // 
-            this.testGamePadJoystickToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.devicetestscomToolStripMenuItem,
-            this.gamepadtestercomToolStripMenuItem});
+            this.testGamePadJoystickToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.devicetestscomToolStripMenuItem, this.gamepadtestercomToolStripMenuItem });
             this.testGamePadJoystickToolStripMenuItem.Name = "testGamePadJoystickToolStripMenuItem";
             this.testGamePadJoystickToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.testGamePadJoystickToolStripMenuItem.Text = "Test GamePad / Joystick";
@@ -468,50 +432,46 @@ namespace Key2Joy.Gui
             this.devicetestscomToolStripMenuItem.Name = "devicetestscomToolStripMenuItem";
             this.devicetestscomToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.devicetestscomToolStripMenuItem.Text = "devicetests.com";
-            this.devicetestscomToolStripMenuItem.Click += new System.EventHandler(this.DevicetestscomToolStripMenuItem_Click);
+            this.devicetestscomToolStripMenuItem.Click += this.DevicetestscomToolStripMenuItem_Click;
             // 
             // gamepadtestercomToolStripMenuItem
             // 
             this.gamepadtestercomToolStripMenuItem.Name = "gamepadtestercomToolStripMenuItem";
             this.gamepadtestercomToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.gamepadtestercomToolStripMenuItem.Text = "gamepad-tester.com";
-            this.gamepadtestercomToolStripMenuItem.Click += new System.EventHandler(this.GamepadtestercomToolStripMenuItem_Click);
+            this.gamepadtestercomToolStripMenuItem.Click += this.GamepadtestercomToolStripMenuItem_Click;
             // 
             // testKeyboardToolStripMenuItem
             // 
             this.testKeyboardToolStripMenuItem.Name = "testKeyboardToolStripMenuItem";
             this.testKeyboardToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.testKeyboardToolStripMenuItem.Text = "Test Keyboard";
-            this.testKeyboardToolStripMenuItem.Click += new System.EventHandler(this.TestKeyboardToolStripMenuItem_Click);
+            this.testKeyboardToolStripMenuItem.Click += this.TestKeyboardToolStripMenuItem_Click;
             // 
             // testMouseToolStripMenuItem
             // 
             this.testMouseToolStripMenuItem.Name = "testMouseToolStripMenuItem";
             this.testMouseToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
             this.testMouseToolStripMenuItem.Text = "Test Mouse";
-            this.testMouseToolStripMenuItem.Click += new System.EventHandler(this.TestMouseToolStripMenuItem_Click);
+            this.testMouseToolStripMenuItem.Click += this.TestMouseToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(250, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(246, 6);
             // 
             // userConfigurationsToolStripMenuItem
             // 
-            this.userConfigurationsToolStripMenuItem.Image = global::Key2Joy.Gui.Properties.Resources.cog;
+            this.userConfigurationsToolStripMenuItem.Image = Properties.Resources.cog;
             this.userConfigurationsToolStripMenuItem.Name = "userConfigurationsToolStripMenuItem";
-            this.userConfigurationsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Oemcomma)));
-            this.userConfigurationsToolStripMenuItem.Size = new System.Drawing.Size(253, 26);
+            this.userConfigurationsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Oemcomma;
+            this.userConfigurationsToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
             this.userConfigurationsToolStripMenuItem.Text = "Configuration";
-            this.userConfigurationsToolStripMenuItem.Click += new System.EventHandler(this.UserConfigurationsToolStripMenuItem_Click);
+            this.userConfigurationsToolStripMenuItem.Click += this.UserConfigurationsToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.reportAProblemToolStripMenuItem,
-            this.viewSourceCodeToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.reportAProblemToolStripMenuItem, this.viewSourceCodeToolStripMenuItem, this.toolStripSeparator1, this.aboutToolStripMenuItem });
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -519,55 +479,55 @@ namespace Key2Joy.Gui
             // reportAProblemToolStripMenuItem
             // 
             this.reportAProblemToolStripMenuItem.Name = "reportAProblemToolStripMenuItem";
-            this.reportAProblemToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
+            this.reportAProblemToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.reportAProblemToolStripMenuItem.Text = "Report a Problem";
-            this.reportAProblemToolStripMenuItem.Click += new System.EventHandler(this.ReportAProblemToolStripMenuItem_Click);
+            this.reportAProblemToolStripMenuItem.Click += this.ReportAProblemToolStripMenuItem_Click;
             // 
             // viewSourceCodeToolStripMenuItem
             // 
             this.viewSourceCodeToolStripMenuItem.Name = "viewSourceCodeToolStripMenuItem";
-            this.viewSourceCodeToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
+            this.viewSourceCodeToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.viewSourceCodeToolStripMenuItem.Text = "View Source Code";
-            this.viewSourceCodeToolStripMenuItem.Click += new System.EventHandler(this.ViewSourceCodeToolStripMenuItem_Click);
+            this.viewSourceCodeToolStripMenuItem.Click += this.ViewSourceCodeToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(181, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(166, 6);
             // 
             // aboutToolStripMenuItem
             // 
-            this.aboutToolStripMenuItem.Image = global::Key2Joy.Gui.Properties.Resources.information;
+            this.aboutToolStripMenuItem.Image = Properties.Resources.information;
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Click += this.AboutToolStripMenuItem_Click;
             // 
             // ntfIndicator
             // 
-            this.ntfIndicator.Icon = ((System.Drawing.Icon)(resources.GetObject("ntfIndicator.Icon")));
+            this.ntfIndicator.Icon = (System.Drawing.Icon)resources.GetObject("ntfIndicator.Icon");
             this.ntfIndicator.Text = "Key2Joy";
             this.ntfIndicator.Visible = true;
-            this.ntfIndicator.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NtfIndicator_MouseDoubleClick);
+            this.ntfIndicator.MouseDoubleClick += this.NtfIndicator_MouseDoubleClick;
             // 
             // pnlMainMenu
             // 
             this.pnlMainMenu.Controls.Add(this.menMainMenu);
             this.pnlMainMenu.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlMainMenu.Location = new System.Drawing.Point(0, 0);
-            this.pnlMainMenu.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlMainMenu.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.pnlMainMenu.Name = "pnlMainMenu";
-            this.pnlMainMenu.Size = new System.Drawing.Size(667, 23);
+            this.pnlMainMenu.Size = new System.Drawing.Size(881, 27);
             this.pnlMainMenu.TabIndex = 85;
             // 
             // pnlNotificationsParent
             // 
             this.pnlNotificationsParent.AutoSize = true;
             this.pnlNotificationsParent.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlNotificationsParent.Location = new System.Drawing.Point(0, 54);
-            this.pnlNotificationsParent.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlNotificationsParent.Location = new System.Drawing.Point(0, 63);
+            this.pnlNotificationsParent.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.pnlNotificationsParent.Name = "pnlNotificationsParent";
-            this.pnlNotificationsParent.Size = new System.Drawing.Size(667, 0);
+            this.pnlNotificationsParent.Size = new System.Drawing.Size(881, 0);
             this.pnlNotificationsParent.TabIndex = 89;
             // 
             // splitContainer
@@ -575,7 +535,7 @@ namespace Key2Joy.Gui
             this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.splitContainer.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.splitContainer.Name = "splitContainer";
             // 
             // splitContainer.Panel1
@@ -585,14 +545,13 @@ namespace Key2Joy.Gui
             this.splitContainer.Panel1.Controls.Add(this.pnlNotificationsParent);
             this.splitContainer.Panel1.Controls.Add(this.pnlProfileManagement);
             this.splitContainer.Panel1.Controls.Add(this.pnlMainMenu);
-            this.splitContainer.Panel1MinSize = 760;
             // 
             // splitContainer.Panel2
             // 
             this.splitContainer.Panel2.Controls.Add(this.pnlContainer);
-            this.splitContainer.Panel2MinSize = 100;
-            this.splitContainer.Size = new System.Drawing.Size(784, 561);
-            this.splitContainer.SplitterDistance = 889;
+            this.splitContainer.Size = new System.Drawing.Size(915, 647);
+            this.splitContainer.SplitterDistance = 881;
+            this.splitContainer.SplitterWidth = 5;
             this.splitContainer.TabIndex = 90;
             // 
             // pnlContainer
@@ -602,10 +561,10 @@ namespace Key2Joy.Gui
             this.pnlContainer.Controls.Add(this.lblDevices);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContainer.Location = new System.Drawing.Point(0, 0);
-            this.pnlContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlContainer.Margin = new System.Windows.Forms.Padding(2);
             this.pnlContainer.Name = "pnlContainer";
-            this.pnlContainer.Padding = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.pnlContainer.Size = new System.Drawing.Size(113, 561);
+            this.pnlContainer.Padding = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.pnlContainer.Size = new System.Drawing.Size(29, 647);
             this.pnlContainer.TabIndex = 5;
             // 
             // pnlDeviceListContainer
@@ -614,31 +573,31 @@ namespace Key2Joy.Gui
             this.pnlDeviceListContainer.Controls.Add(this.pnlDevices);
             this.pnlDeviceListContainer.Controls.Add(this.lblListPlaceholder);
             this.pnlDeviceListContainer.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlDeviceListContainer.Location = new System.Drawing.Point(4, 54);
-            this.pnlDeviceListContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlDeviceListContainer.Location = new System.Drawing.Point(5, 63);
+            this.pnlDeviceListContainer.Margin = new System.Windows.Forms.Padding(2);
             this.pnlDeviceListContainer.Name = "pnlDeviceListContainer";
-            this.pnlDeviceListContainer.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.pnlDeviceListContainer.Size = new System.Drawing.Size(105, 372);
+            this.pnlDeviceListContainer.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.pnlDeviceListContainer.Size = new System.Drawing.Size(19, 430);
             this.pnlDeviceListContainer.TabIndex = 4;
             // 
             // pnlDevices
             // 
             this.pnlDevices.AutoSize = true;
             this.pnlDevices.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlDevices.Location = new System.Drawing.Point(0, 372);
-            this.pnlDevices.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.pnlDevices.Location = new System.Drawing.Point(0, 430);
+            this.pnlDevices.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.pnlDevices.Name = "pnlDevices";
-            this.pnlDevices.Size = new System.Drawing.Size(105, 0);
+            this.pnlDevices.Size = new System.Drawing.Size(19, 0);
             this.pnlDevices.TabIndex = 0;
             // 
             // lblListPlaceholder
             // 
             this.lblListPlaceholder.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblListPlaceholder.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.lblListPlaceholder.Location = new System.Drawing.Point(0, 4);
+            this.lblListPlaceholder.Location = new System.Drawing.Point(0, 5);
             this.lblListPlaceholder.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblListPlaceholder.Name = "lblListPlaceholder";
-            this.lblListPlaceholder.Size = new System.Drawing.Size(105, 368);
+            this.lblListPlaceholder.Size = new System.Drawing.Size(19, 425);
             this.lblListPlaceholder.TabIndex = 3;
             this.lblListPlaceholder.Text = "No devices found.\r\n\r\nTry connecting the Key2Joy device.";
             this.lblListPlaceholder.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -648,71 +607,71 @@ namespace Key2Joy.Gui
             this.pnlDeviceListActions.Controls.Add(this.chkArmed);
             this.pnlDeviceListActions.Controls.Add(this.btnRefresh);
             this.pnlDeviceListActions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlDeviceListActions.Location = new System.Drawing.Point(4, 23);
-            this.pnlDeviceListActions.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pnlDeviceListActions.Location = new System.Drawing.Point(5, 27);
+            this.pnlDeviceListActions.Margin = new System.Windows.Forms.Padding(2);
             this.pnlDeviceListActions.Name = "pnlDeviceListActions";
-            this.pnlDeviceListActions.Size = new System.Drawing.Size(105, 31);
+            this.pnlDeviceListActions.Size = new System.Drawing.Size(19, 36);
             this.pnlDeviceListActions.TabIndex = 4;
             // 
             // chkArmed
             // 
             this.chkArmed.Appearance = System.Windows.Forms.Appearance.Button;
             this.chkArmed.Dock = System.Windows.Forms.DockStyle.Left;
+            this.chkArmed.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.chkArmed.Location = new System.Drawing.Point(0, 0);
-            this.chkArmed.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.chkArmed.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.chkArmed.Name = "chkArmed";
-            this.chkArmed.Size = new System.Drawing.Size(75, 31);
+            this.chkArmed.Size = new System.Drawing.Size(88, 36);
             this.chkArmed.TabIndex = 81;
             this.chkArmed.Text = "Connect";
             this.chkArmed.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.chkArmed.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.chkArmed.UseVisualStyleBackColor = true;
-            this.chkArmed.CheckedChanged += new System.EventHandler(this.ChkEnabled_CheckedChanged);
+            this.chkArmed.CheckedChanged += this.ChkEnabled_CheckedChanged;
             // 
             // btnRefresh
             // 
             this.btnRefresh.AccessibleName = "Refresh";
             this.btnRefresh.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnRefresh.Image = global::Key2Joy.Gui.Properties.Resources.arrow_refresh;
-            this.btnRefresh.Location = new System.Drawing.Point(77, 0);
-            this.btnRefresh.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefresh.Image = Properties.Resources.arrow_refresh;
+            this.btnRefresh.Location = new System.Drawing.Point(-14, 0);
+            this.btnRefresh.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(28, 31);
+            this.btnRefresh.Size = new System.Drawing.Size(33, 36);
             this.btnRefresh.TabIndex = 2;
-            this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            this.btnRefresh.Click += this.btnRefresh_Click;
             // 
             // lblDevices
             // 
             this.lblDevices.BackColor = System.Drawing.Color.Transparent;
             this.lblDevices.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblDevices.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDevices.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             this.lblDevices.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblDevices.Location = new System.Drawing.Point(4, 0);
-            this.lblDevices.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblDevices.Location = new System.Drawing.Point(5, 0);
+            this.lblDevices.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.lblDevices.Name = "lblDevices";
-            this.lblDevices.Size = new System.Drawing.Size(105, 23);
+            this.lblDevices.Size = new System.Drawing.Size(19, 27);
             this.lblDevices.TabIndex = 0;
             this.lblDevices.Text = "Devices";
             this.lblDevices.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.ClientSize = new System.Drawing.Size(915, 647);
             this.Controls.Add(this.splitContainer);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.MinimumSize = new System.Drawing.Size(799, 498);
+            this.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
+            this.MinimumSize = new System.Drawing.Size(929, 569);
             this.Name = "MainForm";
             this.Text = "Key2Joy - Alpha Version";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
-            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
-            ((System.ComponentModel.ISupportInitialize)(this.olvMappings)).EndInit();
+            this.FormClosing += this.MainForm_FormClosing;
+            this.Load += this.MainForm_Load;
+            this.SizeChanged += this.MainForm_SizeChanged;
+            ((System.ComponentModel.ISupportInitialize)this.olvMappings).EndInit();
             this.pnlActionManagement.ResumeLayout(false);
             this.pnlProfileManagement.ResumeLayout(false);
             this.pnlProfileManagement.PerformLayout();
@@ -723,7 +682,7 @@ namespace Key2Joy.Gui
             this.splitContainer.Panel1.ResumeLayout(false);
             this.splitContainer.Panel1.PerformLayout();
             this.splitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)this.splitContainer).EndInit();
             this.splitContainer.ResumeLayout(false);
             this.pnlContainer.ResumeLayout(false);
             this.pnlContainer.PerformLayout();

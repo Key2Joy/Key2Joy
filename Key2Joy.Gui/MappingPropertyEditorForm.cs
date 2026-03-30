@@ -101,7 +101,8 @@ public partial class MappingPropertyEditorForm : Form
             {
                 DecimalPlaces = 0,
                 Minimum = Key2Joy.Util.TypeExtensions.ToDecimalSafe(minValue),
-                Maximum = Key2Joy.Util.TypeExtensions.ToDecimalSafe(maxValue)
+                Maximum = Key2Joy.Util.TypeExtensions.ToDecimalSafe(maxValue),
+                BorderStyle = BorderStyle.FixedSingle,
             };
 
             nud.Value = commonValue == null ? 0 : Key2Joy.Util.TypeExtensions.ToDecimalSafe(commonValue);
@@ -116,7 +117,8 @@ public partial class MappingPropertyEditorForm : Form
             {
                 DecimalPlaces = 2,  // Assuming 2 decimal places
                 Minimum = Key2Joy.Util.TypeExtensions.ToDecimalSafe(minValue),
-                Maximum = Key2Joy.Util.TypeExtensions.ToDecimalSafe(maxValue)
+                Maximum = Key2Joy.Util.TypeExtensions.ToDecimalSafe(maxValue),
+                BorderStyle = BorderStyle.FixedSingle,
             };
 
             nud.Value = commonValue == null ? 0 : Key2Joy.Util.TypeExtensions.ToDecimalSafe(commonValue);

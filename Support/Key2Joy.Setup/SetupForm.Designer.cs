@@ -1,4 +1,4 @@
-﻿namespace Key2Joy.Setup
+namespace Key2Joy.Setup
 {
     partial class SetupForm
     {
@@ -83,7 +83,7 @@
             this.btnBrowseInstallPath.Size = new System.Drawing.Size(100, 19);
             this.btnBrowseInstallPath.TabIndex = 2;
             this.btnBrowseInstallPath.Text = "Browse...";
-            this.btnBrowseInstallPath.UseVisualStyleBackColor = true;
+            this.btnBrowseInstallPath.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnBrowseInstallPath.Click += new System.EventHandler(this.BtnBrowseInstallPath_Click);
             // 
             // panel2

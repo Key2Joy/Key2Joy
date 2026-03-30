@@ -16,8 +16,6 @@ using Key2Joy.Util;
 using Key2Joy.Gui.Properties;
 using Key2Joy.Gui.Util;
 using Key2Joy.LowLevelInput;
-using Key2Joy.LowLevelInput.SimulatedGamePad;
-using Key2Joy.LowLevelInput.XInput;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions;
 using Key2Joy.Mapping.Actions.Input;
@@ -33,6 +31,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
     private readonly ConfigState configState;
 
     private MappingProfile selectedProfile;
+    private Color childColor = Color.Gray;
 
     public MainForm(bool shouldStartMinimized = false)
     {
@@ -51,9 +50,32 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
         this.ConfigureTooltips();
 
         // Don't go looking for devices in design mode
-        if (System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv")
+        if (Process.GetCurrentProcess().ProcessName != "devenv")
         {
             this.RefreshDevices();
+        }
+
+        // ObjectListView poorly integrates with System Dark mode, so we manually detect it and set the header text
+        // color to something brighter.
+        var isDarkMode =
+            Application.ColorMode == SystemColorMode.Dark ||
+            (Application.ColorMode == SystemColorMode.System &&
+             Application.SystemColorMode == SystemColorMode.Dark);
+
+        if (isDarkMode)
+        {
+            this.olvMappings.HeaderFormatStyle = new HeaderFormatStyle
+            {
+                Normal = new HeaderStateStyle
+                {
+                    ForeColor = Color.White,
+                    BackColor = Color.FromArgb(50, 50, 50)
+                }
+            };
+
+            // Sadly we can't change the group text color it seems. So let's just change the background to something a bit lighter
+            this.olvMappings.BackColor = Color.FromArgb(90, 90, 90);
+            childColor = Color.FromArgb(200, 200, 200);
         }
     }
 
@@ -700,7 +722,7 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
                 e.ListView.CellPadding?.Right ?? 0,
                 e.ListView.CellPadding?.Bottom ?? 0
             );
-            e.Item.ForeColor = Color.Gray;
+            e.Item.ForeColor = childColor;
         }
     }
 
