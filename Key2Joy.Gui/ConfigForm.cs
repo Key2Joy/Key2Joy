@@ -103,6 +103,7 @@ public partial class ConfigForm : Form
             {
                 CheckBox control = new()
                 {
+                    AutoSize = true,
                     Text = booleanConfigControlAttribute.Text,
                     Checked = (bool)value
                 };
@@ -114,6 +115,7 @@ public partial class ConfigForm : Form
                 CreateLabel();
                 NumericUpDown control = new()
                 {
+                    AutoSize = true,
                     Minimum = (decimal)numericConfigControlAttribute.Minimum,
                     Maximum = (decimal)numericConfigControlAttribute.Maximum,
                     Value = (decimal)Convert.ChangeType(value, typeof(decimal))
@@ -126,6 +128,7 @@ public partial class ConfigForm : Form
                 CreateLabel();
                 TextBox control = new()
                 {
+                    AutoSize = true,
                     Text = value.ToString(),
                     MaxLength = textConfigControlAttribute.MaxLength
                 };
@@ -139,6 +142,7 @@ public partial class ConfigForm : Form
                 var selected = Enum.Parse(enumConfigControlAttribute.EnumType, value.ToString());
                 ComboBox control = new()
                 {
+                    AutoSize = true,
                     DropDownStyle = ComboBoxStyle.DropDownList,
                 };
 
