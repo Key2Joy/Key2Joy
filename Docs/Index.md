@@ -33,6 +33,8 @@
 * [`App.Command` (```AppCommand```)](Api/Logic/App.Command.md)
 * [`ClearInterval` (```IntervalId```)](Api/Logic/ClearInterval.md)
 * [`ClearTimeout` (```TimeoutId```)](Api/Logic/ClearTimeout.md)
+* [`Cursor.Restore` ()](Api/Logic/Cursor.Restore.md)
+* [`Cursor.Set` (```String```, ```Int32```, ```Int32```)](Api/Logic/Cursor.Set.md)
 * [`MessageBox.Show` (```String```)](Api/Logic/MessageBox.Show.md)
 * [`SetDelayedFunctions` (```Int64```, ```Action[]```)](Api/Logic/SetDelayedFunctions.md)
 * [`SetInterval` (```CallbackAction```, ```Int64```, ```Object[]```)](Api/Logic/SetInterval.md)
@@ -46,7 +48,10 @@
 ## Windows
 
 * [`Window.Find` (```String```, ```String```)](Api/Windows/Window.Find.md)
+* [`Window.Focus` (```String```, ```String```)](Api/Windows/Window.Focus.md)
 * [`Window.GetAll` ()](Api/Windows/Window.GetAll.md)
 * [`Window.GetClass` (```IntPtr```)](Api/Windows/Window.GetClass.md)
 * [`Window.GetForeground` ()](Api/Windows/Window.GetForeground.md)
 * [`Window.GetTitle` (```IntPtr```)](Api/Windows/Window.GetTitle.md)
+* [`Window.Minimize` (```String```, ```String```)](Api/Windows/Window.Minimize.md)
+

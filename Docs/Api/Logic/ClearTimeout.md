@@ -10,14 +10,14 @@ Cancels a timeout previously established by calling SetTimeout()
 ## Examples
 > Shows how to set and immediately cancel a timeout.
 > 
-> #### _js_:
-> ```js
-> var timeoutID = setTimeout(() => {
->    Print("You shouldn't see this because the timeout will have been cancelled!");
-> }, 1000);
+> #### _lua_:
+> ```lua
+> local timeoutID = SetTimeout(function ()
+>    Print("You shouldn't see this because the timeout will have been cancelled!")
+> end, 1000);
 > 
-> Print(timeoutID);
+> Print(timeoutID)
 > 
-> clearTimeout(timeoutID);
+> ClearTimeout(timeoutID)
 > ```
 ---

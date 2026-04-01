@@ -16,15 +16,15 @@ Simulate moving the mouse
 ## Examples
 > Nudges the cursor 100 pixels to the left from where it is now.
 > 
-> #### _js_:
-> ```js
-> Mouse.SimulateMove(-100,0)
+> #### _lua_:
+> ```lua
+> Mouse.SimulateMove(-100, 0)
 > ```
 ---
 > Moves the cursor to an absolute position on the screen.
 > 
 > #### _lua_:
 > ```lua
-> Mouse.SimulateMove(1024,1050,MoveType.Absolute)
+> Mouse.SimulateMove(1024, 1050, MoveType.Absolute)
 > ```
 ---
