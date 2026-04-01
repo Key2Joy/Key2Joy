@@ -10,16 +10,10 @@ Reference.
 
 
 ## Available Scripting Languages
-When writing action scripts you have the choice to use any of these
-languages:
-* [Lua 5.2.3](https://www.lua.org/manual/5.2/)
-* [ECMAScript 5.1 (Javascript)](https://262.ecma-international.org/5.1/)
-  *(with partial [ECMAScript 2015 - 2022
-  Support](https://github.com/sebastienros/jint#version-3x))*
+When writing action scripts you can use [Lua 5.2.3](https://www.lua.org/manual/5.2/).
 
-*If you're an advanced user and curious about the Lua and Javascript
-implementations: this project uses [NLua](https://github.com/NLua/NLua) and
-[Jint](https://github.com/sebastienros/jint).*
+*If you're an advanced user and curious about the Lua implementation: this project
+uses [NLua](https://github.com/NLua/NLua)*
 
 
 ## How to trigger a script
@@ -93,35 +87,6 @@ SetTimeout(function ()
 end, 500)
 
 Print("end test")
-```
-
-**Javascript:**
-```js
-Print("test");
-
-GamePad.Simulate(GamePadControl.A, PressState.Press);
-setTimeout(function () {
-   GamePad.Simulate(GamePadControl.A, PressState.Release)
-   App.Command("abort");
-}, 500); // SetTimeout also works in Javascript.
-
-Print("end test");
-```
-
-### Access Window titles
-These Window functions could be used to only press buttons when a specific
-window is in the foreground.
-
-```js
-let handles = Window.GetAll();
-
-handles.forEach(function (handle) {
-  Print(
-    handle + " / " + Window.GetClass(handle) + " : " + Window.GetTitle(handle)
-  );
-});
-
-Print(Window.GetForeground());
 ```
 
 ### See how much the trigger was pressed

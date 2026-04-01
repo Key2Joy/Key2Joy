@@ -105,27 +105,18 @@ public class SetCursorAction : CoreAction
     /// Call `Cursor.Restore` to undo any changes made by this method.
     /// </summary>
     /// <markdown-example>
-    /// Hides the cursor, waits 2 seconds, then restores it.
-    /// <code language="js">
-    /// <![CDATA[
-    /// Cursor.Set();                        // hide
-    /// setTimeout(() => Cursor.Restore(), 2000);
-    /// ]]>
-    /// </code>
-    /// </markdown-example>
-    /// <markdown-example>
     /// Replaces every cursor with the built-in Wait (hourglass) cursor.
-    /// <code language="js">
+    /// <code language="lua">
     /// <![CDATA[
-    /// Cursor.Set("Wait");
+    /// Cursor.Set("Wait")
     /// ]]>
     /// </code>
     /// </markdown-example>
     /// <markdown-example>
     /// Loads a custom cursor from disk.
-    /// <code language="js">
+    /// <code language="lua">
     /// <![CDATA[
-    /// Cursor.Set("C:\\cursors\\my_cursor.ani");
+    /// Cursor.Set("C:\\cursors\\my_cursor.ani")
     /// ]]>
     /// </code>
     /// </markdown-example>
@@ -163,9 +154,9 @@ public class SetCursorAction : CoreAction
     /// Restores all system cursors to the user's saved settings (undoes any previous `Cursor.Set` call).
     /// </summary>
     /// <markdown-example>
-    /// <code language="js">
+    /// <code language="lua">
     /// <![CDATA[
-    /// Cursor.Restore();
+    /// Cursor.Restore()
     /// ]]>
     /// </code>
     /// </markdown-example>

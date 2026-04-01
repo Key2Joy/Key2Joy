@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using Esprima;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Mapping.Actions.Scripting;
@@ -11,7 +10,6 @@ namespace Key2Joy.Gui.Mapping;
 [MappingControl(
     ForTypes = new[]
     {
-        typeof(JavascriptAction),
         typeof(LuaScriptAction),
     },
     ImageResourceName = "script_code"
@@ -34,14 +32,10 @@ public partial class ScriptActionControl : UserControl, IActionOptionsControl
         var mappingType = action.GetType();
         string languageName;
 
-        // If it's LuaScriptAction or JavascriptAction change the typename to ScriptAction
+        // If it's LuaScriptAction change the typename to ScriptAction
         if (mappingType == typeof(LuaScriptAction))
         {
             languageName = "Lua";
-        }
-        else if (mappingType == typeof(JavascriptAction))
-        {
-            languageName = "Javascript";
         }
         else
         {
@@ -78,21 +72,6 @@ public partial class ScriptActionControl : UserControl, IActionOptionsControl
         if (mappingType == typeof(LuaScriptAction))
         {
             // TODO: Parse Lua and check for errors
-        }
-        else if (mappingType == typeof(JavascriptAction))
-        {
-            // Since we only get a ParserError somewhere inside Esprima.dll, we check for errors here
-            var parser = new JavaScriptParser();
-
-            try
-            {
-                parser.ParseScript(thisAction.Script);
-            }
-            catch (ParserException ex)
-            {
-                MessageBox.Show(ex.Message, "Script Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
         }
 
         return MessageBox.Show(

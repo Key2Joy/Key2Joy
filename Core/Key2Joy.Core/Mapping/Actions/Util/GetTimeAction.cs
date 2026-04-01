@@ -24,7 +24,7 @@ public class GetTimeAction : CoreAction
     /// </summary>
     /// <markdown-example>
     /// The code below prints 1661456521 to the logs if the system time is 19:42:01 (GMT) on the 25th of August, 2022.
-    /// <code language="js">
+    /// <code language="lua">
     /// <![CDATA[
     /// Print(Util.GetUnixTimeSeconds())
     /// ]]>
