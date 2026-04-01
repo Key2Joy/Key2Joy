@@ -28,9 +28,7 @@ public static class Program
             {
                 var args = Environment.GetCommandLineArgs();
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.SetColorMode(SystemColorMode.System);
+                ApplicationConfiguration.Initialize();
 
                 foreach (var arg in args)
                 {
@@ -41,7 +39,6 @@ public static class Program
                 }
 
                 ShowForm(GetStartupForm());
-
 
                 while (ActiveForm != null && !ActiveForm.IsDisposed)
                 {
