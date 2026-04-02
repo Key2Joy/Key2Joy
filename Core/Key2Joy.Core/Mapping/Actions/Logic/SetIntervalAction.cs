@@ -33,23 +33,22 @@ public class SetIntervalAction : CoreAction
     /// </summary>
     /// <markdown-example>
     /// Shows how to count every second
-    /// <code language="js">
+    /// <code language="lua">
     /// <![CDATA[
-    /// let counter = 0;
-    /// setInterval(function () {
-    ///     counter++;
-    ///     Print(counter);
-    /// }, 1000)
+    /// local counter = 0
+    /// SetInterval(function ()
+    ///     counter = counter + 1
+    ///     Print(counter)
+    /// end, 1000)
     /// ]]>
     /// </code>
     /// </markdown-example>
     /// <param name="callback">Function to execute after each wait</param>
     /// <param name="waitTime">Time to wait (in milliseconds)</param>
     /// <param name="arguments">Zero or more extra parameters to pass to the function</param>
-    /// <returns>An interval id that can be removed with clearInterval</returns>
+    /// <returns>An interval id that can be removed with ClearInterval</returns>
     /// <name>SetInterval</name>
     [ExposesScriptingMethod("SetInterval")]
-    [ExposesScriptingMethod("setInterval")] // Alias to conform to JS standard
     public IdPool.IntervalId ExecuteForScript(CallbackAction callback, long waitTime, params object[] arguments)
     {
         this.WaitTime = TimeSpan.FromMilliseconds(waitTime);

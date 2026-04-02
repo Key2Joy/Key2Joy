@@ -29,12 +29,6 @@ public class GetCursorPositionAction : CoreAction
     /// </summary>
     /// <markdown-example>
     /// The code below prints 0, 0 when the cursor is held in the top left of the first monitor.
-    /// <code language="js">
-    /// <![CDATA[
-    /// var cursorPosition = Cursor.GetPosition()
-    /// Print(`${cursorPosition.X}, ${cursorPosition.Y}`)
-    /// ]]>
-    /// </code>
     /// <code language="lua">
     /// <![CDATA[
     /// local cursorPosition = Cursor.GetPosition()

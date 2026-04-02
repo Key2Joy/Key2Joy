@@ -33,32 +33,6 @@ public class SetTimeoutAction : CoreAction
     /// Timeout for the specified duration in milliseconds, then execute the callback
     /// </summary>
     /// <markdown-example>
-    /// Shows how to count down from 3 and execute a command using Javascript.
-    /// <code language="js">
-    /// <![CDATA[
-    /// setTimeout(function () {
-    ///   Print("Aborting in 3 second...")
-    ///
-    ///   setTimeout(function () {
-    ///     Print("Three")
-    ///
-    ///     setTimeout(function () {
-    ///       Print("Two")
-    ///
-    ///       setTimeout(function () {
-    ///         Print("One")
-    ///
-    ///         setTimeout(function () {
-    ///           App.Command("abort")
-    ///         }, 1000)
-    ///       }, 1000)
-    ///     }, 1000)
-    ///   }, 1000)
-    /// }, 1000)
-    /// ]]>
-    /// </code>
-    /// </markdown-example>
-    /// <markdown-example>
     /// Shows how to count down from 3 each second and execute a command using Lua.
     /// <code language="lua">
     /// <![CDATA[
@@ -87,10 +61,9 @@ public class SetTimeoutAction : CoreAction
     /// <param name="callback">Function to execute after the wait</param>
     /// <param name="waitTime">Time to wait (in milliseconds)</param>
     /// <param name="arguments">Zero or more extra parameters to pass to the function</param>
-    /// <returns>A timeout id that can be removed with clearTimeout</returns>
+    /// <returns>A timeout id that can be removed with ClearTimeout</returns>
     /// <name>SetTimeout</name>
     [ExposesScriptingMethod("SetTimeout")]
-    [ExposesScriptingMethod("setTimeout")] // Alias to conform to JS standard
     public IdPool.TimeoutId ExecuteForScript(CallbackAction callback, long waitTime, params object[] arguments)
     {
         this.WaitTime = TimeSpan.FromMilliseconds(waitTime);

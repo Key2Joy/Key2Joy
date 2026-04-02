@@ -13,8 +13,8 @@ String containing expanded path.
 ## Examples
 > Demonstrates how to get the home drive
 > 
-> #### _js_:
-> ```js
+> #### _lua_:
+> ```lua
 > Print(Util.PathExpand("%HOMEDRIVE%/"))
 > ```
 ---

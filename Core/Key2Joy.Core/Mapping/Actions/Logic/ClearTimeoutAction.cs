@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
@@ -28,22 +28,21 @@ public class ClearTimeoutAction : CoreAction
     /// </summary>
     /// <markdown-example>
     /// Shows how to set and immediately cancel a timeout.
-    /// <code language="js">
+    /// <code language="lua">
     /// <![CDATA[
-    /// var timeoutID = setTimeout(() => {
-    ///    Print("You shouldn't see this because the timeout will have been cancelled!");
-    /// }, 1000);
+    /// local timeoutID = SetTimeout(function ()
+    ///    Print("You shouldn't see this because the timeout will have been cancelled!")
+    /// end, 1000);
     ///
-    /// Print(timeoutID);
+    /// Print(timeoutID)
     ///
-    /// clearTimeout(timeoutID);
+    /// ClearTimeout(timeoutID)
     /// ]]>
     /// </code>
     /// </markdown-example>
     /// <name>ClearTimeout</name>
     /// <param name="timeoutId">Id returned by SetTimeout to cancel</param>
     [ExposesScriptingMethod("ClearTimeout")]
-    [ExposesScriptingMethod("clearTimeout")] // Alias to conform to JS standard
     public void ExecuteForScript(IdPool.TimeoutId timeoutId) => timeoutId.Cancel();
 
     public override Task Execute(AbstractInputBag inputBag = null) =>

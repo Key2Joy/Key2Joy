@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
@@ -28,17 +28,19 @@ public class ClearIntervalAction : CoreAction
     /// </summary>
     /// <markdown-example>
     /// Shows how to count up to 3 every second and then stop by using ClearInterval();
-    /// <code language="js">
+    /// <code language="lua">
     /// <![CDATA[
-    /// var count = 0;
-    /// var intervalId;
+    /// local count = 0
+    /// local intervalId
     ///
-    /// intervalId = setInterval(() => {
-    ///    Print(count++);
+    /// intervalId = SetInterval(function ()
+    ///    Print(count)
+    ///    count = count + 1
     ///
-    ///    if(count == 3)
-    ///       clearInterval(intervalId);
-    /// }, 1000);
+    ///    if (count == 3) then
+    ///       ClearInterval(intervalId)
+    ///    end
+    /// end, 1000)
     ///
     /// Print(intervalId);
     /// ]]>
@@ -47,7 +49,6 @@ public class ClearIntervalAction : CoreAction
     /// <name>ClearInterval</name>
     /// <param name="intervalId">Id returned by SetInterval to cancel</param>
     [ExposesScriptingMethod("ClearInterval")]
-    [ExposesScriptingMethod("clearInterval")] // Alias to conform to JS standard
     public void ExecuteForScript(IdPool.IntervalId intervalId) => intervalId.Cancel();
 
     public override Task Execute(AbstractInputBag inputBag = null) =>

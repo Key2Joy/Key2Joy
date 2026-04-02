@@ -44,11 +44,11 @@ public class KeyboardGetKeyDownAction : CoreAction
     /// </markdown-example>
     /// <markdown-example>
     /// Shows how to only simulate pressing "A" when shift is also held down. This allows binding to multiple keys, where one is the trigger and the rest of the inputs are checked in the script.
-    /// <code language="js">
+    /// <code language="lua">
     /// <![CDATA[
-    /// if(Keyboard.GetKeyDown(KeyboardKey.Shift)) {
-    ///   GamePad.Simulate(GamePadControl.A, PressState.Press);
-    /// }
+    /// if (Keyboard.GetKeyDown(KeyboardKey.Shift)) then
+    ///   GamePad.Simulate(GamePadControl.A, PressState.Press)
+    /// end
     /// ]]>
     /// </code>
     /// </markdown-example>

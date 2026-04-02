@@ -14,34 +14,9 @@ Timeout for the specified duration in milliseconds, then execute the callback
 
 ## Returns
 ```TimeoutId```
-A timeout id that can be removed with clearTimeout.
+A timeout id that can be removed with ClearTimeout.
 
 ## Examples
-> Shows how to count down from 3 and execute a command using Javascript.
-> 
-> #### _js_:
-> ```js
-> setTimeout(function () {
->   Print("Aborting in 3 second...")
-> 
->   setTimeout(function () {
->     Print("Three")
-> 
->     setTimeout(function () {
->       Print("Two")
-> 
->       setTimeout(function () {
->         Print("One")
-> 
->         setTimeout(function () {
->           App.Command("abort")
->         }, 1000)
->       }, 1000)
->     }, 1000)
->   }, 1000)
-> }, 1000)
-> ```
----
 > Shows how to count down from 3 each second and execute a command using Lua.
 > 
 > #### _lua_:

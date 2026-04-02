@@ -26,10 +26,10 @@ True if the key is currently pressed down, false otherwise.
 ---
 > Shows how to only simulate pressing "A" when shift is also held down. This allows binding to multiple keys, where one is the trigger and the rest of the inputs are checked in the script.
 > 
-> #### _js_:
-> ```js
-> if(Keyboard.GetKeyDown(KeyboardKey.Shift)) {
->   GamePad.Simulate(GamePadControl.A, PressState.Press);
-> }
+> #### _lua_:
+> ```lua
+> if (Keyboard.GetKeyDown(KeyboardKey.Shift)) then
+>   GamePad.Simulate(GamePadControl.A, PressState.Press)
+> end
 > ```
 ---

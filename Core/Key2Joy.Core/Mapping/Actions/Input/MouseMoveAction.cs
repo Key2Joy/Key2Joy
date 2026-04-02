@@ -43,9 +43,9 @@ public class MouseMoveAction : CoreAction, IProvideReverseAspect
     /// </summary>
     /// <markdown-example>
     /// Nudges the cursor 100 pixels to the left from where it is now.
-    /// <code language="js">
+    /// <code language="lua">
     /// <![CDATA[
-    /// Mouse.SimulateMove(-100,0)
+    /// Mouse.SimulateMove(-100, 0)
     /// ]]>
     /// </code>
     /// </markdown-example>
@@ -53,7 +53,7 @@ public class MouseMoveAction : CoreAction, IProvideReverseAspect
     /// Moves the cursor to an absolute position on the screen.
     /// <code language="lua">
     /// <![CDATA[
-    /// Mouse.SimulateMove(1024,1050,MoveType.Absolute)
+    /// Mouse.SimulateMove(1024, 1050, MoveType.Absolute)
     /// ]]>
     /// </code>
     /// </markdown-example>

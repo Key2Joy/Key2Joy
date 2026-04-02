@@ -17,7 +17,7 @@
 
 </div>
 
-In addition to simply simulating a button being pressed on the Joystick, you can also write Javascript and Lua scripts to execute a more complex sequence of actions.
+In addition to simply simulating a button being pressed on the Joystick, you can also write Lua scripts to execute a more complex sequence of actions.
 
 ---
 
@@ -53,7 +53,7 @@ In addition to simply simulating a button being pressed on the Joystick, you can
     > [!NOTE]
     > **Default behaviour of a trigger is disabled by default**. This means setting the left mouse button as a trigger will make it so you can't left-click anymore until you abort this app.
 
-   **An action** is what will happen when that trigger occurs. *E.g: simulating a joystick button being pressed, a keyboard button being released, or executing a Lua/Javascript script.*
+   **An action** is what will happen when that trigger occurs. *E.g: simulating a joystick button being pressed, a keyboard button being released, or executing a Lua script.*
 
 4. Click the *Connect* button for Key2Joy to start listening for triggers that will execute the configured actions.
 
@@ -81,7 +81,7 @@ In addition to simply simulating a button being pressed on the Joystick, you can
 
 ## Scripting
 
-You can create scripts in Lua or Javascript that perform a sequence of actions with more complex logic.
+You can create scripts in Lua that perform a sequence of actions with more complex logic.
 
 Here is a simple example of a script that holds the "A" button on a gamepad for 500 ms and then stops simulating input:
 
@@ -137,7 +137,6 @@ Originally inspired by [JoyToKey](https://joytokey.net/en/), this project has si
 * [📦 DavidRieman/SimWinInput](https://github.com/DavidRieman/SimWinInput) - Simulate gamepads from .NET.
 * [📦 nefarius/ScpVBus](https://github.com/nefarius/ScpVBus) - The foundational driver enabling GamePad simulation.
 * [📦 NLua](https://github.com/NLua/NLua) - Enables Lua scripting for actions.
-* [📦 Jint](https://github.com/sebastienros/jint) - Supports JavaScript scripting for actions.
 * [📦 ObjectListView](https://objectlistview.sourceforge.net) - Used for mapping listings in the GUI.
 
 **Iconography**:

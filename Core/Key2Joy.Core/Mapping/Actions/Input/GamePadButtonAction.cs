@@ -99,12 +99,12 @@ public class GamePadButtonAction : CoreAction, IPressState, IProvideReverseAspec
     /// </summary>
     /// <markdown-example>
     /// Shows how to press "A" on the gamepad for 500ms, then release it.
-    /// <code language="js">
+    /// <code language="lua">
     /// <![CDATA[
-    /// GamePad.Simulate(GamePadControl.A, PressState.Press);
-    /// setTimeout(function () {
-    ///     GamePad.Simulate(GamePadControl.A, PressState.Release);
-    /// }, 500);
+    /// GamePad.Simulate(GamePadControl.A, PressState.Press)
+    /// SetTimeout(function ()
+    ///     GamePad.Simulate(GamePadControl.A, PressState.Release)
+    /// end, 500)
     /// ]]>
     /// </code>
     /// </markdown-example>

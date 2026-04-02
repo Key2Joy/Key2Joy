@@ -949,7 +949,11 @@ public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
             return;
         }
 
-        Process.Start(logFile);
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = logFile,
+            UseShellExecute = true
+        });
     }
 
     private void ViewEventViewerToolStripMenuItem_Click(object sender, EventArgs e) => Process.Start("eventvwr.exe", "/c:Application");

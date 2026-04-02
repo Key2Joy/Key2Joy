@@ -24,7 +24,7 @@ public class PathExpandAction : CoreAction
     /// </summary>
     /// <markdown-example>
     /// Demonstrates how to get the home drive
-    /// <code language="js">
+    /// <code language="lua">
     /// <![CDATA[
     /// Print(Util.PathExpand("%HOMEDRIVE%/"))
     /// ]]>

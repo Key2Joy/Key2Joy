@@ -10,17 +10,19 @@ Cancels an interval previously established by calling SetInterval()
 ## Examples
 > Shows how to count up to 3 every second and then stop by using ClearInterval();
 > 
-> #### _js_:
-> ```js
-> var count = 0;
-> var intervalId;
+> #### _lua_:
+> ```lua
+> local count = 0
+> local intervalId
 > 
-> intervalId = setInterval(() => {
->    Print(count++);
+> intervalId = SetInterval(function ()
+>    Print(count)
+>    count = count + 1
 > 
->    if(count == 3)
->       clearInterval(intervalId);
-> }, 1000);
+>    if (count == 3) then
+>       ClearInterval(intervalId)
+>    end
+> end, 1000)
 > 
 > Print(intervalId);
 > ```

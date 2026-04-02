@@ -14,17 +14,17 @@ Repeatedly calls a function or executes a code snippet, with a fixed time delay 
 
 ## Returns
 ```IntervalId```
-An interval id that can be removed with clearInterval.
+An interval id that can be removed with ClearInterval.
 
 ## Examples
 > Shows how to count every second
 > 
-> #### _js_:
-> ```js
-> let counter = 0;
-> setInterval(function () {
->     counter++;
->     Print(counter);
-> }, 1000)
+> #### _lua_:
+> ```lua
+> local counter = 0
+> SetInterval(function ()
+>     counter = counter + 1
+>     Print(counter)
+> end, 1000)
 > ```
 ---
