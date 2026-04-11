@@ -76,6 +76,16 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         }
     }
 
+    public void AddMapping(MappedOption mappedOption)
+    {
+        this.SelectedProfile?.AddMapping(mappedOption);
+
+        if (!mappedOption.IsChild)
+        {
+            this.MappedOptions.Add(mappedOption);
+        }
+    }
+
     /// <summary>
     /// Called automatically when the Armed property changes. We use this to arm or disarm the mappings in the manager, and to refresh the device list.
     /// </summary>

@@ -16,7 +16,7 @@ public sealed partial class ActionControl : UserControl
         DependencyProperty.Register(
             nameof(ActionsAvailable),
             typeof(IEnumerable<ActionComboBoxItem>),
-            typeof(MappingControl),
+            typeof(ActionControl),
             new PropertyMetadata(null));
 
     public IEnumerable<ActionComboBoxItem> ActionsAvailable
@@ -29,7 +29,7 @@ public sealed partial class ActionControl : UserControl
         DependencyProperty.Register(
             nameof(ActionSelected),
             typeof(ActionComboBoxItem),
-            typeof(MappingControl),
+            typeof(ActionControl),
             new PropertyMetadata(null, OnActionSelected));
 
     public ActionComboBoxItem ActionSelected
@@ -42,7 +42,7 @@ public sealed partial class ActionControl : UserControl
         DependencyProperty.Register(
             nameof(ActionContent),
             typeof(object),
-            typeof(MappingControl),
+            typeof(ActionControl),
             new PropertyMetadata(null));
 
     public object ActionContent
@@ -53,10 +53,23 @@ public sealed partial class ActionControl : UserControl
 
     public bool IsTopLevel { get; set; }
 
+    public IActionOptionsControl Options { get; private set; }
+    public AbstractAction Action { get; private set; }
+
+    public event EventHandler<ActionChangedEventArgs> ActionChanged;
+
+    private AbstractAction pendingSelectAction;
+
     public ActionControl()
     {
         this.InitializeComponent();
 
+        this.Loaded += this.ActionControl_Loaded;
+    }
+
+    private void ActionControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        this.Loaded -= this.ActionControl_Loaded;
         this.LoadActions();
     }
 
@@ -81,31 +94,88 @@ public sealed partial class ActionControl : UserControl
             })
             .Where(acbi => acbi.MappingControlFactory != null)
             .ToList();
+
+        if (this.pendingSelectAction != null)
+        {
+            this.SelectAction(this.pendingSelectAction);
+            this.pendingSelectAction = null;
+        }
     }
 
-    private static void OnActionSelected(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private void BuildAction()
     {
-        // When the selected action changes, we want to update the ActionContent to be the corresponding mapping control for the selected action
-        var control = (ActionControl)d;
-        var selectedAction = (ActionComboBoxItem)e.NewValue;
-
-        // If no action is selected, clear the content
-        if (selectedAction == null)
+        if (this.ActionSelected == null)
         {
-            control.ActionContent = new Grid();
+            ActionChanged?.Invoke(this, new ActionChangedEventArgs(null));
             return;
         }
 
-        var mappingControlFactory = selectedAction.MappingControlFactory;
-        control.ActionContent = mappingControlFactory.CreateInstance<FrameworkElement>();
-    }
-}
+        var typeFactory = this.ActionSelected.TypeFactory;
 
-public class ActionComboBoxItem
-{
-    public ActionAttribute ActionAttribute { get; set; }
-    public MappingTypeFactory<AbstractAction> TypeFactory { get; set; }
-    public MappingControlFactory MappingControlFactory { get; set; }
-    public string Description { get; set; }
-    public Uri ImageUri { get; set; }
+        if (this.Action == null || this.Action.GetType().FullName != typeFactory.FullTypeName)
+        {
+            this.Action = CoreAction.MakeAction(typeFactory);
+        }
+
+        this.Options?.Setup(this.Action);
+
+        ActionChanged?.Invoke(this, new ActionChangedEventArgs(this.Action));
+    }
+
+    public void SelectAction(AbstractAction action)
+    {
+        if (this.ActionsAvailable == null)
+        {
+            this.pendingSelectAction = action;
+            return;
+        }
+
+        var actionFullTypeName = MappingTypeHelper.GetTypeFullName(ActionsRepository.GetAllActions(), action);
+        actionFullTypeName = MappingTypeHelper.EnsureSimpleTypeName(actionFullTypeName);
+
+        var match = this.ActionsAvailable
+            .FirstOrDefault(a => a.TypeFactory.FullTypeName == actionFullTypeName);
+
+        if (match == null)
+        {
+            return;
+        }
+
+        this.ActionSelected = match;
+        this.Options?.Select(action);
+    }
+
+    public bool CanMappingSave(AbstractMappedOption mappedOption)
+        => this.Options?.CanMappingSave(mappedOption.Action) ?? false;
+
+    private static void OnActionSelected(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var control = (ActionControl)d;
+        var selectedAction = (ActionComboBoxItem)e.NewValue;
+
+        // Unsubscribe from old options
+        if (control.Options != null)
+        {
+            control.Options.OptionsChanged -= control.OnOptionsChanged;
+        }
+
+        if (selectedAction == null)
+        {
+            control.Options = null;
+            control.Action = null;
+            control.ActionContent = new Grid();
+            control.BuildAction();
+            return;
+        }
+
+        var newOptions = selectedAction.MappingControlFactory.CreateInstance<IActionOptionsControl>();
+        control.Options = newOptions;
+        control.ActionContent = newOptions;
+
+        newOptions.OptionsChanged += control.OnOptionsChanged;
+
+        control.BuildAction();
+    }
+
+    private void OnOptionsChanged(object sender, EventArgs e) => this.BuildAction();
 }

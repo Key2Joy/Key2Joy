@@ -25,7 +25,7 @@
 
             <ComboBox x:Name="TriggerComboBox"
                       Grid.Column="1"
-                      ItemsSource="{x:Bind TriggersAvailable}"
+                      ItemsSource="{x:Bind TriggersAvailable, Mode=OneWay}"
                       SelectedItem="{x:Bind TriggerSelected, Mode=TwoWay}"
                       Margin="10,0,0,0"
                       HorizontalAlignment="Stretch">

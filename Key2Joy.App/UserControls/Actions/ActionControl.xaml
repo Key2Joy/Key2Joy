@@ -20,13 +20,13 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            
+
             <TextBlock Text="Actions that start at the trigger:"
                        VerticalAlignment="Center" />
 
             <ComboBox x:Name="ActionComboBox"
                       Grid.Column="1"
-                      ItemsSource="{x:Bind ActionsAvailable}"
+                      ItemsSource="{x:Bind ActionsAvailable, Mode=OneWay}"
                       SelectedItem="{x:Bind ActionSelected, Mode=TwoWay}"
                       Margin="10,0,0,0"
                       HorizontalAlignment="Stretch">

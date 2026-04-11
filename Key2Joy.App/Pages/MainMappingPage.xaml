@@ -127,7 +127,8 @@
             </Grid>
         </Grid>
 
-        <controls:MappingControl Grid.Row="1"
+        <controls:MappingControl x:Name="MappingControl"
+                                 Grid.Row="1"
                                  Height="240" />
     </Grid>
 </Page>

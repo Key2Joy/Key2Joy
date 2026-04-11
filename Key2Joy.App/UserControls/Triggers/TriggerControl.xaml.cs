@@ -16,7 +16,7 @@ public sealed partial class TriggerControl : UserControl
         DependencyProperty.Register(
             nameof(TriggersAvailable),
             typeof(IEnumerable<TriggerComboBoxItem>),
-            typeof(MappingControl),
+            typeof(TriggerControl),
             new PropertyMetadata(null));
 
     public IEnumerable<TriggerComboBoxItem> TriggersAvailable
@@ -29,7 +29,7 @@ public sealed partial class TriggerControl : UserControl
         DependencyProperty.Register(
             nameof(TriggerSelected),
             typeof(TriggerComboBoxItem),
-            typeof(MappingControl),
+            typeof(TriggerControl),
             new PropertyMetadata(null, OnTriggerSelected));
 
     public TriggerComboBoxItem TriggerSelected
@@ -42,7 +42,7 @@ public sealed partial class TriggerControl : UserControl
         DependencyProperty.Register(
             nameof(TriggerContent),
             typeof(object),
-            typeof(MappingControl),
+            typeof(TriggerControl),
             new PropertyMetadata(null));
 
     public object TriggerContent
@@ -53,10 +53,23 @@ public sealed partial class TriggerControl : UserControl
 
     public bool IsTopLevel { get; set; }
 
+    public ITriggerOptionsControl Options { get; private set; }
+    public AbstractTrigger Trigger { get; private set; }
+
+    public event EventHandler<TriggerChangedEventArgs> TriggerChanged;
+
+    private AbstractTrigger pendingSelectTrigger;
+
     public TriggerControl()
     {
         this.InitializeComponent();
 
+        this.Loaded += this.TriggerControl_Loaded;
+    }
+
+    private void TriggerControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        this.Loaded -= this.TriggerControl_Loaded;
         this.LoadTriggers();
     }
 
@@ -81,31 +94,85 @@ public sealed partial class TriggerControl : UserControl
             })
             .Where(acbi => acbi.MappingControlFactory != null)
             .ToList();
+
+        if (this.pendingSelectTrigger != null)
+        {
+            this.SelectTrigger(this.pendingSelectTrigger);
+            this.pendingSelectTrigger = null;
+        }
     }
 
-    private static void OnTriggerSelected(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private void BuildTrigger()
     {
-        // When the selected trigger changes, we want to update the TriggerContent to be the corresponding mapping control for the selected trigger
-        var control = (TriggerControl)d;
-        var selectedTrigger = (TriggerComboBoxItem)e.NewValue;
-
-        // If no trigger is selected, clear the content
-        if (selectedTrigger == null)
+        if (this.TriggerSelected == null)
         {
-            control.TriggerContent = new Grid();
+            TriggerChanged?.Invoke(this, TriggerChangedEventArgs.Empty);
             return;
         }
 
-        var mappingControlFactory = selectedTrigger.MappingControlFactory;
-        control.TriggerContent = mappingControlFactory.CreateInstance<FrameworkElement>();
-    }
-}
+        var attribute = this.TriggerSelected.TriggerAttribute;
+        var typeFactory = this.TriggerSelected.TypeFactory;
 
-public class TriggerComboBoxItem
-{
-    public TriggerAttribute TriggerAttribute { get; set; }
-    public MappingTypeFactory<AbstractTrigger> TypeFactory { get; set; }
-    public MappingControlFactory MappingControlFactory { get; set; }
-    public string Description { get; set; }
-    public Uri ImageUri { get; set; }
+        if (this.Trigger == null || this.Trigger.GetType().FullName != typeFactory.FullTypeName)
+        {
+            this.Trigger = typeFactory.CreateInstance(new object[] { attribute.NameFormat });
+        }
+
+        this.Options?.Setup(this.Trigger);
+
+        TriggerChanged?.Invoke(this, new TriggerChangedEventArgs(this.Trigger));
+    }
+
+    public void SelectTrigger(AbstractTrigger trigger)
+    {
+        if (this.TriggersAvailable == null)
+        {
+            this.pendingSelectTrigger = trigger;
+            return;
+        }
+
+        var match = this.TriggersAvailable
+            .FirstOrDefault(t => t.TypeFactory.FullTypeName == trigger.GetType().FullName);
+
+        if (match == null)
+        {
+            return;
+        }
+
+        this.TriggerSelected = match;
+        this.Options?.Select(trigger);
+    }
+
+    public bool CanMappingSave(AbstractMappedOption mappedOption)
+        => this.Options?.CanMappingSave(mappedOption.Trigger) ?? false;
+
+    private static void OnTriggerSelected(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var control = (TriggerControl)d;
+        var selectedTrigger = (TriggerComboBoxItem)e.NewValue;
+
+        // Unsubscribe from old options
+        if (control.Options != null)
+        {
+            control.Options.OptionsChanged -= control.OnOptionsChanged;
+        }
+
+        if (selectedTrigger == null)
+        {
+            control.Options = null;
+            control.TriggerContent = new Grid();
+            control.BuildTrigger();
+            return;
+        }
+
+        var newOptions = selectedTrigger.MappingControlFactory.CreateInstance<ITriggerOptionsControl>();
+        control.Options = newOptions;
+        control.TriggerContent = newOptions;
+
+        newOptions.OptionsChanged += control.OnOptionsChanged;
+
+        control.BuildTrigger();
+    }
+
+    private void OnOptionsChanged(object sender, EventArgs e) => this.BuildTrigger();
 }

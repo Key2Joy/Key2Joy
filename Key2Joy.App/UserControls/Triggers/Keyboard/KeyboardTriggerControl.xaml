@@ -20,6 +20,13 @@
         <TextBlock Text="Keyboard Key:"
                    VerticalAlignment="Center"/>
 
+        <!-- TODO: I couldn't find an Unfocus of sorts, so I focus this invisible textbox instead -->
+        <TextBox x:Name="UnfocusTextBox"
+                 MinWidth="0"
+                 MinHeight="0"
+                 Width="0"
+                 Height="0" />
+
         <TextBox x:Name="KeyBindTextBox"
                  Grid.Column="1"
                  IsReadOnly="True"

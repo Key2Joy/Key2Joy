@@ -21,7 +21,7 @@
                     Padding="5">
             <TextBlock HorizontalAlignment="Center"
                    Style="{ThemeResource BodyLargeStrongTextBlockStyle}"
-                   Text="Create a new mapping"/>
+                   Text="Creating a new mapping"/>
         </StackPanel>
 
         <Grid Grid.Row="1"
@@ -32,10 +32,14 @@
             </Grid.ColumnDefinitions>
 
             <triggers:TriggerControl x:Name="TriggerControl"
-                                  Grid.Column="0" />
+                                     IsTopLevel="True"
+                                     TriggerSelected="{x:Bind SelectedTrigger, Mode=TwoWay}"
+                                     Grid.Column="0" />
 
             <actions:ActionControl x:Name="ActionControl"
-                                 Grid.Column="1" />
+                                   IsTopLevel="True"
+                                   ActionSelected="{x:Bind SelectedAction, Mode=TwoWay}"
+                                   Grid.Column="1" />
         </Grid>
 
         <!-- Creation -->
@@ -48,11 +52,13 @@
 
             <CheckBox x:Name="HoldCheckBox"
                       Content="Also create a child mapping that is a useful reverse of this"
+                      IsChecked="{x:Bind CreateOrUpdateReverseMapping, Mode=TwoWay}"
                       HorizontalAlignment="Right"
                       Margin="5"/>
 
             <Button Grid.Column="1"
                     Content="Create Mapping"
+                    Command="{x:Bind CreateMappingCommand}"
                     Margin="5"/>
         </Grid>
     </Grid>
