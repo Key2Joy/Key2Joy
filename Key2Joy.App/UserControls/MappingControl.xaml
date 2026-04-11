@@ -21,7 +21,7 @@
                     Padding="5">
             <TextBlock HorizontalAlignment="Center"
                    Style="{ThemeResource BodyLargeStrongTextBlockStyle}"
-                   Text="Creating a new mapping"/>
+                   Text="{x:Bind ModeTitle, Mode=OneWay}"/>
         </StackPanel>
 
         <Grid Grid.Row="1"
@@ -46,20 +46,29 @@
         <Grid Grid.Row="2"
               Padding="5">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
+            <Button Content="Delete Mapping"
+                    Command="{x:Bind DeleteMappingCommand}"
+                    Visibility="{x:Bind IsEditing, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Margin="5"/>
+
             <CheckBox x:Name="HoldCheckBox"
+                      Grid.Column="1"
                       Content="Also create a child mapping that is a useful reverse of this"
                       IsChecked="{x:Bind CreateOrUpdateReverseMapping, Mode=TwoWay}"
                       HorizontalAlignment="Right"
                       Margin="5"/>
 
-            <Button Grid.Column="1"
-                    Content="Create Mapping"
-                    Command="{x:Bind CreateMappingCommand}"
-                    Margin="5"/>
+            <StackPanel Grid.Column="2"
+                        Orientation="Horizontal">
+                <Button Content="{x:Bind SaveButtonText, Mode=OneWay}"
+                        Command="{x:Bind CreateMappingCommand}"
+                        Margin="5"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

@@ -7,50 +7,15 @@ using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using DependencyPropertyGenerator;
 
 namespace Key2Joy.App.UserControls.Actions;
 
+[DependencyProperty<IEnumerable<ActionComboBoxItem>>("ActionsAvailable")]
+[DependencyProperty<ActionComboBoxItem>("ActionSelected")]
+[DependencyProperty<object>("ActionContent")]
 public sealed partial class ActionControl : UserControl
 {
-    public static readonly DependencyProperty ActionsAvailableProperty =
-        DependencyProperty.Register(
-            nameof(ActionsAvailable),
-            typeof(IEnumerable<ActionComboBoxItem>),
-            typeof(ActionControl),
-            new PropertyMetadata(null));
-
-    public IEnumerable<ActionComboBoxItem> ActionsAvailable
-    {
-        get => (IEnumerable<ActionComboBoxItem>)this.GetValue(ActionsAvailableProperty);
-        set => this.SetValue(ActionsAvailableProperty, value);
-    }
-
-    public static readonly DependencyProperty ActionSelectedProperty =
-        DependencyProperty.Register(
-            nameof(ActionSelected),
-            typeof(ActionComboBoxItem),
-            typeof(ActionControl),
-            new PropertyMetadata(null, OnActionSelected));
-
-    public ActionComboBoxItem ActionSelected
-    {
-        get => (ActionComboBoxItem)this.GetValue(ActionSelectedProperty);
-        set => this.SetValue(ActionSelectedProperty, value);
-    }
-
-    public static readonly DependencyProperty ActionContentProperty =
-        DependencyProperty.Register(
-            nameof(ActionContent),
-            typeof(object),
-            typeof(ActionControl),
-            new PropertyMetadata(null));
-
-    public object ActionContent
-    {
-        get => this.GetValue(ActionContentProperty);
-        set => this.SetValue(ActionContentProperty, value);
-    }
-
     public bool IsTopLevel { get; set; }
 
     public IActionOptionsControl Options { get; private set; }
@@ -148,33 +113,30 @@ public sealed partial class ActionControl : UserControl
     public bool CanMappingSave(AbstractMappedOption mappedOption)
         => this.Options?.CanMappingSave(mappedOption.Action) ?? false;
 
-    private static void OnActionSelected(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnActionSelectedChanged(ActionComboBoxItem selectedAction)
     {
-        var control = (ActionControl)d;
-        var selectedAction = (ActionComboBoxItem)e.NewValue;
-
         // Unsubscribe from old options
-        if (control.Options != null)
+        if (this.Options != null)
         {
-            control.Options.OptionsChanged -= control.OnOptionsChanged;
+            this.Options.OptionsChanged -= this.OnOptionsChanged;
         }
 
         if (selectedAction == null)
         {
-            control.Options = null;
-            control.Action = null;
-            control.ActionContent = new Grid();
-            control.BuildAction();
+            this.Options = null;
+            this.Action = null;
+            this.ActionContent = new Grid();
+            this.BuildAction();
             return;
         }
 
         var newOptions = selectedAction.MappingControlFactory.CreateInstance<IActionOptionsControl>();
-        control.Options = newOptions;
-        control.ActionContent = newOptions;
+        this.Options = newOptions;
+        this.ActionContent = newOptions;
 
-        newOptions.OptionsChanged += control.OnOptionsChanged;
+        newOptions.OptionsChanged += this.OnOptionsChanged;
 
-        control.BuildAction();
+        this.BuildAction();
     }
 
     private void OnOptionsChanged(object sender, EventArgs e) => this.BuildAction();

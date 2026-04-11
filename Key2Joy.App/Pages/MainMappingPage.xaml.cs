@@ -22,21 +22,41 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
         this.ViewModel.Initialize();
 
         this.MappingControl.MappingCreated += this.MappingControl_MappingCreated;
+        this.MappingControl.MappingDeleted += this.MappingControl_MappingDeleted;
     }
 
     private void MappingControl_MappingCreated(object sender, Key2Joy.Mapping.MappedOption mappedOption)
     {
-        this.ViewModel.AddMapping(mappedOption);
+        var isExisting = this.ViewModel.MappedOptions.Contains(mappedOption);
 
-        if (mappedOption.Children.Any())
+        if (!isExisting)
         {
-            foreach (var child in mappedOption.Children)
+            this.ViewModel.AddMapping(mappedOption);
+
+            if (mappedOption.Children.Any())
             {
-                this.ViewModel.AddMapping(child);
+                foreach (var child in mappedOption.Children)
+                {
+                    this.ViewModel.AddMapping(child);
+                }
             }
         }
 
         this.ViewModel.SelectedProfile?.Save();
+        this.MappingListView.SelectedItem = null;
+    }
+
+    private void MappingControl_MappingDeleted(object sender, Key2Joy.Mapping.MappedOption mappedOption)
+    {
+        this.ViewModel.RemoveMapping(mappedOption);
+        this.ViewModel.SelectedProfile?.Save();
+        this.MappingListView.SelectedItem = null;
+    }
+
+    private void MappingListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var selected = this.MappingListView.SelectedItem as Key2Joy.Mapping.MappedOption;
+        this.MappingControl.SelectMapping(selected);
     }
 
     public bool RunAppCommand(AppCommand command)

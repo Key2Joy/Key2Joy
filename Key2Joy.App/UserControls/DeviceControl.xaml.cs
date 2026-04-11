@@ -1,9 +1,14 @@
+using System.Collections.Generic;
+using DependencyPropertyGenerator;
+using Key2Joy.App.UserControls.Triggers;
 using Key2Joy.LowLevelInput;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Key2Joy.App.UserControls;
 
+[DependencyProperty<int>("DeviceIndex")] //OnDeviceIndexChanged
+[DependencyProperty<string>("DeviceName")] //OnDeviceNameChanged
 public sealed partial class DeviceControl : UserControl
 {
     public DeviceControl()
@@ -22,45 +27,13 @@ public sealed partial class DeviceControl : UserControl
         this.DeviceTextBlock.Text = device.Name;
     }
 
-    /// <summary>Identifies the <see cref="DeviceIndex"/> dependency property.</summary>
-    public static readonly DependencyProperty DeviceIndexProperty =
-        DependencyProperty.Register(
-            nameof(DeviceIndex),
-            typeof(int),
-            typeof(DeviceControl),
-            new PropertyMetadata(0, OnDeviceIndexChanged));
-
-    /// <summary>Gets or sets the one-based index shown in the header.</summary>
-    public int DeviceIndex
+    partial void OnDeviceIndexChanged(int newValue)
     {
-        get => (int)this.GetValue(DeviceIndexProperty);
-        set => this.SetValue(DeviceIndexProperty, value);
+        this.IndexTextBlock.Text = $"#{newValue}";
     }
 
-    private static void OnDeviceIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnDeviceNameChanged(string newValue) 
     {
-        var control = (DeviceControl)d;
-        control.IndexTextBlock.Text = $"#{e.NewValue}";
-    }
-
-    /// <summary>Identifies the <see cref="DeviceName"/> dependency property.</summary>
-    public static readonly DependencyProperty DeviceNameProperty =
-        DependencyProperty.Register(
-            nameof(DeviceName),
-            typeof(string),
-            typeof(DeviceControl),
-            new PropertyMetadata(string.Empty, OnDeviceNameChanged));
-
-    /// <summary>Gets or sets the device name shown below the header.</summary>
-    public string DeviceName
-    {
-        get => (string)this.GetValue(DeviceNameProperty);
-        set => this.SetValue(DeviceNameProperty, value);
-    }
-
-    private static void OnDeviceNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var control = (DeviceControl)d;
-        control.DeviceTextBlock.Text = e.NewValue as string ?? string.Empty;
+        this.DeviceTextBlock.Text = newValue as string ?? string.Empty;
     }
 }

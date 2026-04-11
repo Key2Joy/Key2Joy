@@ -23,12 +23,28 @@ public sealed partial class MappingControl : UserControl
     [ObservableProperty]
     public partial ActionComboBoxItem SelectedAction { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsEditing { get; set; }
+
+    [ObservableProperty]
+    public partial string ModeTitle { get; set; } = "Creating a new mapping";
+
+    [ObservableProperty]
+    public partial string SaveButtonText { get; set; } = "Create Mapping";
+
     public MappedOption MappedOption { get; private set; } = null;
     public MappedOption MappedOptionReverse { get; private set; } = null;
 
     public event EventHandler<MappedOption> MappingCreated;
+    public event EventHandler<MappedOption> MappingDeleted;
 
     private bool dominantReverseCheckedState;
+
+    partial void OnIsEditingChanged(bool value)
+    {
+        this.ModeTitle = value ? "Modifying a mapping" : "Creating a new mapping";
+        this.SaveButtonText = value ? "Save Mapping" : "Create Mapping";
+    }
 
     public MappingControl()
     {
@@ -119,15 +135,34 @@ public sealed partial class MappingControl : UserControl
         // Reset for next mapping
         this.MappedOption = null;
         this.MappedOptionReverse = null;
+        this.IsEditing = false;
     }
 
     public void SelectMapping(MappedOption mappedOption)
     {
+        if (mappedOption == null)
+        {
+            this.MappedOption = null;
+            this.IsEditing = false;
+            return;
+        }
+
         this.MappedOption = mappedOption;
         this.dominantReverseCheckedState = mappedOption.Children.Any();
+        this.IsEditing = true;
 
         this.TriggerControl.SelectTrigger(mappedOption.Trigger);
         this.ActionControl.SelectAction(mappedOption.Action);
+    }
+
+    [RelayCommand]
+    private void DeleteMapping()
+    {
+        var toDelete = this.MappedOption;
+        this.MappedOption = null;
+        this.MappedOptionReverse = null;
+        this.IsEditing = false;
+        MappingDeleted?.Invoke(this, toDelete);
     }
 
     private void ShowError(string title, string message)

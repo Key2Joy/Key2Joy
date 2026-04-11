@@ -86,6 +86,16 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         }
     }
 
+    public void RemoveMapping(MappedOption mappedOption)
+    {
+        this.SelectedProfile?.RemoveMapping(mappedOption);
+
+        if (!mappedOption.IsChild)
+        {
+            this.MappedOptions.Remove(mappedOption);
+        }
+    }
+
     /// <summary>
     /// Called automatically when the Armed property changes. We use this to arm or disarm the mappings in the manager, and to refresh the device list.
     /// </summary>

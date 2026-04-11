@@ -7,50 +7,15 @@ using Key2Joy.Mapping;
 using Key2Joy.Mapping.Triggers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using DependencyPropertyGenerator;
 
 namespace Key2Joy.App.UserControls.Triggers;
 
+[DependencyProperty<IEnumerable<TriggerComboBoxItem>>("TriggersAvailable")]
+[DependencyProperty<TriggerComboBoxItem>("TriggerSelected")]
+[DependencyProperty<object>("TriggerContent")]
 public sealed partial class TriggerControl : UserControl
 {
-    public static readonly DependencyProperty TriggersAvailableProperty =
-        DependencyProperty.Register(
-            nameof(TriggersAvailable),
-            typeof(IEnumerable<TriggerComboBoxItem>),
-            typeof(TriggerControl),
-            new PropertyMetadata(null));
-
-    public IEnumerable<TriggerComboBoxItem> TriggersAvailable
-    {
-        get => (IEnumerable<TriggerComboBoxItem>)this.GetValue(TriggersAvailableProperty);
-        set => this.SetValue(TriggersAvailableProperty, value);
-    }
-
-    public static readonly DependencyProperty TriggerSelectedProperty =
-        DependencyProperty.Register(
-            nameof(TriggerSelected),
-            typeof(TriggerComboBoxItem),
-            typeof(TriggerControl),
-            new PropertyMetadata(null, OnTriggerSelected));
-
-    public TriggerComboBoxItem TriggerSelected
-    {
-        get => (TriggerComboBoxItem)this.GetValue(TriggerSelectedProperty);
-        set => this.SetValue(TriggerSelectedProperty, value);
-    }
-
-    public static readonly DependencyProperty TriggerContentProperty =
-        DependencyProperty.Register(
-            nameof(TriggerContent),
-            typeof(object),
-            typeof(TriggerControl),
-            new PropertyMetadata(null));
-
-    public object TriggerContent
-    {
-        get => this.GetValue(TriggerContentProperty);
-        set => this.SetValue(TriggerContentProperty, value);
-    }
-
     public bool IsTopLevel { get; set; }
 
     public ITriggerOptionsControl Options { get; private set; }
@@ -146,32 +111,29 @@ public sealed partial class TriggerControl : UserControl
     public bool CanMappingSave(AbstractMappedOption mappedOption)
         => this.Options?.CanMappingSave(mappedOption.Trigger) ?? false;
 
-    private static void OnTriggerSelected(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    partial void OnTriggerSelectedChanged(TriggerComboBoxItem? selectedTrigger)
     {
-        var control = (TriggerControl)d;
-        var selectedTrigger = (TriggerComboBoxItem)e.NewValue;
-
         // Unsubscribe from old options
-        if (control.Options != null)
+        if (this.Options != null)
         {
-            control.Options.OptionsChanged -= control.OnOptionsChanged;
+            this.Options.OptionsChanged -= this.OnOptionsChanged;
         }
 
         if (selectedTrigger == null)
         {
-            control.Options = null;
-            control.TriggerContent = new Grid();
-            control.BuildTrigger();
+            this.Options = null;
+            this.TriggerContent = new Grid();
+            this.BuildTrigger();
             return;
         }
 
         var newOptions = selectedTrigger.MappingControlFactory.CreateInstance<ITriggerOptionsControl>();
-        control.Options = newOptions;
-        control.TriggerContent = newOptions;
+        this.Options = newOptions;
+        this.TriggerContent = newOptions;
 
-        newOptions.OptionsChanged += control.OnOptionsChanged;
+        newOptions.OptionsChanged += this.OnOptionsChanged;
 
-        control.BuildTrigger();
+        this.BuildTrigger();
     }
 
     private void OnOptionsChanged(object sender, EventArgs e) => this.BuildTrigger();
