@@ -1,20 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Key2Joy.App.UserControls;
 using Key2Joy.Config;
 using Key2Joy.LowLevelInput;
 using Key2Joy.LowLevelInput.SimulatedGamePad;
 using Key2Joy.LowLevelInput.XInput;
 using Key2Joy.Mapping;
 using Key2Joy.Util;
-using SimWinInput;
 
 namespace Key2Joy.App.Pages;
 
@@ -70,7 +62,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         this.SelectedProfile = profile;
         this.configState.LastLoadedProfile = profile.FilePath;
 
-        MappedOptions.Clear();
+        this.MappedOptions.Clear();
 
         foreach (var mappedOption in profile.MappedOptions)
         {
@@ -80,7 +72,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
                 continue;
             }
 
-            MappedOptions.Add(mappedOption);
+            this.MappedOptions.Add(mappedOption);
         }
     }
 
@@ -114,7 +106,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
     private void RefreshDevices()
     {
-        Devices.Clear();
+        this.Devices.Clear();
 
         this.RefreshSimulatedDevices();
         this.RefreshPhysicalDevices();
@@ -128,7 +120,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
         foreach (var device in deviceIndexes)
         {
-            Devices.Add(device);
+            this.Devices.Add(device);
         }
     }
 
@@ -139,7 +131,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
         foreach (var gamePad in simulatedGamePads)
         {
-            Devices.Add(gamePad);
+            this.Devices.Add(gamePad);
         }
     }
 

@@ -15,14 +15,59 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\Icons\application_osx_terminal.png" />
+    <None Remove="Assets\Icons\application_xp_terminal.png" />
+    <None Remove="Assets\Icons\arrow_down.png" />
+    <None Remove="Assets\Icons\arrow_refresh.png" />
+    <None Remove="Assets\Icons\clock.png" />
+    <None Remove="Assets\Icons\cog.png" />
     <None Remove="Assets\Icons\connect.png" />
+    <None Remove="Assets\Icons\cross.png" />
+    <None Remove="Assets\Icons\cursor.png" />
     <None Remove="Assets\Icons\disconnect.png" />
+    <None Remove="Assets\Icons\disk.png" />
+    <None Remove="Assets\Icons\disk_multiple.png" />
+    <None Remove="Assets\Icons\door_out.png" />
+    <None Remove="Assets\Icons\error.png" />
+    <None Remove="Assets\Icons\film.png" />
+    <None Remove="Assets\Icons\icon128.png" />
+    <None Remove="Assets\Icons\icon16.png" />
+    <None Remove="Assets\Icons\icon256.png" />
+    <None Remove="Assets\Icons\icon32.png" />
+    <None Remove="Assets\Icons\icon48.png" />
+    <None Remove="Assets\Icons\icon64.png" />
+    <None Remove="Assets\Icons\information.png" />
+    <None Remove="Assets\Icons\joystick.png" />
+    <None Remove="Assets\Icons\keyboard.png" />
+    <None Remove="Assets\Icons\link.png" />
+    <None Remove="Assets\Icons\logo.fig" />
+    <None Remove="Assets\Icons\magnifier.png" />
+    <None Remove="Assets\Icons\mouse.png" />
+    <None Remove="Assets\Icons\plugin.png" />
+    <None Remove="Assets\Icons\script_code.png" />
+    <None Remove="Assets\Icons\sound.png" />
+    <None Remove="Assets\Icons\text_list_bullets.png" />
+    <None Remove="Assets\Icons\text_list_numbers.png" />
+    <None Remove="Assets\Icons\tick.png" />
     <None Remove="Pages\AboutPage.xaml" />
     <None Remove="Pages\ConfigPage.xaml" />
     <None Remove="Pages\MainMappingPage.xaml" />
     <None Remove="SetupWindow.xaml" />
+    <None Remove="UserControls\ActionControl.xaml" />
+    <None Remove="UserControls\Actions\Graphics\GamePadStickActionControl.xaml" />
+    <None Remove="UserControls\Actions\Graphics\SetCursorActionControl.xaml" />
+    <None Remove="UserControls\Actions\Input\GamePadActionControl.xaml" />
+    <None Remove="UserControls\Actions\Input\GamePadTriggerActionControl.xaml" />
+    <None Remove="UserControls\Actions\Input\KeyboardActionControl.xaml" />
+    <None Remove="UserControls\Actions\Logic\AppCommandActionControl.xaml" />
+    <None Remove="UserControls\Actions\Logic\SequenceActionControl.xaml" />
+    <None Remove="UserControls\Actions\Logic\WaitActionControl.xaml" />
+    <None Remove="UserControls\Actions\Scripting\ScriptActionControl.xaml" />
+    <None Remove="UserControls\Actions\Windows\WindowActionControl.xaml" />
     <None Remove="UserControls\DeviceControl.xaml" />
     <None Remove="UserControls\MappingControl.xaml" />
+    <None Remove="UserControls\TriggerControl.xaml" />
+    <None Remove="UserControls\Triggers\Keyboard\KeyboardTriggerControl.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,6 +102,16 @@
     <ProjectReference Include="..\Core\Key2Joy.Core\Key2Joy.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="UserControls\TriggerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\ActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Pages\ConfigPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -83,6 +138,61 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="UserControls\DeviceControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\Triggers\Keyboard\KeyboardTriggerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\Actions\Input\KeyboardActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\Actions\Input\GamePadTriggerActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\Actions\Graphics\GamePadStickActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\Actions\Input\GamePadActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\Actions\Windows\WindowActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\Actions\Scripting\ScriptActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\Actions\Logic\WaitActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\Actions\Logic\SequenceActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\Actions\Graphics\SetCursorActionControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\Actions\Logic\AppCommandActionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

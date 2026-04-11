@@ -1,24 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
 using Key2Joy.App.Pages;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions.Logic;
-using Key2Joy.Mapping.Triggers.Mouse;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.Storage.Pickers;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using WinRT.Interop;
 
 namespace Key2Joy.App;
@@ -29,17 +19,17 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
 
     public MainWindow(bool shouldStartMinimized)
     {
-        InitializeComponent();
+        this.InitializeComponent();
 
-        ExtendsContentIntoTitleBar = true;
-        SetTitleBar(TitleBar);
+        this.ExtendsContentIntoTitleBar = true;
+        this.SetTitleBar(this.TitleBar);
 
-        MainFrame.Navigate(typeof(Pages.MainMappingPage));
+        this.MainFrame.Navigate(typeof(Pages.MainMappingPage));
     }
 
     public bool RunAppCommand(AppCommand command)
     {
-        if (MainFrame.Content is IAcceptAppCommands page)
+        if (this.MainFrame.Content is IAcceptAppCommands page)
         {
             return page.RunAppCommand(command);
         }
@@ -49,14 +39,14 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
 
     private void MainFrame_Navigated(object sender, NavigationEventArgs e)
     {
-        if (MainFrame.Content is MainMappingPage page)
+        if (this.MainFrame.Content is MainMappingPage page)
         {
-            _mappingPage = page;
+            this._mappingPage = page;
         }
     }
 
     private void MenuNewProfile_Click(object sender, RoutedEventArgs e)
-        => _mappingPage?.CreateNewProfile(" - Copy");
+        => this._mappingPage?.CreateNewProfile(" - Copy");
 
     private async void MenuLoadProfile_Click(object sender, RoutedEventArgs e)
     {
@@ -75,19 +65,19 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         if (profile == null)
         {
             await ShowError(
-                Content.XamlRoot,
+                this.Content.XamlRoot,
                 "Failed to load profile!",
                 "The selected profile was corrupt!\n\nPlease help us by reporting this bug on GitHub."
             );
             return;
         }
 
-        _mappingPage?.SetSelectedProfile(profile);
+        this._mappingPage?.SetSelectedProfile(profile);
     }
 
     private void MenuOpenProfileFolder_Click(object sender, RoutedEventArgs e)
     {
-        var profile = _mappingPage?.ViewModel.SelectedProfile;
+        var profile = this._mappingPage?.ViewModel.SelectedProfile;
         if (profile == null)
         {
             Process.Start(new ProcessStartInfo { FileName = MappingProfile.GetSaveDirectory(), UseShellExecute = true });
@@ -128,7 +118,7 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         => OpenUrl("https://devicetests.com/controller-tester");
 
     private async void MenuConfig_Click(object sender, RoutedEventArgs e)
-        => NavigateWithBackButton(typeof(ConfigPage));
+        => this.NavigateWithBackButton(typeof(ConfigPage));
 
     private async void MenuViewLog_Click(object sender, RoutedEventArgs e)
     {
@@ -136,7 +126,7 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         if (!File.Exists(logFile))
         {
             await ShowError(
-                Content.XamlRoot,
+                this.Content.XamlRoot,
                 "Log file not found",
                 "The log file does not exist yet. Please wait for the app to write to it."
             );
@@ -153,22 +143,22 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         => OpenUrl("https://github.com/Key2Joy/Key2Joy");
 
     private async void MenuAbout_Click(object sender, RoutedEventArgs e)
-        => NavigateWithBackButton(typeof(AboutPage));
+        => this.NavigateWithBackButton(typeof(AboutPage));
 
     private void NavigateWithBackButton(Type type)
     {
-        MainFrame.Navigate(type);
-        TitleBar.IsBackButtonVisible = true;
+        this.MainFrame.Navigate(type);
+        this.TitleBar.IsBackButtonVisible = true;
     }
 
     private void TitleBar_BackRequested(TitleBar sender, object args)
     {
-        MainFrame.GoBack();
+        this.MainFrame.GoBack();
 
-        if (MainFrame.CanGoBack)
+        if (this.MainFrame.CanGoBack)
             return;
 
-        TitleBar.IsBackButtonVisible = false;
+        this.TitleBar.IsBackButtonVisible = false;
     }
 
     private static IAsyncOperation<ContentDialogResult> ShowError(XamlRoot root, string title, string message)

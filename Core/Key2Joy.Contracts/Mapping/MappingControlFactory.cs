@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Forms;
 
 namespace Key2Joy.Contracts.Mapping;
 
@@ -17,7 +16,7 @@ public abstract class MappingControlFactory
         this.ImageResourceName = imageResourceName;
     }
 
-    public virtual T CreateInstance<T>() where T : Control => (T)Activator.CreateInstance(this.ToType());
+    public virtual T CreateInstance<T>() => (T)Activator.CreateInstance(this.ToType());
 
     public abstract Type ToType();
     public virtual string GetTypeName() => this.ToType().FullName;

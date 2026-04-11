@@ -1,18 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Key2Joy.LowLevelInput;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 namespace Key2Joy.App.UserControls;
 
@@ -45,8 +33,8 @@ public sealed partial class DeviceControl : UserControl
     /// <summary>Gets or sets the one-based index shown in the header.</summary>
     public int DeviceIndex
     {
-        get => (int)GetValue(DeviceIndexProperty);
-        set => SetValue(DeviceIndexProperty, value);
+        get => (int)this.GetValue(DeviceIndexProperty);
+        set => this.SetValue(DeviceIndexProperty, value);
     }
 
     private static void OnDeviceIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -66,8 +54,8 @@ public sealed partial class DeviceControl : UserControl
     /// <summary>Gets or sets the device name shown below the header.</summary>
     public string DeviceName
     {
-        get => (string)GetValue(DeviceNameProperty);
-        set => SetValue(DeviceNameProperty, value);
+        get => (string)this.GetValue(DeviceNameProperty);
+        set => this.SetValue(DeviceNameProperty, value);
     }
 
     private static void OnDeviceNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

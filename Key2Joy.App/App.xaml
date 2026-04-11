@@ -17,6 +17,7 @@
             <toolkit:BoolNegationConverter x:Key="BoolNegationConverter" />
             <utils:StringToBoolConverter x:Key="StringToBoolConverter" />
             <utils:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+            <utils:EnumToStringConverter x:Key="EnumToStringConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

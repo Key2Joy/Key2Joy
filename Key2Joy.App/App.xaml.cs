@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Key2Joy.Extensions;
 using Key2Joy.LowLevelInput.SimulatedGamePad;
 using Key2Joy.Mapping;
@@ -10,17 +6,6 @@ using Key2Joy.Mapping.Actions.Logic;
 using Key2Joy.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
-using SimWinInput;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 namespace Key2Joy.App;
 
@@ -40,7 +25,7 @@ public partial class App : Application
     /// </summary>
     public App()
     {
-        InitializeComponent();
+        this.InitializeComponent();
     }
 
     /// <summary>
