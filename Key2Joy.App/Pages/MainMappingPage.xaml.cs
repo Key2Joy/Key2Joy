@@ -23,6 +23,7 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
 
         this.MappingControl.MappingCreated += this.MappingControl_MappingCreated;
         this.MappingControl.MappingDeleted += this.MappingControl_MappingDeleted;
+        this.MappingControl.MappingDeselected += this.MappingControl_MappingDeselected;
     }
 
     private void MappingControl_MappingCreated(object sender, Key2Joy.Mapping.MappedOption mappedOption)
@@ -53,9 +54,15 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
         this.MappingListView.SelectedItem = null;
     }
 
+    private void MappingControl_MappingDeselected(object sender, Key2Joy.Mapping.MappedOption mappedOption)
+    {
+        this.MappingListView.SelectedItem = null;
+    }
+
     private void MappingListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        var selected = this.MappingListView.SelectedItem as Key2Joy.Mapping.MappedOption;
+        var listView = sender as ListView;
+        var selected = listView.SelectedItem as Key2Joy.Mapping.MappedOption;
         this.MappingControl.SelectMapping(selected);
     }
 

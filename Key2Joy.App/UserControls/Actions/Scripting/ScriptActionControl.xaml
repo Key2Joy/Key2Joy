@@ -8,7 +8,35 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <StackPanel Spacing="8">
+        <CheckBox Content="Load script from file"
+                  IsChecked="{x:Bind IsScriptPath, Mode=TwoWay}" />
 
-    </Grid>
+        <!-- Inline script editor -->
+        <TextBox Visibility="{x:Bind IsInlineScript, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                 AcceptsReturn="True"
+                 IsSpellCheckEnabled="False"
+                 MinHeight="120"
+                 FontFamily="Cascadia Code, Consolas, Courier New"
+                 TextWrapping="Wrap"
+                 Text="{x:Bind Script, Mode=TwoWay}"
+                 PlaceholderText="Enter Lua script here..." />
+
+        <!-- File path input -->
+        <Grid ColumnSpacing="10"
+              Visibility="{x:Bind IsScriptPath, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox HorizontalAlignment="Stretch"
+                     IsReadOnly="True"
+                     Text="{x:Bind ScriptFilePath, Mode=OneWay}"
+                     PlaceholderText="Select a .lua file..."
+                     VerticalAlignment="Center" />
+            <Button Grid.Column="1"
+                    Content="Browse..."
+                    Click="BrowseButton_Click" />
+        </Grid>
+    </StackPanel>
 </UserControl>

@@ -59,7 +59,9 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
 
         var file = await picker.PickSingleFileAsync();
         if (file == null)
+        {
             return;
+        }
 
         var profile = MappingProfile.Load(file.Path);
         if (profile == null)
@@ -156,7 +158,9 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         this.MainFrame.GoBack();
 
         if (this.MainFrame.CanGoBack)
+        {
             return;
+        }
 
         this.TitleBar.IsBackButtonVisible = false;
     }

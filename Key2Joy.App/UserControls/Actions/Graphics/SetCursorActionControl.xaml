@@ -8,7 +8,39 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <StackPanel Spacing="8">
+        <Grid ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Cursor:"
+                       VerticalAlignment="Center"/>
+            <ComboBox Grid.Column="1"
+                      HorizontalAlignment="Stretch"
+                      SelectedItem="{x:Bind SelectedCursor, Mode=TwoWay}"
+                      ItemsSource="{x:Bind AvailableCursors}" />
+        </Grid>
 
-    </Grid>
+        <StackPanel Spacing="4"
+                    Visibility="{x:Bind IsFileMode, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Cursor File:"
+                           VerticalAlignment="Center"/>
+                <TextBox Grid.Column="1"
+                         HorizontalAlignment="Stretch"
+                         IsReadOnly="True"
+                         Text="{x:Bind CursorFilePath, Mode=OneWay}"
+                         VerticalAlignment="Center" />
+                <Button Grid.Column="2"
+                        Content="Browse..."
+                        Click="BrowseButton_Click" />
+            </Grid>
+        </StackPanel>
+    </StackPanel>
 </UserControl>

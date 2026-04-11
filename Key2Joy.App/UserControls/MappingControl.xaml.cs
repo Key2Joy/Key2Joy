@@ -37,6 +37,7 @@ public sealed partial class MappingControl : UserControl
 
     public event EventHandler<MappedOption> MappingCreated;
     public event EventHandler<MappedOption> MappingDeleted;
+    public event EventHandler<MappedOption> MappingDeselected;
 
     private bool dominantReverseCheckedState;
 
@@ -82,18 +83,18 @@ public sealed partial class MappingControl : UserControl
     [RelayCommand]
     private void CreateMapping()
     {
-        var trigger = TriggerControl.Trigger;
-        var action = ActionControl.Action;
+        var trigger = this.TriggerControl.Trigger;
+        var action = this.ActionControl.Action;
 
         if (trigger == null)
         {
-            ShowError("No trigger selected", "Please select a trigger before creating the mapping.");
+            this.ShowError("No trigger selected", "Please select a trigger before creating the mapping.");
             return;
         }
 
         if (action == null)
         {
-            ShowError("No action selected", "Please select an action before creating the mapping.");
+            this.ShowError("No action selected", "Please select an action before creating the mapping.");
             return;
         }
 
@@ -101,12 +102,12 @@ public sealed partial class MappingControl : UserControl
         this.MappedOption.Trigger = trigger;
         this.MappedOption.Action = action;
 
-        if (!TriggerControl.CanMappingSave(this.MappedOption))
+        if (!this.TriggerControl.CanMappingSave(this.MappedOption))
         {
             return;
         }
 
-        if (!ActionControl.CanMappingSave(this.MappedOption))
+        if (!this.ActionControl.CanMappingSave(this.MappedOption))
         {
             return;
         }
@@ -163,6 +164,16 @@ public sealed partial class MappingControl : UserControl
         this.MappedOptionReverse = null;
         this.IsEditing = false;
         MappingDeleted?.Invoke(this, toDelete);
+    }
+
+    [RelayCommand]
+    private void DeselectMapping()
+    {
+        var toDeselect = this.MappedOption;
+        this.MappedOption = null;
+        this.MappedOptionReverse = null;
+        this.IsEditing = false;
+        MappingDeselected?.Invoke(this, toDeselect);
     }
 
     private void ShowError(string title, string message)

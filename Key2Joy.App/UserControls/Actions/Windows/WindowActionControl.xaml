@@ -8,7 +8,37 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <StackPanel Spacing="8">
+        <Grid ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Open Window:"
+                       VerticalAlignment="Center"/>
+            <ComboBox Grid.Column="1"
+                      HorizontalAlignment="Stretch"
+                      SelectedItem="{x:Bind SelectedWindow, Mode=TwoWay}"
+                      ItemsSource="{x:Bind AvailableWindows}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Identifier}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
 
-    </Grid>
+        <Grid ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Window Title:"
+                       VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1"
+                     HorizontalAlignment="Stretch"
+                     Text="{x:Bind WindowIdentifier, Mode=TwoWay}"
+                     PlaceholderText="Or type a window title directly..." />
+        </Grid>
+    </StackPanel>
 </UserControl>

@@ -20,8 +20,8 @@
         <StackPanel Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
                     Padding="5">
             <TextBlock HorizontalAlignment="Center"
-                   Style="{ThemeResource BodyLargeStrongTextBlockStyle}"
-                   Text="{x:Bind ModeTitle, Mode=OneWay}"/>
+                       Style="{ThemeResource BodyLargeStrongTextBlockStyle}"
+                       Text="{x:Bind ModeTitle, Mode=OneWay}"/>
         </StackPanel>
 
         <Grid Grid.Row="1"
@@ -47,6 +47,7 @@
               Padding="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
@@ -56,14 +57,20 @@
                     Visibility="{x:Bind IsEditing, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
                     Margin="5"/>
 
+            <Button Content="Deselect Mapping"
+                    Grid.Column="1"
+                    Command="{x:Bind DeselectMappingCommand}"
+                    Visibility="{x:Bind IsEditing, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Margin="5"/>
+
             <CheckBox x:Name="HoldCheckBox"
-                      Grid.Column="1"
+                      Grid.Column="2"
                       Content="Also create a child mapping that is a useful reverse of this"
                       IsChecked="{x:Bind CreateOrUpdateReverseMapping, Mode=TwoWay}"
                       HorizontalAlignment="Right"
                       Margin="5"/>
 
-            <StackPanel Grid.Column="2"
+            <StackPanel Grid.Column="3"
                         Orientation="Horizontal">
                 <Button Content="{x:Bind SaveButtonText, Mode=OneWay}"
                         Command="{x:Bind CreateMappingCommand}"

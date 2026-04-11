@@ -143,7 +143,7 @@ public sealed partial class KeyboardTriggerControl : UserControl, ITriggerOption
 
         // TODO: Somehow lose focus from the binding textbox without an invisible UnfocusTextBox?
         // We lose focus so the user can just click it again to change the keybind without having to first focus something else
-        UnfocusTextBox.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
+        this.UnfocusTextBox.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
     }
 
     private void UpdateKeys()

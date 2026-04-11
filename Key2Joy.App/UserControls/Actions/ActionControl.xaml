@@ -53,9 +53,10 @@
             </ComboBox>
         </Grid>
 
-        <Frame Grid.Row="1"
-               Margin="0,10,0,0"
+        <ScrollViewer Grid.Row="1">
+            <Frame Margin="0,10,0,0"
                VerticalContentAlignment="Top"
                Content="{x:Bind ActionContent, Mode=OneWay}"/>
+        </ScrollViewer>
     </Grid>
 </UserControl>
