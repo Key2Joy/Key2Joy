@@ -22,7 +22,8 @@
 
         <TitleBar x:Name="TitleBar"
                   Title="Key2Joy"
-                  IsBackButtonVisible="False">
+                  IsBackButtonVisible="False"
+                  BackRequested="TitleBar_BackRequested">
             <TitleBar.IconSource>
                 <ImageIconSource ImageSource="/Assets/Icon.ico" />
             </TitleBar.IconSource>
@@ -30,43 +31,82 @@
             <TitleBar.Content>
                 <MenuBar>
                     <MenuBarItem Title="File">
-                        <MenuFlyoutSubItem Text="New">
-                            <MenuFlyoutItem Text="Plain Text Document"/>
-                            <MenuFlyoutItem Text="Rich Text Document"/>
-                            <MenuFlyoutItem Text="Other Formats..."/>
-                        </MenuFlyoutSubItem>
-                        <MenuFlyoutItem Text="Open..."/>
-                        <MenuFlyoutItem Text="Save"/>
+                        <MenuFlyoutItem x:Name="MenuNewProfile"
+                                        Text="New Profile"
+                                        Click="MenuNewProfile_Click" />
+                        <MenuFlyoutItem x:Name="MenuLoadProfile"
+                                        Text="Load Profile..."
+                                        Click="MenuLoadProfile_Click" />
+                        <MenuFlyoutItem x:Name="MenuOpenProfileFolder"
+                                        Text="Open Profile Folder"
+                                        Click="MenuOpenProfileFolder_Click" />
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Text="Exit"/>
+                        <MenuFlyoutItem x:Name="MenuExit"
+                                        Text="Exit"
+                                        Click="MenuExit_Click" />
                     </MenuBarItem>
-
-                    <MenuBarItem Title="Edit">
-                        <MenuFlyoutItem Text="Undo"/>
-                        <MenuFlyoutItem Text="Cut"/>
-                        <MenuFlyoutItem Text="Copy"/>
-                        <MenuFlyoutItem Text="Paste"/>
+                    <MenuBarItem Title="Mappings">
+                        <!--<MenuFlyoutSubItem Text="Add All GamePad">
+                            <MenuFlyoutItem x:Name="MenuGamePadPressRelease"
+                                            Text="Press + Release"
+                                            Click="MenuGamePadPressRelease_Click" />
+                            <MenuFlyoutItem x:Name="MenuGamePadPress"
+                                            Text="Press Only"
+                                            Click="MenuGamePadPress_Click" />
+                            <MenuFlyoutItem x:Name="MenuGamePadRelease"
+                                            Text="Release Only"
+                                            Click="MenuGamePadRelease_Click" />
+                        </MenuFlyoutSubItem>
+                        <MenuFlyoutSubItem Text="Add All Keyboard">
+                            <MenuFlyoutItem x:Name="MenuKeyboardPressRelease"
+                                            Text="Press + Release"
+                                            Click="MenuKeyboardPressRelease_Click" />
+                            <MenuFlyoutItem x:Name="MenuKeyboardPress"
+                                            Text="Press Only"
+                                            Click="MenuKeyboardPress_Click" />
+                            <MenuFlyoutItem x:Name="MenuKeyboardRelease"
+                                            Text="Release Only"
+                                            Click="MenuKeyboardRelease_Click" />
+                        </MenuFlyoutSubItem>-->
                     </MenuBarItem>
-
-                    <MenuBarItem Title="View">
-                        <MenuFlyoutItem Text="Output"/>
-                        <MenuFlyoutSeparator/>
-                        <RadioMenuFlyoutItem Text="Landscape" GroupName="OrientationGroup"/>
-                        <RadioMenuFlyoutItem Text="Portrait" GroupName="OrientationGroup" IsChecked="True"/>
-                        <MenuFlyoutSeparator/>
-                        <RadioMenuFlyoutItem Text="Small icons" GroupName="SizeGroup"/>
-                        <RadioMenuFlyoutItem Text="Medium icons" IsChecked="True" GroupName="SizeGroup"/>
-                        <RadioMenuFlyoutItem Text="Large icons" GroupName="SizeGroup"/>
+                    <MenuBarItem Title="Test">
+                        <MenuFlyoutItem x:Name="MenuTestKeyboard"
+                                        Text="Test Keyboard"
+                                        Click="MenuTestKeyboard_Click" />
+                        <MenuFlyoutItem x:Name="MenuTestMouse"
+                                        Text="Test Mouse"
+                                        Click="MenuTestMouse_Click" />
+                        <MenuFlyoutItem x:Name="MenuTestController"
+                                        Text="Test Controller"
+                                        Click="MenuTestController_Click" />
                     </MenuBarItem>
-
+                    <MenuBarItem Title="Tools">
+                        <MenuFlyoutItem x:Name="MenuConfig"
+                                        Text="Settings..."
+                                        Click="MenuConfig_Click" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="MenuViewLog"
+                                        Text="View Log File"
+                                        Click="MenuViewLog_Click" />
+                    </MenuBarItem>
                     <MenuBarItem Title="Help">
-                        <MenuFlyoutItem Text="About"/>
+                        <MenuFlyoutItem x:Name="MenuReportProblem"
+                                        Text="Report a Problem"
+                                        Click="MenuReportProblem_Click" />
+                        <MenuFlyoutItem x:Name="MenuViewSource"
+                                        Text="View Source Code"
+                                        Click="MenuViewSource_Click" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="MenuAbout"
+                                        Text="About"
+                                        Click="MenuAbout_Click" />
                     </MenuBarItem>
                 </MenuBar>
             </TitleBar.Content>
         </TitleBar>
 
         <Frame x:Name="MainFrame"
+               Navigated="MainFrame_Navigated"
                Grid.Row="1" />
     </Grid>
 </Window>

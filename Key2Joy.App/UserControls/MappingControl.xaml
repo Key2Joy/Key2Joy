@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Key2Joy.App.UserControls.MappingControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Key2Joy.App.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Background="{ThemeResource AccentAcrylicBackgroundFillColorDefaultBrush}"
+                    Padding="5">
+            <TextBlock HorizontalAlignment="Center"
+                   Style="{ThemeResource BodyLargeStrongTextBlockStyle}"
+                   Text="Create a new mapping"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1"
+              Padding="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Trigger -->
+            <Grid Padding="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                    <TextBlock Text="Trigger that starts the action(s):"/>
+                    <ComboBox x:Name="TriggerComboBox"
+                          ItemsSource="{x:Bind TriggersAvailable}"
+                          SelectedItem="{x:Bind TriggerSelected, Mode=TwoWay}"
+                          Margin="10,0,0,0"
+                          Width="150"/>
+                </StackPanel>
+
+                <Frame Grid.Row="1"
+                   Margin="0,10,0,0"
+                   Content="{x:Bind TriggerContent}"/>
+            </Grid>
+
+            <!-- Action -->
+            <Grid Padding="5"
+              Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                    <TextBlock Text="Actions that start at the trigger:"/>
+                    <ComboBox x:Name="ActionComboBox"
+                          ItemsSource="{x:Bind ActionsAvailable}"
+                          SelectedItem="{x:Bind ActionSelected, Mode=TwoWay}"
+                          Margin="10,0,0,0"
+                          Width="150"/>
+                </StackPanel>
+
+                <Frame Grid.Row="1"
+                   Margin="0,10,0,0"
+                   Content="{x:Bind ActionContent}"/>
+            </Grid>
+        </Grid>
+
+        <!-- Creation -->
+        <Grid Grid.Row="2"
+              Padding="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <CheckBox x:Name="HoldCheckBox"
+                      Content="Also create a child mapping that is a useful reverse of this"
+                      HorizontalAlignment="Right"
+                      Margin="5"/>
+
+            <Button Grid.Column="1"
+                    Content="Create Mapping"
+                    Margin="5"/>
+        </Grid>
+    </Grid>
+</UserControl>

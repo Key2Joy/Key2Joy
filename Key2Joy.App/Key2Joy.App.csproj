@@ -15,7 +15,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\Icons\connect.png" />
+    <None Remove="Assets\Icons\disconnect.png" />
+    <None Remove="Pages\AboutPage.xaml" />
+    <None Remove="Pages\ConfigPage.xaml" />
     <None Remove="Pages\MainMappingPage.xaml" />
+    <None Remove="SetupWindow.xaml" />
+    <None Remove="UserControls\DeviceControl.xaml" />
+    <None Remove="UserControls\MappingControl.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.2.251219" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1721" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260317003" />
   </ItemGroup>
@@ -49,7 +57,32 @@
     <ProjectReference Include="..\Core\Key2Joy.Core\Key2Joy.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Pages\ConfigPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\AboutPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\MappingControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="SetupWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Pages\MainMappingPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="UserControls\DeviceControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

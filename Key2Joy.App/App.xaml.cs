@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using SimWinInput;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -31,6 +32,7 @@ public partial class App : Application
     public static Window CurrentWindow { get; private set; }
 
     private static bool shouldStartMinimized;
+    private static Action _cleanupHandle;
 
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -44,36 +46,33 @@ public partial class App : Application
     /// <summary>
     /// Invoked when the application is launched.
     /// </summary>
-    /// <param name="args">Details about the launch request and process.</param>
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    /// <param name="_">Details about the launch request and process.</param>
+    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs _)
     {
-        Key2JoyManager.InitSafely(
-            OnRunAppCommand,
-            () =>
-                {
-                    var args = Environment.GetCommandLineArgs();
+        _cleanupHandle = Key2JoyManager.InitHandle(OnRunAppCommand);
+        var args = Environment.GetCommandLineArgs();
 
-                    ApplicationConfiguration.Initialize();
+        ApplicationConfiguration.Initialize();
 
-                    foreach (var arg in args)
-                    {
-                        if (arg == "--minimized")
-                        {
-                            shouldStartMinimized = true;
-                        }
-                    }
+        foreach (var arg in args)
+        {
+            if (arg == "--minimized")
+            {
+                shouldStartMinimized = true;
+            }
+        }
 
-                    ShowForm(GetStartupWindow());
-                }
-            );
+        ShowWindow(GetStartupWindow());
     }
 
-    public static void ShowForm(Window window)
+    public static void ShowWindow(Window window)
     {
         if (window is MainWindow)
         {
             MappingProfile.ExtractDefaultIfNotExists();
             var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
+
+            window.Closed += (_, _) => _cleanupHandle();
 
             try
             {
@@ -102,6 +101,8 @@ public partial class App : Application
         oldWindow?.Close();
     }
 
+    public static void ShowMainWindow() => ShowWindow(new MainWindow(shouldStartMinimized));
+
     private static Window GetStartupWindow()
     {
         if (ScpBusExtensions.IsDriverInstalled())
@@ -109,15 +110,14 @@ public partial class App : Application
             return new MainWindow(shouldStartMinimized);
         }
 
-        // TODO: return new SetupForm();
-        return new MainWindow(false);
+        return new SetupWindow();
     }
 
     private static bool OnRunAppCommand(AppCommand command)
     {
-        if (CurrentWindow is IAcceptAppCommands form)
+        if (CurrentWindow is IAcceptAppCommands window)
         {
-            return form.RunAppCommand(command);
+            return window.RunAppCommand(command);
         }
 
         return false;

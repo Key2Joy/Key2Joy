@@ -5,6 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Key2Joy.App.Pages"
     xmlns:mapping="using:Key2Joy.Mapping"
+    xmlns:input="using:Key2Joy.LowLevelInput"
+    xmlns:controls="using:Key2Joy.App.UserControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -15,11 +17,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Top Section -->
+        <!-- Main Section -->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="200" />
             </Grid.ColumnDefinitions>
 
             <!-- Mappings List -->
@@ -27,24 +29,105 @@
                       ItemsSource="{x:Bind ViewModel.MappedOptions}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="mapping:MappedOption">
-                        <!-- Each mapping has a trigger and an action -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Vertical"
+                                    Spacing="5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0"
+                                <TextBlock Grid.Column="0"
                                        Text="{x:Bind Trigger}"
-                                       Margin="5" />
+                                       Margin="5,15,5,0" />
 
-                            <TextBlock Grid.Column="1"
+                                <TextBlock Grid.Column="1"
                                        Text="{x:Bind Action}"
-                                       Margin="5" />
-                        </Grid>
+                                       Margin="5,15,5,0" />
+                            </Grid>
+
+                            <ListView Grid.Column="0"
+                                      Padding="25,0,0,15"
+                                      ItemsSource="{x:Bind Children}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="mapping:MappedOption">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0"
+                                                       Text="{x:Bind Trigger}"
+                                                       Foreground="{ThemeResource TextFillColorDisabled}"
+                                                       Margin="5" />
+
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{x:Bind Action}"
+                                                       Foreground="{ThemeResource TextFillColorDisabled}"
+                                                       Margin="5" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
+            <!-- Connect & Devices List -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid ColumnSpacing="10"
+                      Padding="10,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Connect when untoggled, disconnect when toggled -->
+                    <ToggleButton x:Name="ArmedToggleButton"
+                                  HorizontalAlignment="Stretch"
+                                  IsChecked="{x:Bind ViewModel.Armed, Mode=TwoWay}"
+                                  Content="{x:Bind ViewModel.ArmedButtonText, Mode=OneWay}"/>
+
+                    <!-- Refresh Button -->
+                    <Button Grid.Column="1">
+                        <FontIcon Glyph="&#xE72C;" />
+                    </Button>
+                </Grid>
+
+                <TextBlock Grid.Row="1"
+                           HorizontalAlignment="Center"
+                           Margin="5"
+                           Text="{x:Bind ViewModel.ArmErrorMessage, Mode=OneWay}"
+                           Visibility="{x:Bind ViewModel.ArmErrorMessage, Mode=OneWay, Converter={StaticResource StringToVisibilityConverter}}"
+                           Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}" />
+
+                <!-- Devices List -->
+                <ListView Grid.Row="1"
+                          Padding="5"
+                          SelectionMode="None"
+                          ItemsSource="{x:Bind ViewModel.Devices}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="input:IGamePadInfo">
+                            <StackPanel Orientation="Vertical"
+                                        Spacing="5"
+                                        Margin="10">
+                                <controls:DeviceControl DeviceIndex="{x:Bind Index}"
+                                                        DeviceName="{x:Bind Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
         </Grid>
+
+        <controls:MappingControl Grid.Row="1"
+                                 Height="240" />
     </Grid>
 </Page>

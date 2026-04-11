@@ -6,17 +6,34 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Key2Joy.App.UserControls;
 using Key2Joy.Config;
+using Key2Joy.LowLevelInput;
+using Key2Joy.LowLevelInput.SimulatedGamePad;
+using Key2Joy.LowLevelInput.XInput;
 using Key2Joy.Mapping;
 using Key2Joy.Util;
+using SimWinInput;
 
 namespace Key2Joy.App.Pages;
 
-public class MainMappingPageViewModel
+[ObservableObject]
+public partial class MainMappingPageViewModel : IInvokeOnUI
 {
     public ObservableCollection<MappedOption> MappedOptions = new();
+    public ObservableCollection<IGamePadInfo> Devices = new();
 
-    public MappingProfile SelectedProfile;
+    public MappingProfile SelectedProfile { get; private set; }
+
+    [ObservableProperty]
+    public partial bool Armed { get; set; }
+
+    [ObservableProperty]
+    public partial string ArmedButtonText { get; set; } = "Connect";
+
+    [ObservableProperty]
+    public partial string ArmErrorMessage { get; set; }
 
     private readonly ConfigState configState;
 
@@ -36,7 +53,7 @@ public class MainMappingPageViewModel
         }
 
         // Ensure the manager knows which window handle catches all inputs
-        // TODO: Key2JoyManager.Instance.SetHandlerWithInvoke(this);
+        Key2JoyManager.Instance.SetHandlerWithInvoke(this);
         Key2JoyManager.Instance.StatusChanged += (s, ev) =>
         {
             //this.SetStatusView(ev.IsEnabled);
@@ -48,7 +65,7 @@ public class MainMappingPageViewModel
         };
     }
 
-    private void SetSelectedProfile(MappingProfile profile)
+    public void SetSelectedProfile(MappingProfile profile)
     {
         this.SelectedProfile = profile;
         this.configState.LastLoadedProfile = profile.FilePath;
@@ -57,7 +74,78 @@ public class MainMappingPageViewModel
 
         foreach (var mappedOption in profile.MappedOptions)
         {
+            // Only add top-level mapped options, children will be added as part of the parent mapped option
+            if (mappedOption.IsChild)
+            {
+                continue;
+            }
+
             MappedOptions.Add(mappedOption);
         }
     }
+
+    /// <summary>
+    /// Called automatically when the Armed property changes. We use this to arm or disarm the mappings in the manager, and to refresh the device list.
+    /// </summary>
+    /// <param name="isArmed"></param>
+    partial void OnArmedChanged(bool isArmed)
+    {
+        ArmedButtonText = isArmed ? "Disconnect" : "Connect";
+
+        if (isArmed)
+        {
+            try
+            {
+                Key2JoyManager.Instance.ArmMappings(SelectedProfile);
+            }
+            catch (MappingArmingFailedException ex)
+            {
+                Armed = false;
+                ArmErrorMessage = ex.Message;
+            }
+        }
+        else if (Key2JoyManager.Instance.GetIsArmed())
+        {
+            Key2JoyManager.Instance.DisarmMappings();
+        }
+
+        RefreshDevices();
+    }
+
+    private void RefreshDevices()
+    {
+        Devices.Clear();
+
+        this.RefreshSimulatedDevices();
+        this.RefreshPhysicalDevices();
+    }
+
+    private void RefreshPhysicalDevices()
+    {
+        var xInputService = ServiceContainer.Get<IXInputService>();
+        xInputService.RecognizePhysicalDevices();
+        var deviceIndexes = xInputService.GetActiveDevicesInfo();
+
+        foreach (var device in deviceIndexes)
+        {
+            Devices.Add(device);
+        }
+    }
+
+    private void RefreshSimulatedDevices()
+    {
+        var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
+        var simulatedGamePads = gamePadService.GetActiveDevicesInfo();
+
+        foreach (var gamePad in simulatedGamePads)
+        {
+            Devices.Add(gamePad);
+        }
+    }
+
+    public object Invoke(Delegate method)
+        => method.DynamicInvoke();
+
+    public object Invoke(Delegate method, params object[] arguments)
+        => method.DynamicInvoke(arguments);
 }

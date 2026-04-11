@@ -2,10 +2,8 @@ using System;
 
 namespace Key2Joy;
 
-public interface IHaveHandleAndInvoke
+public interface IInvokeOnUI
 {
-    IntPtr Handle { get; }
-
     object Invoke(Delegate method);
 
     object Invoke(Delegate method, params object[] arguments);

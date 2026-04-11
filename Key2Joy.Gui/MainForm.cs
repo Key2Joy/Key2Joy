@@ -25,7 +25,7 @@ using Key2Joy.Mapping.Triggers.Mouse;
 
 namespace Key2Joy.Gui;
 
-public partial class MainForm : Form, IAcceptAppCommands, IHaveHandleAndInvoke
+public partial class MainForm : Form, IAcceptAppCommands, IInvokeOnUI
 {
     private readonly IDictionary<string, CachedMappingGroup> cachedMappingGroups = new Dictionary<string, CachedMappingGroup>();
     private readonly ConfigState configState;
