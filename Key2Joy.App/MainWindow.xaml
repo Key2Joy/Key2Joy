@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Key2Joy.App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Key2Joy.App"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Key2Joy.App">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TitleBar x:Name="TitleBar"
+                  Title="Key2Joy"
+                  IsBackButtonVisible="False">
+            <TitleBar.IconSource>
+                <ImageIconSource ImageSource="/Assets/Icon.ico" />
+            </TitleBar.IconSource>
+
+            <TitleBar.Content>
+                <MenuBar>
+                    <MenuBarItem Title="File">
+                        <MenuFlyoutSubItem Text="New">
+                            <MenuFlyoutItem Text="Plain Text Document"/>
+                            <MenuFlyoutItem Text="Rich Text Document"/>
+                            <MenuFlyoutItem Text="Other Formats..."/>
+                        </MenuFlyoutSubItem>
+                        <MenuFlyoutItem Text="Open..."/>
+                        <MenuFlyoutItem Text="Save"/>
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Text="Exit"/>
+                    </MenuBarItem>
+
+                    <MenuBarItem Title="Edit">
+                        <MenuFlyoutItem Text="Undo"/>
+                        <MenuFlyoutItem Text="Cut"/>
+                        <MenuFlyoutItem Text="Copy"/>
+                        <MenuFlyoutItem Text="Paste"/>
+                    </MenuBarItem>
+
+                    <MenuBarItem Title="View">
+                        <MenuFlyoutItem Text="Output"/>
+                        <MenuFlyoutSeparator/>
+                        <RadioMenuFlyoutItem Text="Landscape" GroupName="OrientationGroup"/>
+                        <RadioMenuFlyoutItem Text="Portrait" GroupName="OrientationGroup" IsChecked="True"/>
+                        <MenuFlyoutSeparator/>
+                        <RadioMenuFlyoutItem Text="Small icons" GroupName="SizeGroup"/>
+                        <RadioMenuFlyoutItem Text="Medium icons" IsChecked="True" GroupName="SizeGroup"/>
+                        <RadioMenuFlyoutItem Text="Large icons" GroupName="SizeGroup"/>
+                    </MenuBarItem>
+
+                    <MenuBarItem Title="Help">
+                        <MenuFlyoutItem Text="About"/>
+                    </MenuBarItem>
+                </MenuBar>
+            </TitleBar.Content>
+        </TitleBar>
+
+        <Frame x:Name="MainFrame"
+               Grid.Row="1" />
+    </Grid>
+</Window>

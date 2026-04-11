@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Key2Joy.App (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Key2Joy.App (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
