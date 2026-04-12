@@ -1,9 +1,14 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using CommunityToolkit.Mvvm.Input;
+using H.NotifyIcon;
 using Key2Joy.App.Pages;
+using Key2Joy.Config;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions.Logic;
+using Key2Joy.Util;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -15,11 +20,16 @@ namespace Key2Joy.App;
 
 public sealed partial class MainWindow : Window, IAcceptAppCommands
 {
-    private MainMappingPage? _mappingPage;
+    private MainMappingPage? mappingPage;
+    private readonly ConfigState configState;
+    private bool wantsToExit = false;
 
     public MainWindow(bool shouldStartMinimized)
     {
         this.InitializeComponent();
+
+        this.configState = ServiceContainer.Get<IConfigManager>()
+            .GetConfigState();
 
         this.ExtendsContentIntoTitleBar = true;
         this.SetTitleBar(this.TitleBar);
@@ -41,12 +51,12 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
     {
         if (this.MainFrame.Content is MainMappingPage page)
         {
-            this._mappingPage = page;
+            this.mappingPage = page;
         }
     }
 
     private void MenuNewProfile_Click(object sender, RoutedEventArgs e)
-        => this._mappingPage?.CreateNewProfile(" - Copy");
+        => this.mappingPage?.CreateNewProfile(" - Copy");
 
     private async void MenuLoadProfile_Click(object sender, RoutedEventArgs e)
     {
@@ -74,12 +84,12 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
             return;
         }
 
-        this._mappingPage?.SetSelectedProfile(profile);
+        this.mappingPage?.SetSelectedProfile(profile);
     }
 
     private void MenuOpenProfileFolder_Click(object sender, RoutedEventArgs e)
     {
-        var profile = this._mappingPage?.ViewModel.SelectedProfile;
+        var profile = this.mappingPage?.ViewModel.SelectedProfile;
         if (profile == null)
         {
             Process.Start(new ProcessStartInfo { FileName = MappingProfile.GetSaveDirectory(), UseShellExecute = true });
@@ -163,6 +173,41 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         }
 
         this.TitleBar.IsBackButtonVisible = false;
+    }
+
+    private void Window_Closed(object sender, WindowEventArgs args)
+    {
+        if (!this.wantsToExit && this.configState.ShouldCloseButtonMinimize)
+        {
+            args.Handled = true;
+            this.Hide();
+            return;
+        }
+
+        if (this.mappingPage != null && this.mappingPage.ViewModel.Armed)
+        {
+            this.mappingPage.ViewModel.Armed = false;
+        }
+    }
+
+    [RelayCommand]
+    private void ShowWindow()
+    {
+        this.AppWindow.Show();
+
+        var presenter = this.AppWindow.Presenter as OverlappedPresenter;
+
+        if (presenter != null && presenter.State == OverlappedPresenterState.Minimized)
+        {
+            presenter.Restore();
+        }
+    }
+
+    [RelayCommand]
+    private void ExitApplication()
+    {
+        this.wantsToExit = true;
+        Application.Current.Exit();
     }
 
     private static IAsyncOperation<ContentDialogResult> ShowError(XamlRoot root, string title, string message)
