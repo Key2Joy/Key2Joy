@@ -18,6 +18,9 @@ public class MappedOption : AbstractMappedOption
     [JsonIgnore]
     public IList<MappedOption> Children { get; set; } = new List<MappedOption>();
 
+    [JsonIgnore]
+    public bool HasChildren => Children.Count > 0;
+
     public MappedOption()
         : base()
         => this.Guid = Guid.NewGuid();

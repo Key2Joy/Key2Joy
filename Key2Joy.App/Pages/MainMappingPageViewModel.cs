@@ -37,6 +37,9 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
     [ObservableProperty]
     public partial string ProfileName { get; set; } = "";
 
+    [ObservableProperty]
+    public partial int DevicesCount { get; set; } = 0;
+
     private bool _isSettingProfile;
 
     private readonly ConfigState configState;
@@ -153,6 +156,8 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
         this.RefreshSimulatedDevices();
         this.RefreshPhysicalDevices();
+
+        this.DevicesCount = this.Devices.Count;
     }
 
     private void RefreshPhysicalDevices()

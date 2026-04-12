@@ -40,12 +40,6 @@ public sealed partial class SetupWindow : Window
 
     private void InstallButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!IsRunningAsAdministrator())
-        {
-            RestartAsAdministrator();
-            return;
-        }
-
         try
         {
             ScpDriverInstaller.Install();
@@ -90,6 +84,16 @@ public sealed partial class SetupWindow : Window
         catch (Win32Exception)
         {
             // user declined the UAC prompt — stay open
+        }
+    }
+
+    private void Window_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        // Ensure we are running as an administrator, which is required for installing the driver. If not, restart the app with elevated privileges.
+        if (!IsRunningAsAdministrator())
+        {
+            RestartAsAdministrator();
+            return;
         }
     }
 }

@@ -18,6 +18,7 @@
             <utils:StringToBoolConverter x:Key="StringToBoolConverter" />
             <utils:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
             <utils:EnumToStringConverter x:Key="EnumToStringConverter" />
+            <utils:VisibleWhenZeroConverter x:Name="VisibleWhenZeroConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -70,60 +70,98 @@
                 </Grid>
 
                 <!-- Mappings List -->
-                <ListView x:Name="MappingListView"
-                          Grid.Row="1"
-                          ItemsSource="{x:Bind ViewModel.FilteredMappedOptions}"
-                          SelectionMode="Single"
-                          SelectionChanged="MappingListView_SelectionChanged">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="mapping:MappedOption">
-                            <StackPanel Orientation="Vertical"
-                                        Spacing="5">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
+                <ScrollViewer Grid.Row="1">
+                    <ItemsControl x:Name="MappingListView"
+                                  ItemsSource="{x:Bind ViewModel.FilteredMappedOptions}"
+                                  Margin="0,4">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="mapping:MappedOption">
+                                <StackPanel Margin="10,2">
+                                    <!-- Parent row -->
+                                    <Grid Tapped="MappingItem_Tapped"
+                                          Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                          CornerRadius="4"
+                                          Padding="10"
+                                          Tag="{x:Bind}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <TextBlock Grid.Column="0"
-                                           Text="{x:Bind Trigger}"
-                                           Margin="5,15,5,0" />
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{x:Bind Trigger}"
+                                                   VerticalAlignment="Center"
+                                                   Margin="4,0,0,0" />
 
-                                    <TextBlock Grid.Column="1"
-                                           Text="{x:Bind Action}"
-                                           Margin="5,15,5,0" />
-                                </Grid>
+                                        <FontIcon Grid.Column="1"
+                                                  Glyph="&#xE72A;"
+                                                  FontSize="12"
+                                                  Margin="10,0"
+                                                  Opacity="0.5"
+                                                  VerticalAlignment="Center" />
 
-                                <ListView Grid.Column="0"
-                                          Padding="25,0,0,15"
-                                          SelectionMode="Single"
-                                          ItemsSource="{x:Bind Children}"
-                                          SelectionChanged="MappingListView_SelectionChanged">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate x:DataType="mapping:MappedOption">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{x:Bind Action}"
+                                                   VerticalAlignment="Center" />
 
-                                                <TextBlock Grid.Column="0"
-                                                           Text="{x:Bind Trigger}"
-                                                           Foreground="{ThemeResource TextFillColorDisabled}"
-                                                           Margin="5" />
+                                        <!-- Expand/collapse chevron, only visible when there are children -->
+                                        <ToggleButton Grid.Column="3"
+                                                      Click="ExpandToggle_Click"
+                                                      Visibility="{x:Bind HasChildren, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                      Background="Transparent"
+                                                      BorderThickness="0"
+                                                      Padding="5"
+                                                      MinWidth="0"
+                                                      MinHeight="0"
+                                                      VerticalAlignment="Center">
+                                            <FontIcon Glyph="&#xE96D;"
+                                                      FontSize="12" />
+                                        </ToggleButton>
+                                    </Grid>
 
-                                                <TextBlock Grid.Column="1"
-                                                           Text="{x:Bind Action}"
-                                                           Foreground="{ThemeResource TextFillColorDisabled}"
-                                                           Margin="5" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                    <!-- Children panel, collapsed by default -->
+                                    <ItemsControl ItemsSource="{x:Bind Children}"
+                                                  Visibility="Collapsed"
+                                                  Margin="28,5,0,5">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="mapping:MappedOption">
+                                                <Grid Tapped="MappingItem_Tapped"
+                                                      Background="Transparent"
+                                                      Padding="4,6"
+                                                      Tag="{x:Bind}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Grid.Column="0"
+                                                               Text="{x:Bind Trigger}"
+                                                               Foreground="{ThemeResource TextFillColorSecondary}"
+                                                               VerticalAlignment="Center" />
+
+                                                    <FontIcon Grid.Column="1"
+                                                              Glyph="&#xE72A;"
+                                                              FontSize="10"
+                                                              Margin="10,0"
+                                                              Opacity="0.3"
+                                                              VerticalAlignment="Center" />
+
+                                                    <TextBlock Grid.Column="2"
+                                                               Text="{x:Bind Action}"
+                                                               Foreground="{ThemeResource TextFillColorSecondary}"
+                                                               VerticalAlignment="Center" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </Grid>
 
             <!-- Connect & Devices List -->
@@ -175,6 +213,24 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
+                <!-- Devices List Empty State -->
+                <StackPanel Visibility="{x:Bind ViewModel.DevicesCount, Mode=OneWay, Converter={StaticResource VisibleWhenZeroConverter}}"
+                            Grid.Row="1"
+                            Padding="5"
+                            Orientation="Vertical"
+                            HorizontalAlignment="Center"
+                            Opacity=".5">
+                    <TextBlock TextAlignment="Center">
+                                No devices found.
+                    </TextBlock>
+
+                    <TextBlock Margin="0,20"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Center">
+                                Try connecting the Key2Joy device.
+                    </TextBlock>
+                </StackPanel>
             </Grid>
         </Grid>
 
