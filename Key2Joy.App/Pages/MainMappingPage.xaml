@@ -24,61 +24,107 @@
                 <ColumnDefinition Width="200" />
             </Grid.ColumnDefinitions>
 
-            <!-- Mappings List -->
-            <ListView Grid.Column="0"
-                      x:Name="MappingListView"
-                      ItemsSource="{x:Bind ViewModel.MappedOptions}"
-                      SelectionMode="Single"
-                      SelectionChanged="MappingListView_SelectionChanged">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="mapping:MappedOption">
-                        <StackPanel Orientation="Vertical"
-                                    Spacing="5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                                <TextBlock Grid.Column="0"
-                                       Text="{x:Bind Trigger}"
-                                       Margin="5,15,5,0" />
+                <!-- Search and Profile -->
+                <Grid Padding="10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="1"
-                                       Text="{x:Bind Action}"
-                                       Margin="5,15,5,0" />
-                            </Grid>
+                    <StackPanel Orientation="Horizontal"
+                                Padding="10,0"
+                                Spacing="10">
+                        <Image Source="/Assets/Icons/magnifier.png"
+                               Height="16"/>
+                        <TextBlock VerticalAlignment="Center">
+                            Search
+                        </TextBlock>
+                    </StackPanel>
 
-                            <ListView Grid.Column="0"
-                                      Padding="25,0,0,15"
-                                      SelectionMode="Single"
-                                      ItemsSource="{x:Bind Children}"
-                                      SelectionChanged="MappingListView_SelectionChanged">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="mapping:MappedOption">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
+                    <TextBox x:Name="SearchTextBox"
+                             Grid.Column="1"
+                             Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                                            <TextBlock Grid.Column="0"
-                                                       Text="{x:Bind Trigger}"
-                                                       Foreground="{ThemeResource TextFillColorDisabled}"
-                                                       Margin="5" />
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Column="2"
+                                Padding="40,0,10,0"
+                                Spacing="10">
+                        <Image Source="/Assets/Icons/text_list_bullets.png"
+                               Height="16"/>
+                        <TextBlock VerticalAlignment="Center">
+                            Profile
+                        </TextBlock>
+                    </StackPanel>
 
-                                            <TextBlock Grid.Column="1"
-                                                       Text="{x:Bind Action}"
-                                                       Foreground="{ThemeResource TextFillColorDisabled}"
-                                                       Margin="5" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                    <TextBox x:Name="ProfileNameTextBox"
+                             Grid.Column="3"
+                             Text="{x:Bind ViewModel.ProfileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </Grid>
+
+                <!-- Mappings List -->
+                <ListView x:Name="MappingListView"
+                          Grid.Row="1"
+                          ItemsSource="{x:Bind ViewModel.FilteredMappedOptions}"
+                          SelectionMode="Single"
+                          SelectionChanged="MappingListView_SelectionChanged">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="mapping:MappedOption">
+                            <StackPanel Orientation="Vertical"
+                                        Spacing="5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                           Text="{x:Bind Trigger}"
+                                           Margin="5,15,5,0" />
+
+                                    <TextBlock Grid.Column="1"
+                                           Text="{x:Bind Action}"
+                                           Margin="5,15,5,0" />
+                                </Grid>
+
+                                <ListView Grid.Column="0"
+                                          Padding="25,0,0,15"
+                                          SelectionMode="Single"
+                                          ItemsSource="{x:Bind Children}"
+                                          SelectionChanged="MappingListView_SelectionChanged">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="mapping:MappedOption">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0"
+                                                           Text="{x:Bind Trigger}"
+                                                           Foreground="{ThemeResource TextFillColorDisabled}"
+                                                           Margin="5" />
+
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{x:Bind Action}"
+                                                           Foreground="{ThemeResource TextFillColorDisabled}"
+                                                           Margin="5" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
 
             <!-- Connect & Devices List -->
             <Grid Grid.Column="1">

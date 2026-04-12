@@ -22,11 +22,14 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
 {
     private MainMappingPage? mappingPage;
     private readonly ConfigState configState;
-    private bool wantsToExit = false;
+    private bool shouldStartMinimized;
+    private bool wantsToExit;
 
     public MainWindow(bool shouldStartMinimized)
     {
         this.InitializeComponent();
+
+        this.shouldStartMinimized = shouldStartMinimized;
 
         this.configState = ServiceContainer.Get<IConfigManager>()
             .GetConfigState();
@@ -64,16 +67,17 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         {
             SuggestedStartLocation = PickerLocationId.DocumentsLibrary
         };
-        picker.FileTypeFilter.Add(MappingProfile.EXTENSION);
-        InitializeWithWindow.Initialize(picker, WindowNative.GetWindowHandle(this));
+        picker.FileTypeFilter.Add(MappingProfile.EXTENSION_REAL);
 
         var file = await picker.PickSingleFileAsync();
+
         if (file == null)
         {
             return;
         }
 
         var profile = MappingProfile.Load(file.Path);
+
         if (profile == null)
         {
             await ShowError(
@@ -81,6 +85,7 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
                 "Failed to load profile!",
                 "The selected profile was corrupt!\n\nPlease help us by reporting this bug on GitHub."
             );
+
             return;
         }
 
@@ -99,26 +104,29 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         Process.Start("explorer.exe", $"/select, \"{profile.FilePath}\"");
     }
 
+    private void MenuCloseToTray_Click(object sender, RoutedEventArgs e)
+        => this.Hide();
+
     private void MenuExit_Click(object sender, RoutedEventArgs e)
         => Application.Current.Exit();
 
-    //private void MenuGamePadPressRelease_Click(object sender, RoutedEventArgs e)
-    //    => _mappingPage?.AddAllGamePadMappings(includePressRelease: true);
+    private void MenuGamePadPressRelease_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllGamePadMappings();
 
-    //private void MenuGamePadPress_Click(object sender, RoutedEventArgs e)
-    //    => _mappingPage?.AddAllGamePadMappings(pressOnly: true);
+    private void MenuGamePadPress_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllGamePadMappings(pressOnly: true);
 
-    //private void MenuGamePadRelease_Click(object sender, RoutedEventArgs e)
-    //    => _mappingPage?.AddAllGamePadMappings(releaseOnly: true);
+    private void MenuGamePadRelease_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllGamePadMappings(releaseOnly: true);
 
-    //private void MenuKeyboardPressRelease_Click(object sender, RoutedEventArgs e)
-    //    => _mappingPage?.AddAllKeyboardMappings(includePressRelease: true);
+    private void MenuKeyboardPressRelease_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllKeyboardMappings();
 
-    //private void MenuKeyboardPress_Click(object sender, RoutedEventArgs e)
-    //    => _mappingPage?.AddAllKeyboardMappings(pressOnly: true);
+    private void MenuKeyboardPress_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllKeyboardMappings(pressOnly: true);
 
-    //private void MenuKeyboardRelease_Click(object sender, RoutedEventArgs e)
-    //    => _mappingPage?.AddAllKeyboardMappings(releaseOnly: true);
+    private void MenuKeyboardRelease_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllKeyboardMappings(releaseOnly: true);
 
     private void MenuTestKeyboard_Click(object sender, RoutedEventArgs e)
         => OpenUrl("https://devicetests.com/keyboard-tester");
@@ -148,6 +156,14 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         Process.Start(new ProcessStartInfo { FileName = logFile, UseShellExecute = true });
     }
 
+    private void MenuViewEventViewer_Click(object sender, RoutedEventArgs e)
+        => Process.Start(new ProcessStartInfo
+        {
+            FileName = "eventvwr.msc",
+            Arguments = "/c:Application",
+            UseShellExecute = true,
+        });
+
     private void MenuReportProblem_Click(object sender, RoutedEventArgs e)
         => OpenUrl("https://github.com/Key2Joy/Key2Joy/issues");
 
@@ -173,6 +189,17 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         }
 
         this.TitleBar.IsBackButtonVisible = false;
+    }
+
+    private void Window_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        var presenter = this.AppWindow.Presenter as OverlappedPresenter;
+
+        if (this.shouldStartMinimized && presenter != null)
+        {
+            this.shouldStartMinimized = false;
+            this.Hide();
+        }
     }
 
     private void Window_Closed(object sender, WindowEventArgs args)

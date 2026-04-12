@@ -96,8 +96,11 @@ public sealed partial class TriggerControl : UserControl
             return;
         }
 
-        var match = this.TriggersAvailable
-            .FirstOrDefault(t => t.TypeFactory.FullTypeName == trigger.GetType().FullName);
+        var match = trigger != null
+            ? this.TriggersAvailable
+                .FirstOrDefault(t => t.TypeFactory.FullTypeName == trigger.GetType().FullName)
+            : null;
+
 
         if (match == null)
         {

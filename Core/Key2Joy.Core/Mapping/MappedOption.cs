@@ -99,15 +99,15 @@ public class MappedOption : AbstractMappedOption
     /// <returns></returns>
     public static MappedOption GenerateReverseMapping(MappedOption mapping, bool dontSetParent = false)
     {
-        var actionCopy = (AbstractAction)mapping.Action.Clone();
-        var triggerCopy = (AbstractTrigger)mapping.Trigger.Clone();
+        var actionCopy = (AbstractAction)mapping.Action?.Clone();
+        var triggerCopy = (AbstractTrigger)mapping.Trigger?.Clone();
 
-        if (mapping.Action is IProvideReverseAspect action)
+        if (actionCopy != null && mapping.Action is IProvideReverseAspect action)
         {
             action.MakeReverse(actionCopy);
         }
 
-        if (mapping.Trigger is IProvideReverseAspect trigger)
+        if (triggerCopy != null && mapping.Trigger is IProvideReverseAspect trigger)
         {
             trigger.MakeReverse(triggerCopy);
         }

@@ -20,6 +20,7 @@ public class MappingProfile
 
     public const string DEFAULT_PROFILE_PATH = "default-profile";
     public const string EXTENSION = ".k2j.json";
+    public const string EXTENSION_REAL = ".json";
 
     public const string BACKUP_EXTENSION = ".bak";
     public const string SAVE_DIR = "Profiles";

@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    Activated="Window_Activated"
     Closed="Window_Closed"
     Title="Key2Joy.App">
 
@@ -60,12 +61,16 @@
                                         Text="Open Profile Folder"
                                         Click="MenuOpenProfileFolder_Click" />
                         <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="MenuCloseToTray"
+                                        Text="Close To Tray"
+                                        Click="MenuCloseToTray_Click" />
+                        <MenuFlyoutSeparator />
                         <MenuFlyoutItem x:Name="MenuExit"
                                         Text="Exit"
                                         Click="MenuExit_Click" />
                     </MenuBarItem>
                     <MenuBarItem Title="Mappings">
-                        <!--<MenuFlyoutSubItem Text="Add All GamePad">
+                        <MenuFlyoutSubItem Text="Add All GamePad">
                             <MenuFlyoutItem x:Name="MenuGamePadPressRelease"
                                             Text="Press + Release"
                                             Click="MenuGamePadPressRelease_Click" />
@@ -86,7 +91,7 @@
                             <MenuFlyoutItem x:Name="MenuKeyboardRelease"
                                             Text="Release Only"
                                             Click="MenuKeyboardRelease_Click" />
-                        </MenuFlyoutSubItem>-->
+                        </MenuFlyoutSubItem>
                     </MenuBarItem>
                     <MenuBarItem Title="Test">
                         <MenuFlyoutItem x:Name="MenuTestKeyboard"
@@ -107,6 +112,9 @@
                         <MenuFlyoutItem x:Name="MenuViewLog"
                                         Text="View Log File"
                                         Click="MenuViewLog_Click" />
+                        <MenuFlyoutItem x:Name="MenuViewEventViewer"
+                                        Text="View Event Viewer"
+                                        Click="MenuViewEventViewer_Click" />
                     </MenuBarItem>
                     <MenuBarItem Title="Help">
                         <MenuFlyoutItem x:Name="MenuReportProblem"

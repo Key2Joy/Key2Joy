@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions.Logic;
 using Key2Joy.Mapping.Triggers.Mouse;
@@ -28,29 +27,13 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
 
     private void MappingControl_MappingCreated(object sender, Key2Joy.Mapping.MappedOption mappedOption)
     {
-        var isExisting = this.ViewModel.MappedOptions.Contains(mappedOption);
-
-        if (!isExisting)
-        {
-            this.ViewModel.AddMapping(mappedOption);
-
-            if (mappedOption.Children.Any())
-            {
-                foreach (var child in mappedOption.Children)
-                {
-                    this.ViewModel.AddMapping(child);
-                }
-            }
-        }
-
-        this.ViewModel.SelectedProfile?.Save();
+        this.ViewModel.HandleMappingCreated(mappedOption);
         this.MappingListView.SelectedItem = null;
     }
 
     private void MappingControl_MappingDeleted(object sender, Key2Joy.Mapping.MappedOption mappedOption)
     {
-        this.ViewModel.RemoveMapping(mappedOption);
-        this.ViewModel.SelectedProfile?.Save();
+        this.ViewModel.HandleMappingDeleted(mappedOption);
         this.MappingListView.SelectedItem = null;
     }
 
@@ -93,8 +76,9 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
         return false;
     }
 
-    public void CreateNewProfile(string v)
-        => throw new NotImplementedException();
+    public MappingProfile CreateNewProfile(string nameSuffix = default)
+        => this.ViewModel.CreateNewProfile(nameSuffix);
+
 
     public void SetSelectedProfile(MappingProfile profile)
         => this.ViewModel.SetSelectedProfile(profile);
