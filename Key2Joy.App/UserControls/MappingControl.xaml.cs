@@ -45,6 +45,14 @@ public sealed partial class MappingControl : UserControl
     {
         this.ModeTitle = value ? "Modifying a mapping" : "Creating a new mapping";
         this.SaveButtonText = value ? "Save Mapping" : "Create Mapping";
+
+        if (value)
+        {
+            return;
+        }
+
+        this.TriggerControl.Clear();
+        this.ActionControl.Clear();
     }
 
     public MappingControl()

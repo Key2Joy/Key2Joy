@@ -23,18 +23,63 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
         this.MappingControl.MappingCreated += this.MappingControl_MappingCreated;
         this.MappingControl.MappingDeleted += this.MappingControl_MappingDeleted;
         this.MappingControl.MappingDeselected += this.MappingControl_MappingDeselected;
+
+        this.MappingGroupsList.EditMappingRequested += this.MappingGroupsList_EditMappingRequested;
+        this.MappingGroupsList.GenerateReversesRequested += this.MappingGroupsList_GenerateReversesRequested;
+        this.MappingGroupsList.RemoveMappingRequested += this.MappingGroupsList_RemoveMappingRequested;
+        this.MappingGroupsList.MakeMappingParentlessRequested += this.MappingGroupsList_MakeMappingParentlessRequested;
+        this.MappingGroupsList.ChooseNewParentRequested += this.MappingGroupsList_ChooseNewParentRequested;
+    }
+
+    private void MappingGroupsList_EditMappingRequested(object? sender, MappedOption mappedOption)
+    {
+        this.ViewModel.SelectMapping(mappedOption);
+        this.MappingControl.SelectMapping(mappedOption);
+    }
+
+    private void MappingGroupsList_GenerateReversesRequested(object? sender, MappedOption mappedOption)
+    {
+        if (mappedOption == null)
+        {
+            return;
+        }
+
+        this.ViewModel.GenerateReversesForMapping(mappedOption);
+    }
+
+    private void MappingGroupsList_RemoveMappingRequested(object? sender, MappedOption mappedOption)
+    {
+        if (mappedOption == null)
+        {
+            return;
+        }
+
+        this.MappingControl.SelectMapping(null);
+        this.ViewModel.HandleMappingDeleted(mappedOption);
+    }
+
+    private void MappingGroupsList_MakeMappingParentlessRequested(object? sender, MappedOption mappedOption)
+    {
+        this.ViewModel.MakeMappingParentless(mappedOption);
+        this.DeselectSelectedMapping();
+    }
+
+    private void MappingGroupsList_ChooseNewParentRequested(object? sender, (MappedOption Child, MappedOption NewParent) args)
+    {
+        this.ViewModel.ChooseNewParent(args.Child, args.NewParent);
+        this.DeselectSelectedMapping();
     }
 
     private void MappingControl_MappingCreated(object sender, Key2Joy.Mapping.MappedOption mappedOption)
     {
         this.ViewModel.HandleMappingCreated(mappedOption);
-        this.MappingControl.SelectMapping(null);
+        this.DeselectSelectedMapping();
     }
 
     private void MappingControl_MappingDeleted(object sender, Key2Joy.Mapping.MappedOption mappedOption)
     {
         this.ViewModel.HandleMappingDeleted(mappedOption);
-        this.MappingControl.SelectMapping(null);
+        this.DeselectSelectedMapping();
     }
 
     private void MappingControl_MappingDeselected(object sender, Key2Joy.Mapping.MappedOption mappedOption)

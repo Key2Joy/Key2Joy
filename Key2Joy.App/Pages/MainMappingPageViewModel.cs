@@ -133,6 +133,24 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
                 this.MappedOptions.Remove(vm);
             }
         }
+        else
+        {
+            // Detach from parent so parent.Children is updated, then rebuild the parent VM
+            // so its Children snapshot reflects the removal.
+            var parentOption = mappedOption.Parent;
+            mappedOption.SetParent(null);
+
+            if (parentOption != null)
+            {
+                var parentVm = this.MappedOptions.FirstOrDefault(x => x.Option == parentOption);
+
+                if (parentVm != null)
+                {
+                    var index = this.MappedOptions.IndexOf(parentVm);
+                    this.MappedOptions[index] = new MappedOptionViewModel(parentOption);
+                }
+            }
+        }
 
         this.UpdateFilter();
     }
@@ -432,6 +450,48 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         }
 
         this.UpdateFilter();
+    }
+
+    public void GenerateReversesForMapping(MappedOption mappedOption)
+    {
+        if (this.SelectedProfile == null)
+        {
+            return;
+        }
+
+        var newOptions = MappedOption.GenerateReverseMappings(new List<MappedOption> { mappedOption });
+
+        foreach (var option in newOptions)
+        {
+            this.SelectedProfile.MappedOptions.Add(option);
+        }
+
+        this.SelectedProfile.Save();
+        this.SetSelectedProfile(this.SelectedProfile);
+    }
+
+    public void MakeMappingParentless(MappedOption childOption)
+    {
+        if (this.SelectedProfile == null)
+        {
+            return;
+        }
+
+        childOption.SetParent(null);
+        this.SelectedProfile.Save();
+        this.SetSelectedProfile(this.SelectedProfile);
+    }
+
+    public void ChooseNewParent(MappedOption child, MappedOption newParent)
+    {
+        if (this.SelectedProfile == null)
+        {
+            return;
+        }
+
+        child.SetParent(newParent);
+        this.SelectedProfile.Save();
+        this.SetSelectedProfile(this.SelectedProfile);
     }
 
     public object Invoke(Delegate method)

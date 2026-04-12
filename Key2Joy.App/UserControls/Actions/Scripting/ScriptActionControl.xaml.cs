@@ -30,7 +30,7 @@ public sealed partial class ScriptActionControl : UserControl, IActionOptionsCon
     [ObservableProperty]
     public partial string ScriptFilePath { get; set; } = string.Empty;
 
-    private bool _securityWarningAccepted;
+    private bool securityWarningAccepted;
 
     public ScriptActionControl()
         => this.InitializeComponent();
@@ -43,13 +43,12 @@ public sealed partial class ScriptActionControl : UserControl, IActionOptionsCon
 
     partial void OnScriptChanged(string value)
     {
-        _securityWarningAccepted = false;
         OptionsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     partial void OnScriptFilePathChanged(string value)
     {
-        _securityWarningAccepted = false;
+        securityWarningAccepted = false;
         OptionsChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -64,6 +63,11 @@ public sealed partial class ScriptActionControl : UserControl, IActionOptionsCon
         if (file != null)
         {
             this.ScriptFilePath = file.Path;
+
+            if (!this.securityWarningAccepted)
+            {
+                _ = this.ShowSecurityWarningAsync();
+            }
         }
     }
 
@@ -82,7 +86,6 @@ public sealed partial class ScriptActionControl : UserControl, IActionOptionsCon
         {
             this.Script = thisAction.Script ?? string.Empty;
         }
-        this._securityWarningAccepted = false;
     }
 
     void IActionOptionsControl.Setup(AbstractAction action)
@@ -94,13 +97,7 @@ public sealed partial class ScriptActionControl : UserControl, IActionOptionsCon
 
     bool IActionOptionsControl.CanMappingSave(AbstractAction action)
     {
-        if (this._securityWarningAccepted)
-        {
-            return true;
-        }
-
-        _ = this.ShowSecurityWarningAsync();
-        return false;
+        return true;
     }
 
     private async Task ShowSecurityWarningAsync()
@@ -117,7 +114,7 @@ public sealed partial class ScriptActionControl : UserControl, IActionOptionsCon
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            this._securityWarningAccepted = true;
+            this.securityWarningAccepted = true;
         }
     }
 }

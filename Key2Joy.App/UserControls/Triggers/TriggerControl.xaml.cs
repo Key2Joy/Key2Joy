@@ -139,5 +139,11 @@ public sealed partial class TriggerControl : UserControl
         this.BuildTrigger();
     }
 
+    public void Clear()
+    {
+        this.Trigger = null;
+        this.TriggerSelected = null;
+    }
+
     private void OnOptionsChanged(object sender, EventArgs e) => this.BuildTrigger();
 }

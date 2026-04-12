@@ -139,5 +139,11 @@ public sealed partial class ActionControl : UserControl
         this.BuildAction();
     }
 
+    public void Clear()
+    {
+        this.Action = null;
+        this.ActionSelected = null;
+    }
+
     private void OnOptionsChanged(object sender, EventArgs e) => this.BuildAction();
 }

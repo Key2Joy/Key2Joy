@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Key2Joy.App.Pages;
 using Key2Joy.Mapping;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using DependencyPropertyGenerator;
 
@@ -16,6 +18,17 @@ public sealed partial class MappingGroupsListControl : UserControl
 {
     public event EventHandler<MappedOption> MappingSelected;
 
+    /// <summary>Fired when the user wants to edit or add a mapping. Argument is <c>null</c> for "add new".</summary>
+    public event EventHandler<MappedOption> EditMappingRequested;
+
+    public event EventHandler<MappedOption> GenerateReversesRequested;
+
+    public event EventHandler<MappedOption> RemoveMappingRequested;
+
+    public event EventHandler<MappedOption> MakeMappingParentlessRequested;
+
+    public event EventHandler<(MappedOption Child, MappedOption NewParent)> ChooseNewParentRequested;
+
     public MappingGroupsListControl()
     {
         this.InitializeComponent();
@@ -25,14 +38,36 @@ public sealed partial class MappingGroupsListControl : UserControl
 
     public void CollapseAll() => this.SetAllMappingsExpanded(false);
 
-    private void MappingItem_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    private void MappingItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+    {
+        var element = sender as FrameworkElement;
+        var vm = element?.Tag as MappedOptionViewModel;
+
+        List<MappedOptionViewModel> selectedItems = vm != null
+            ? [vm]
+            : [];
+
+        var builder = new MappingContextMenuBuilder(selectedItems);
+        builder.SelectEditMapping += (s, option) => this.EditMappingRequested?.Invoke(this, option);
+        builder.SelectGenerateReverseMappings += (s, _) => this.GenerateReversesRequested?.Invoke(this, vm?.Option);
+        builder.SelectRemoveMappings += (s, _) => this.RemoveMappingRequested?.Invoke(this, vm?.Option);
+        builder.SelectMakeMappingParentless += (s, option) => this.MakeMappingParentlessRequested?.Invoke(this, option);
+        builder.SelectChooseNewParent += (s, args) => this.ChooseNewParentRequested?.Invoke(this, args);
+
+        var flyout = builder.Build();
+        flyout.ShowAt(element, new FlyoutShowOptions { Position = e.GetPosition(element) });
+
+        e.Handled = true;
+    }
+
+    private void MappingItem_Tapped(object sender, TappedRoutedEventArgs e)
     {
         var element = sender as FrameworkElement;
         var vm = element?.Tag as MappedOptionViewModel;
         this.MappingSelected?.Invoke(this, vm?.Option);
     }
 
-    private void MappingItem_DoubleTapped(object sender, Microsoft.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
+    private void MappingItem_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
         var element = sender as FrameworkElement;
         var stackPanel = element?.Parent as StackPanel;
@@ -51,7 +86,7 @@ public sealed partial class MappingGroupsListControl : UserControl
 
         ToggleButton? toggleButton = null;
 
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
         {
             if (VisualTreeHelper.GetChild(element, i) is ToggleButton tb)
             {
@@ -162,7 +197,7 @@ public sealed partial class MappingGroupsListControl : UserControl
     {
         var count = VisualTreeHelper.GetChildrenCount(parent);
 
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var child = VisualTreeHelper.GetChild(parent, i);
 
