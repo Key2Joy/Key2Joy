@@ -38,6 +38,35 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         this.SetTitleBar(this.TitleBar);
 
         this.MainFrame.Navigate(typeof(Pages.MainMappingPage));
+
+        this.SetupGroupingRadioMenu();
+    }
+
+    private void SetupGroupingRadioMenu()
+    {
+        var enumValues = Enum.GetValues<ViewMappingGroupType>();
+        var selected = this.configState.SelectedViewMappingGroupType;
+
+        this.MenuGroupBySubItem.Items.Clear();
+
+        foreach (var enumValue in enumValues)
+        {
+            var radio = new RadioMenuFlyoutItem
+            {
+                Text = enumValue.ToString(),
+                IsChecked = enumValue == selected,
+            };
+
+            radio.Click += (s, e) =>
+            {
+                this.configState.SelectedViewMappingGroupType = enumValue;
+                this.SetupGroupingRadioMenu();
+
+                mappingPage?.RefreshMappingList();
+            };
+
+            this.MenuGroupBySubItem.Items.Add(radio);
+        }
     }
 
     public bool RunAppCommand(AppCommand command)

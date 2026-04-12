@@ -32,7 +32,7 @@ public class ConfigState
         set => this.SaveIfInitialized(this.selectedViewMappingGroupType = value);
     }
 
-    private ViewMappingGroupType selectedViewMappingGroupType = ViewMappingGroupType.ByAction;
+    private ViewMappingGroupType selectedViewMappingGroupType = ViewMappingGroupType.Action;
 
     [BooleanConfigControl(
         Text = "Minimize to Tray"

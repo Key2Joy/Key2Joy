@@ -119,23 +119,27 @@
                                             Click="MenuKeyboardRelease_Click" />
                         </MenuFlyoutSubItem>
                     </MenuBarItem>
-                    <MenuBarItem Title="Test">
-                        <MenuFlyoutItem x:Name="MenuTestKeyboard"
-                                        Text="Test Keyboard"
-                                        Click="MenuTestKeyboard_Click" />
-                        <MenuFlyoutItem x:Name="MenuTestMouse"
-                                        Text="Test Mouse"
-                                        Click="MenuTestMouse_Click" />
-                        <MenuFlyoutSubItem Text="Test GamePad">
-                            <MenuFlyoutItem x:Name="MenuTestControllerDeviceTests"
-                                        Text="devicetests.com"
-                                        Click="MenuTestControllerDeviceTests_Click" />
-                            <MenuFlyoutItem x:Name="MenuTestControllerGamepadTester"
-                                        Text="gamepad-tester.com"
-                                        Click="MenuTestControllerGamepadTester_Click" />
-                        </MenuFlyoutSubItem>
+                    <MenuBarItem Title="View">
+                        <MenuFlyoutSubItem x:Name="MenuGroupBySubItem"
+                                           Text="Group By" />
                     </MenuBarItem>
                     <MenuBarItem Title="Tools">
+                        <MenuFlyoutSubItem Text="Test Mappings">
+                            <MenuFlyoutItem x:Name="MenuTestKeyboard"
+                                            Text="Test Keyboard"
+                                            Click="MenuTestKeyboard_Click" />
+                            <MenuFlyoutItem x:Name="MenuTestMouse"
+                                            Text="Test Mouse"
+                                            Click="MenuTestMouse_Click" />
+                            <MenuFlyoutSubItem Text="Test GamePad">
+                                <MenuFlyoutItem x:Name="MenuTestControllerDeviceTests"
+                                            Text="devicetests.com"
+                                            Click="MenuTestControllerDeviceTests_Click" />
+                                <MenuFlyoutItem x:Name="MenuTestControllerGamepadTester"
+                                            Text="gamepad-tester.com"
+                                            Click="MenuTestControllerGamepadTester_Click" />
+                            </MenuFlyoutSubItem>
+                        </MenuFlyoutSubItem>
                         <MenuFlyoutItem x:Name="MenuViewLog"
                                         Text="View Log File"
                                         Click="MenuViewLog_Click" />

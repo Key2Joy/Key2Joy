@@ -81,6 +81,9 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         };
     }
 
+    public void RefreshMappingList()
+        => this.SetSelectedProfile(this.SelectedProfile);
+
     public void SetSelectedProfile(MappingProfile profile)
     {
         _isSettingProfile = true;
@@ -261,7 +264,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
             {
                 string key;
 
-                if (groupType == ViewMappingGroupType.ByAction)
+                if (groupType == ViewMappingGroupType.Action)
                 {
                     key = vm.Option.Action != null
                         ? ActionsRepository.GetAttributeForAction(vm.Option.Action)?.GroupName ?? "Other"

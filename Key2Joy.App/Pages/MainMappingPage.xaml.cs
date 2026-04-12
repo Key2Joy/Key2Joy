@@ -150,4 +150,7 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
 
     public void SetSelectedProfile(MappingProfile profile)
         => this.ViewModel.SetSelectedProfile(profile);
+
+    public void RefreshMappingList()
+        => this.ViewModel.RefreshMappingList();
 }

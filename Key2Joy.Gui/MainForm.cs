@@ -613,11 +613,11 @@ public partial class MainForm : Form, IAcceptAppCommands, IInvokeOnUI
 
         switch (mappingGroupType)
         {
-            case ViewMappingGroupType.ByAction:
+            case ViewMappingGroupType.Action:
                 attribute = ActionsRepository.GetAttributeForAction(option.Action);
                 break;
 
-            case ViewMappingGroupType.ByTrigger:
+            case ViewMappingGroupType.Trigger:
                 attribute = TriggersRepository.GetAttributeForTrigger(option.Trigger);
                 break;
 
