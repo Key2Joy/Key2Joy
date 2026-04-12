@@ -134,8 +134,11 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
     private void MenuTestMouse_Click(object sender, RoutedEventArgs e)
         => OpenUrl("https://devicetests.com/mouse-test");
 
-    private void MenuTestController_Click(object sender, RoutedEventArgs e)
+    private void MenuTestControllerDeviceTests_Click(object sender, RoutedEventArgs e)
         => OpenUrl("https://devicetests.com/controller-tester");
+
+    private void MenuTestControllerGamepadTester_Click(object sender, RoutedEventArgs e)
+        => OpenUrl("https://gamepad-tester.com");
 
     private async void MenuConfig_Click(object sender, RoutedEventArgs e)
         => this.NavigateWithBackButton(typeof(ConfigPage));

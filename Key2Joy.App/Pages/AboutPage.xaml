@@ -8,7 +8,79 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  Padding="32">
 
-    </Grid>
+        <StackPanel MaxWidth="900"
+                    HorizontalAlignment="Center">
+
+            <!-- Header: Logo + Product Info side by side -->
+            <Grid ColumnSpacing="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0"
+                       Source="/Assets/Icons/icon256.png"
+                       Width="256"
+                       Height="256"
+                       Stretch="Uniform"
+                       VerticalAlignment="Center" />
+
+                <StackPanel Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Spacing="4">
+                    <TextBlock x:Name="ProductNameTextBlock"
+                               Style="{StaticResource TitleLargeTextBlockStyle}" />
+                    <TextBlock x:Name="VersionTextBlock"
+                               Style="{StaticResource SubtitleTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="CopyrightTextBlock"
+                               Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                               Margin="0,4,0,0" />
+
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="8"
+                                Margin="0,12,0,0">
+                        <HyperlinkButton Content="GitHub"
+                                         NavigateUri="https://github.com/luttje/Key2Joy"
+                                         Padding="8,4" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <Rectangle Height="1"
+                       Fill="{ThemeResource DividerStrokeColorDefaultBrush}"
+                       Margin="0,4" />
+
+            <!-- Credits Section -->
+            <StackPanel Spacing="12"
+                        Padding="32">
+                <TextBlock Text="Additional Credits"
+                           Style="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock Text="The following people are thanked for their open-source projects. This software wouldn't exist without their generosity."
+                           TextWrapping="Wrap"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                <!-- Credits cards -->
+                <ItemsControl x:Name="CreditsItemsControl">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="8" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <!-- Note -->
+                <TextBlock Text="If someone is missing from this list, please do let us know on GitHub."
+                           TextWrapping="Wrap"
+                           FontStyle="Italic"
+                           Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                           Margin="0,4,0,0" />
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
 </Page>

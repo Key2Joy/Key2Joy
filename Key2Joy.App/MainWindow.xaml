@@ -100,9 +100,14 @@
                         <MenuFlyoutItem x:Name="MenuTestMouse"
                                         Text="Test Mouse"
                                         Click="MenuTestMouse_Click" />
-                        <MenuFlyoutItem x:Name="MenuTestController"
-                                        Text="Test Controller"
-                                        Click="MenuTestController_Click" />
+                        <MenuFlyoutSubItem Text="Test GamePad">
+                            <MenuFlyoutItem x:Name="MenuTestControllerDeviceTests"
+                                        Text="devicetests.com"
+                                        Click="MenuTestControllerDeviceTests_Click" />
+                            <MenuFlyoutItem x:Name="MenuTestControllerGamepadTester"
+                                        Text="gamepad-tester.com"
+                                        Click="MenuTestControllerGamepadTester_Click" />
+                        </MenuFlyoutSubItem>
                     </MenuBarItem>
                     <MenuBarItem Title="Tools">
                         <MenuFlyoutItem x:Name="MenuConfig"
