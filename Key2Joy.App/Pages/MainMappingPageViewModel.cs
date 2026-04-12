@@ -73,8 +73,6 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         Key2JoyManager.Instance.SetHandlerWithInvoke(this);
         Key2JoyManager.Instance.StatusChanged += (s, ev) =>
         {
-            //this.SetStatusView(ev.IsEnabled);
-
             if (ev.Profile != null)
             {
                 this.SetSelectedProfile(ev.Profile);
