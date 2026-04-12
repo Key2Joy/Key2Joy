@@ -98,7 +98,8 @@
                                   Content="{x:Bind ViewModel.ArmedButtonText, Mode=OneWay}"/>
 
                     <!-- Refresh Button -->
-                    <Button Grid.Column="1">
+                    <Button Grid.Column="1"
+                            Command="{x:Bind ViewModel.RefreshDevicesCommand}">
                         <FontIcon Glyph="&#xE72C;" />
                     </Button>
                 </Grid>

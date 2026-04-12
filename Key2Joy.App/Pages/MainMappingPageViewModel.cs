@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Key2Joy.Config;
 using Key2Joy.LowLevelInput;
 using Key2Joy.LowLevelInput.SimulatedGamePad;
@@ -181,6 +182,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         RefreshDevices();
     }
 
+    [RelayCommand]
     private void RefreshDevices()
     {
         this.Devices.Clear();
