@@ -8,7 +8,9 @@ using Key2Joy.LowLevelInput;
 using Key2Joy.LowLevelInput.SimulatedGamePad;
 using Key2Joy.LowLevelInput.XInput;
 using Key2Joy.Mapping;
+using Key2Joy.Mapping.Actions;
 using Key2Joy.Mapping.Actions.Input;
+using Key2Joy.Mapping.Triggers;
 using Key2Joy.Util;
 
 namespace Key2Joy.App.Pages;
@@ -16,8 +18,8 @@ namespace Key2Joy.App.Pages;
 [ObservableObject]
 public partial class MainMappingPageViewModel : IInvokeOnUI
 {
-    public ObservableCollection<MappedOption> MappedOptions { get; } = new();
-    public ObservableCollection<MappedOption> FilteredMappedOptions { get; } = new();
+    public ObservableCollection<MappedOptionViewModel> MappedOptions { get; } = new();
+    public ObservableCollection<MappingGroupViewModel> FilteredMappingGroups { get; } = new();
     public ObservableCollection<IGamePadInfo> Devices { get; } = new();
 
     public MappingProfile SelectedProfile { get; private set; }
@@ -40,7 +42,15 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
     [ObservableProperty]
     public partial int DevicesCount { get; set; } = 0;
 
+    [ObservableProperty]
+    public partial int FilteredMappedOptionsCount { get; set; } = 0;
+
+    [ObservableProperty]
+    public partial bool HasSelectedMapping { get; set; } = false;
+
     private bool _isSettingProfile;
+
+    private MappedOptionViewModel _selectedMappedOption;
 
     private readonly ConfigState configState;
 
@@ -89,7 +99,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
                 continue;
             }
 
-            this.MappedOptions.Add(mappedOption);
+            this.MappedOptions.Add(new MappedOptionViewModel(mappedOption));
         }
 
         this.ProfileName = profile.Name;
@@ -104,7 +114,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
         if (!mappedOption.IsChild)
         {
-            this.MappedOptions.Add(mappedOption);
+            this.MappedOptions.Add(new MappedOptionViewModel(mappedOption));
         }
 
         this.UpdateFilter();
@@ -116,7 +126,12 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
         if (!mappedOption.IsChild)
         {
-            this.MappedOptions.Remove(mappedOption);
+            var vm = this.MappedOptions.FirstOrDefault(x => x.Option == mappedOption);
+
+            if (vm != null)
+            {
+                this.MappedOptions.Remove(vm);
+            }
         }
 
         this.UpdateFilter();
@@ -199,18 +214,111 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
     private void UpdateFilter()
     {
-        this.FilteredMappedOptions.Clear();
+        this.FilteredMappingGroups.Clear();
 
-        foreach (var mappedOption in this.MappedOptions)
+        var filtered = this.MappedOptions
+            .Where(vm => string.IsNullOrEmpty(this.SearchText)
+                || vm.Option.Action?.ToString().IndexOf(this.SearchText, StringComparison.OrdinalIgnoreCase) > -1
+                || vm.Option.Trigger?.ToString().IndexOf(this.SearchText, StringComparison.OrdinalIgnoreCase) > -1)
+            .ToList();
+
+        var groupType = this.configState.SelectedViewMappingGroupType;
+
+        if (groupType == ViewMappingGroupType.None)
         {
-            if (string.IsNullOrEmpty(this.SearchText)
-                || mappedOption.Action?.ToString().IndexOf(this.SearchText, StringComparison.OrdinalIgnoreCase) > -1
-                || mappedOption.Trigger?.ToString().IndexOf(this.SearchText, StringComparison.OrdinalIgnoreCase) > -1)
+            var group = new MappingGroupViewModel { GroupName = string.Empty, IsHeaderVisible = false };
+
+            foreach (var vm in filtered)
             {
-                this.FilteredMappedOptions.Add(mappedOption);
+                group.Items.Add(vm);
+            }
+
+            this.FilteredMappingGroups.Add(group);
+        }
+        else
+        {
+            var grouped = new Dictionary<string, MappingGroupViewModel>();
+
+            foreach (var vm in filtered)
+            {
+                string key;
+
+                if (groupType == ViewMappingGroupType.ByAction)
+                {
+                    key = vm.Option.Action != null
+                        ? ActionsRepository.GetAttributeForAction(vm.Option.Action)?.GroupName ?? "Other"
+                        : "Other";
+                }
+                else
+                {
+                    key = vm.Option.Trigger != null
+                        ? TriggersRepository.GetAttributeForTrigger(vm.Option.Trigger)?.GroupName ?? "Other"
+                        : "Other";
+                }
+
+                if (!grouped.TryGetValue(key, out var grp))
+                {
+                    grp = new MappingGroupViewModel { GroupName = key, IsHeaderVisible = true };
+                    grouped[key] = grp;
+                }
+
+                grp.Items.Add(vm);
+            }
+
+            foreach (var grp in grouped.Values)
+            {
+                this.FilteredMappingGroups.Add(grp);
+            }
+        }
+
+        this.FilteredMappedOptionsCount = this.FilteredMappingGroups.Sum(g => g.Items.Count);
+    }
+
+    public void SelectMapping(MappedOption option)
+    {
+        if (this._selectedMappedOption != null)
+        {
+            this._selectedMappedOption.IsSelected = false;
+            this._selectedMappedOption = null;
+        }
+
+        if (option == null)
+        {
+            this.HasSelectedMapping = false;
+            return;
+        }
+
+        foreach (var group in this.FilteredMappingGroups)
+        {
+            foreach (var vm in group.Items)
+            {
+                if (vm.Option.Guid == option.Guid)
+                {
+                    vm.IsSelected = true;
+                    this._selectedMappedOption = vm;
+                    this.HasSelectedMapping = true;
+                    return;
+                }
+
+                foreach (var child in vm.Children)
+                {
+                    if (child.Option.Guid == option.Guid)
+                    {
+                        child.IsSelected = true;
+                        this._selectedMappedOption = child;
+                        this.HasSelectedMapping = true;
+                        return;
+                    }
+                }
             }
         }
     }
+
+    public void DeselectSelectedMapping()
+        => this.SelectMapping(null);
+
+    public MappedOption GetSelectedMappingOption()
+        => this._selectedMappedOption?.Option;
 
     public MappingProfile CreateNewProfile(string nameSuffix = default)
     {
@@ -222,7 +330,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
     public void HandleMappingCreated(MappedOption mappedOption)
     {
-        var isExisting = this.MappedOptions.Contains(mappedOption);
+        var isExisting = this.MappedOptions.Any(vm => vm.Option == mappedOption);
 
         if (!isExisting)
         {
@@ -319,7 +427,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         {
             if (!mappedOption.IsChild)
             {
-                this.MappedOptions.Add(mappedOption);
+                this.MappedOptions.Add(new MappedOptionViewModel(mappedOption));
             }
         }
 

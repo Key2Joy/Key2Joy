@@ -55,8 +55,28 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         if (this.MainFrame.Content is MainMappingPage page)
         {
             this.mappingPage = page;
+            page.ViewModel.PropertyChanged += (s, args) =>
+            {
+                if (args.PropertyName == nameof(MainMappingPageViewModel.HasSelectedMapping))
+                {
+                    this.MenuDeleteSelectedMapping.IsEnabled = page.ViewModel.HasSelectedMapping;
+                }
+            };
+            this.MenuDeleteSelectedMapping.IsEnabled = false;
         }
     }
+
+    private void MenuDeselectMapping_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.DeselectSelectedMapping();
+
+    private void MenuDeleteSelectedMapping_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.DeleteSelectedMapping();
+
+    private void MenuExpandAllMappings_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ExpandAllMappings();
+
+    private void MenuCollapseAllMappings_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.CollapseAllMappings();
 
     private void MenuNewProfile_Click(object sender, RoutedEventArgs e)
         => this.mappingPage?.CreateNewProfile(" - Copy");

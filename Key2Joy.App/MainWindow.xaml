@@ -74,6 +74,28 @@
                         </MenuFlyoutItem>
                     </MenuBarItem>
                     <MenuBarItem Title="Mappings">
+                        <MenuFlyoutItem x:Name="MenuExpandAllMappings"
+                                        Text="Expand All"
+                                        Click="MenuExpandAllMappings_Click" />
+                        <MenuFlyoutItem x:Name="MenuCollapseAllMappings"
+                                        Text="Collapse All"
+                                        Click="MenuCollapseAllMappings_Click" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="MenuDeselectMapping"
+                                        Text="Deselect"
+                                        Click="MenuDeselectMapping_Click">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="Escape" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem x:Name="MenuDeleteSelectedMapping"
+                                        Text="Delete Selected"
+                                        Click="MenuDeleteSelectedMapping_Click">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="Delete" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
                         <MenuFlyoutSubItem Text="Add All GamePad">
                             <MenuFlyoutItem x:Name="MenuGamePadPressRelease"
                                             Text="Press + Release"

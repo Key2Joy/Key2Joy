@@ -1,0 +1,33 @@
+using System.Collections.Generic;
+using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Key2Joy.Contracts.Mapping.Triggers;
+using Key2Joy.Contracts.Mapping.Actions;
+using Key2Joy.Mapping;
+
+namespace Key2Joy.App.Pages;
+
+[ObservableObject]
+public partial class MappedOptionViewModel
+{
+    public MappedOption Option { get; }
+
+    [ObservableProperty]
+    public partial bool IsSelected { get; set; }
+
+    public AbstractTrigger Trigger => Option.Trigger;
+
+    public AbstractAction Action => Option.Action;
+
+    public bool HasChildren => this.Children.Count > 0;
+
+    public IReadOnlyList<MappedOptionViewModel> Children { get; }
+
+    public MappedOptionViewModel(MappedOption option)
+    {
+        this.Option = option;
+        this.Children = option.Children
+            .Select(child => new MappedOptionViewModel(child))
+            .ToList();
+    }
+}

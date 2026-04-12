@@ -70,98 +70,139 @@
                 </Grid>
 
                 <!-- Mappings List -->
-                <ScrollViewer Grid.Row="1">
-                    <ItemsControl x:Name="MappingListView"
-                                  ItemsSource="{x:Bind ViewModel.FilteredMappedOptions}"
-                                  Margin="0,4">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="mapping:MappedOption">
-                                <StackPanel Margin="10,2">
-                                    <!-- Parent row -->
-                                    <Grid Tapped="MappingItem_Tapped"
-                                          Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                          CornerRadius="4"
-                                          Padding="10"
-                                          Tag="{x:Bind}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                <Grid Grid.Row="1">
+                    <ScrollViewer>
+                        <ItemsControl x:Name="MappingGroupsControl"
+                                      ItemsSource="{x:Bind ViewModel.FilteredMappingGroups}"
+                                      Margin="0,4">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="local:MappingGroupViewModel">
+                                    <StackPanel>
+                                        <!-- Group header -->
+                                        <TextBlock Text="{x:Bind GroupName}"
+                                                   Visibility="{x:Bind IsHeaderVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                   FontWeight="SemiBold"
+                                                   Margin="12,8,10,2"
+                                                   Opacity="0.6"
+                                                   FontSize="11" />
 
-                                        <TextBlock Grid.Column="0"
-                                                   Text="{x:Bind Trigger}"
-                                                   VerticalAlignment="Center"
-                                                   Margin="4,0,0,0" />
+                                        <!-- Items in this group -->
+                                        <ItemsControl ItemsSource="{x:Bind Items}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="local:MappedOptionViewModel">
+                                                    <StackPanel Margin="10,2">
+                                                        <!-- Parent row -->
+                                                        <Grid Tapped="MappingItem_Tapped"
+                                                              DoubleTapped="MappingItem_DoubleTapped"
+                                                              Background="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource SelectedItemBackgroundConverter}}"
+                                                              CornerRadius="4"
+                                                              Padding="10"
+                                                              Tag="{x:Bind}">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
 
-                                        <FontIcon Grid.Column="1"
-                                                  Glyph="&#xE72A;"
-                                                  FontSize="12"
-                                                  Margin="10,0"
-                                                  Opacity="0.5"
-                                                  VerticalAlignment="Center" />
+                                                            <TextBlock Grid.Column="0"
+                                                                       Text="{x:Bind Trigger}"
+                                                                       VerticalAlignment="Center"
+                                                                       Margin="4,0,0,0" />
 
-                                        <TextBlock Grid.Column="2"
-                                                   Text="{x:Bind Action}"
-                                                   VerticalAlignment="Center" />
+                                                            <FontIcon Grid.Column="1"
+                                                                      Glyph="&#xE72A;"
+                                                                      FontSize="12"
+                                                                      Margin="10,0"
+                                                                      Opacity="0.5"
+                                                                      VerticalAlignment="Center" />
 
-                                        <!-- Expand/collapse chevron, only visible when there are children -->
-                                        <ToggleButton Grid.Column="3"
-                                                      Click="ExpandToggle_Click"
-                                                      Visibility="{x:Bind HasChildren, Converter={StaticResource BoolToVisibilityConverter}}"
-                                                      Background="Transparent"
-                                                      BorderThickness="0"
-                                                      Padding="5"
-                                                      MinWidth="0"
-                                                      MinHeight="0"
-                                                      VerticalAlignment="Center">
-                                            <FontIcon Glyph="&#xE96D;"
-                                                      FontSize="12" />
-                                        </ToggleButton>
-                                    </Grid>
+                                                            <TextBlock Grid.Column="2"
+                                                                       Text="{x:Bind Action}"
+                                                                       VerticalAlignment="Center" />
 
-                                    <!-- Children panel, collapsed by default -->
-                                    <ItemsControl ItemsSource="{x:Bind Children}"
-                                                  Visibility="Collapsed"
-                                                  Margin="28,5,0,5">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="mapping:MappedOption">
-                                                <Grid Tapped="MappingItem_Tapped"
-                                                      Background="Transparent"
-                                                      Padding="4,6"
-                                                      Tag="{x:Bind}">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
+                                                            <!-- Expand/collapse chevron, only visible when there are children -->
+                                                            <ToggleButton Grid.Column="3"
+                                                                          Click="ExpandToggle_Click"
+                                                                          Visibility="{x:Bind HasChildren, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                                          Background="Transparent"
+                                                                          BorderThickness="0"
+                                                                          Padding="5"
+                                                                          MinWidth="0"
+                                                                          MinHeight="0"
+                                                                          VerticalAlignment="Center">
+                                                                <FontIcon Glyph="&#xE96E;"
+                                                                          FontSize="12" />
+                                                            </ToggleButton>
+                                                        </Grid>
 
-                                                    <TextBlock Grid.Column="0"
-                                                               Text="{x:Bind Trigger}"
-                                                               Foreground="{ThemeResource TextFillColorSecondary}"
-                                                               VerticalAlignment="Center" />
+                                                        <!-- Children panel, collapsed by default -->
+                                                        <ItemsControl ItemsSource="{x:Bind Children}"
+                                                                      Visibility="Collapsed"
+                                                                      Margin="28,5,0,5">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate x:DataType="local:MappedOptionViewModel">
+                                                                    <Grid Tapped="MappingItem_Tapped"
+                                                                          Background="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource SelectedItemBackgroundConverter}}"
+                                                                          CornerRadius="4"
+                                                                          Padding="10,10"
+                                                                          Tag="{x:Bind}">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*" />
+                                                                            <ColumnDefinition Width="Auto" />
+                                                                            <ColumnDefinition Width="*" />
+                                                                        </Grid.ColumnDefinitions>
 
-                                                    <FontIcon Grid.Column="1"
-                                                              Glyph="&#xE72A;"
-                                                              FontSize="10"
-                                                              Margin="10,0"
-                                                              Opacity="0.3"
-                                                              VerticalAlignment="Center" />
+                                                                        <TextBlock Grid.Column="0"
+                                                                                   Text="{x:Bind Trigger}"
+                                                                                   Foreground="{ThemeResource TextFillColorSecondary}"
+                                                                                   VerticalAlignment="Center" />
 
-                                                    <TextBlock Grid.Column="2"
-                                                               Text="{x:Bind Action}"
-                                                               Foreground="{ThemeResource TextFillColorSecondary}"
-                                                               VerticalAlignment="Center" />
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                                                                        <FontIcon Grid.Column="1"
+                                                                                  Glyph="&#xE72A;"
+                                                                                  FontSize="10"
+                                                                                  Margin="10,0"
+                                                                                  Opacity="0.3"
+                                                                                  VerticalAlignment="Center" />
+
+                                                                        <TextBlock Grid.Column="2"
+                                                                                   Text="{x:Bind Action}"
+                                                                                   Foreground="{ThemeResource TextFillColorSecondary}"
+                                                                                   VerticalAlignment="Center" />
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- Empty state -->
+                    <StackPanel Visibility="{x:Bind ViewModel.FilteredMappedOptionsCount, Mode=OneWay, Converter={StaticResource VisibleWhenZeroConverter}}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Opacity=".5"
+                                Spacing="8">
+                        <FontIcon Glyph="&#xE71D;"
+                                  FontSize="32"
+                                  HorizontalAlignment="Center" />
+                        <TextBlock TextAlignment="Center"
+                                   FontSize="14">
+                            No mappings found.
+                        </TextBlock>
+                        <TextBlock TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   MaxWidth="220">
+                            Add a mapping using the panel below, or clear your search.
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
             </Grid>
 
             <!-- Connect & Devices List -->

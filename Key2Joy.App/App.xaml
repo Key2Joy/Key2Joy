@@ -19,6 +19,7 @@
             <utils:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
             <utils:EnumToStringConverter x:Key="EnumToStringConverter" />
             <utils:VisibleWhenZeroConverter x:Name="VisibleWhenZeroConverter" />
+            <utils:SelectedItemBackgroundConverter x:Key="SelectedItemBackgroundConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

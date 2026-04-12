@@ -108,7 +108,7 @@ public sealed partial class ConfigPage : Page
                     comboBox.Items.Add(enumValue);
                 }
 
-                comboBox.SelectedItem = selected;
+                comboBox.SelectedIndex = Array.IndexOf(enumValues, selected);
                 comboBox.SelectionChanged += this.OnControlValueChanged;
                 return comboBox;
             }
