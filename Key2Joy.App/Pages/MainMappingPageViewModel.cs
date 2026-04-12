@@ -49,9 +49,9 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
     [ObservableProperty]
     public partial bool HasSelectedMapping { get; set; } = false;
 
-    private bool _isSettingProfile;
+    private bool isSettingProfile;
 
-    private MappedOptionViewModel _selectedMappedOption;
+    private MappedOptionViewModel selectedMappedOption;
 
     private readonly ConfigState configState;
 
@@ -86,7 +86,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
     public void SetSelectedProfile(MappingProfile profile)
     {
-        _isSettingProfile = true;
+        isSettingProfile = true;
 
         this.SelectedProfile = profile;
         this.configState.LastLoadedProfile = profile.FilePath;
@@ -105,7 +105,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         }
 
         this.ProfileName = profile.Name;
-        _isSettingProfile = false;
+        isSettingProfile = false;
 
         this.UpdateFilter();
     }
@@ -224,7 +224,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
     partial void OnProfileNameChanged(string value)
     {
-        if (_isSettingProfile || this.SelectedProfile == null)
+        if (isSettingProfile || this.SelectedProfile == null)
         {
             return;
         }
@@ -297,10 +297,10 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
     public void SelectMapping(MappedOption option)
     {
-        if (this._selectedMappedOption != null)
+        if (this.selectedMappedOption != null)
         {
-            this._selectedMappedOption.IsSelected = false;
-            this._selectedMappedOption = null;
+            this.selectedMappedOption.IsSelected = false;
+            this.selectedMappedOption = null;
         }
 
         if (option == null)
@@ -316,7 +316,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
                 if (vm.Option.Guid == option.Guid)
                 {
                     vm.IsSelected = true;
-                    this._selectedMappedOption = vm;
+                    this.selectedMappedOption = vm;
                     this.HasSelectedMapping = true;
                     return;
                 }
@@ -326,7 +326,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
                     if (child.Option.Guid == option.Guid)
                     {
                         child.IsSelected = true;
-                        this._selectedMappedOption = child;
+                        this.selectedMappedOption = child;
                         this.HasSelectedMapping = true;
                         return;
                     }
@@ -339,7 +339,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         => this.SelectMapping(null);
 
     public MappedOption GetSelectedMappingOption()
-        => this._selectedMappedOption?.Option;
+        => this.selectedMappedOption?.Option;
 
     public MappingProfile CreateNewProfile(string nameSuffix = default)
     {
@@ -455,14 +455,14 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         this.UpdateFilter();
     }
 
-    public void GenerateReversesForMapping(MappedOption mappedOption)
+    public void GenerateReversesForMappings(IList<MappedOption> mappedOptions)
     {
         if (this.SelectedProfile == null)
         {
             return;
         }
 
-        var newOptions = MappedOption.GenerateReverseMappings(new List<MappedOption> { mappedOption });
+        var newOptions = MappedOption.GenerateReverseMappings(mappedOptions.ToList());
 
         foreach (var option in newOptions)
         {

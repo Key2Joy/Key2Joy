@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Key2Joy.Mapping;
 using Key2Joy.Mapping.Actions.Logic;
 using Key2Joy.Mapping.Triggers.Mouse;
@@ -37,14 +38,35 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
         this.MappingControl.SelectMapping(mappedOption);
     }
 
-    private void MappingGroupsList_GenerateReversesRequested(object? sender, MappedOption mappedOption)
+    private async void MappingGroupsList_GenerateReversesRequested(object? sender, IList<MappedOption> mappedOptions)
     {
-        if (mappedOption == null)
+        if (mappedOptions == null || mappedOptions.Count == 0)
         {
             return;
         }
 
-        this.ViewModel.GenerateReversesForMapping(mappedOption);
+        if (mappedOptions.Count > 1)
+        {
+            var dialog = new ContentDialog
+            {
+                Title = $"Generate {mappedOptions.Count} reverse mappings",
+                Content = $"Are you sure you want to create reverse mappings for all {mappedOptions.Count} selected mappings? "
+                    + "Each type of action and trigger will configure their own useful reverse if possible.\n\n"
+                    + "An example of a reverse mapping is how new 'Release' mappings will be created for each 'Press' and vice versa.",
+                PrimaryButtonText = "Yes",
+                CloseButtonText = "No",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+
+            if (result != ContentDialogResult.Primary)
+            {
+                return;
+            }
+        }
+
+        this.ViewModel.GenerateReversesForMappings(mappedOptions);
     }
 
     private void MappingGroupsList_RemoveMappingRequested(object? sender, MappedOption mappedOption)
@@ -127,6 +149,7 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
     public void DeselectSelectedMapping()
     {
         this.ViewModel.DeselectSelectedMapping();
+        this.MappingGroupsList.ClearSelection();
         this.MappingControl.SelectMapping(null);
     }
 

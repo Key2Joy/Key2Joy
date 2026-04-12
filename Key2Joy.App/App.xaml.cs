@@ -17,7 +17,7 @@ public partial class App : Application
     public static Window CurrentWindow { get; private set; }
 
     private static bool shouldStartMinimized;
-    private static Action _cleanupHandle;
+    private static Action cleanupHandle;
 
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -34,7 +34,7 @@ public partial class App : Application
     /// <param name="_">Details about the launch request and process.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs _)
     {
-        _cleanupHandle = Key2JoyManager.InitHandle(OnRunAppCommand);
+        cleanupHandle = Key2JoyManager.InitHandle(OnRunAppCommand);
         var args = Environment.GetCommandLineArgs();
 
         ApplicationConfiguration.Initialize();
@@ -57,7 +57,7 @@ public partial class App : Application
             MappingProfile.ExtractDefaultIfNotExists();
             var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
 
-            window.Closed += (_, _) => _cleanupHandle();
+            window.Closed += (_, _) => cleanupHandle();
 
             try
             {
