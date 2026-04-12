@@ -218,11 +218,20 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
     {
         var presenter = this.AppWindow.Presenter as OverlappedPresenter;
 
-        if (this.shouldStartMinimized && presenter != null)
+        if (presenter == null)
+        {
+            return;
+        }
+
+        if (this.shouldStartMinimized)
         {
             this.shouldStartMinimized = false;
             this.Hide();
+            return;
         }
+
+        presenter.PreferredMinimumWidth ??= 750;
+        presenter.PreferredMinimumHeight ??= 750;
     }
 
     private void Window_Closed(object sender, WindowEventArgs args)

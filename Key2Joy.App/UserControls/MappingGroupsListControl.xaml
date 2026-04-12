@@ -48,6 +48,7 @@
                                                 <TextBlock Grid.Column="0"
                                                            Text="{x:Bind Trigger}"
                                                            VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis"
                                                            Margin="4,0,0,0" />
 
                                                 <FontIcon Grid.Column="1"
@@ -59,6 +60,7 @@
 
                                                 <TextBlock Grid.Column="2"
                                                            Text="{x:Bind Action}"
+                                                           TextTrimming="CharacterEllipsis"
                                                            VerticalAlignment="Center" />
 
                                                 <!-- Expand/collapse chevron, only visible when there are children -->
