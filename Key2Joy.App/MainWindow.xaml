@@ -67,7 +67,11 @@
                         <MenuFlyoutSeparator />
                         <MenuFlyoutItem x:Name="MenuExit"
                                         Text="Exit"
-                                        Click="MenuExit_Click" />
+                                        Click="MenuExit_Click">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Menu" Key="F4" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
                     </MenuBarItem>
                     <MenuBarItem Title="Mappings">
                         <MenuFlyoutSubItem Text="Add All GamePad">
@@ -110,16 +114,20 @@
                         </MenuFlyoutSubItem>
                     </MenuBarItem>
                     <MenuBarItem Title="Tools">
-                        <MenuFlyoutItem x:Name="MenuConfig"
-                                        Text="Settings..."
-                                        Click="MenuConfig_Click" />
-                        <MenuFlyoutSeparator />
                         <MenuFlyoutItem x:Name="MenuViewLog"
                                         Text="View Log File"
                                         Click="MenuViewLog_Click" />
                         <MenuFlyoutItem x:Name="MenuViewEventViewer"
                                         Text="View Event Viewer"
                                         Click="MenuViewEventViewer_Click" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="MenuConfig"
+                                        Text="Configuration..."
+                                        Click="MenuConfig_Click">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="F1" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
                     </MenuBarItem>
                     <MenuBarItem Title="Help">
                         <MenuFlyoutItem x:Name="MenuReportProblem"
