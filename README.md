@@ -46,7 +46,7 @@ In addition to simply simulating a button being pressed on the Joystick, you can
 
 3. Use the default mappings, modify them by double-clicking a row in the mapping-list, or add new mappings.
 
-   ![Screenshot showing the overview window. Off to the side the mapping dialog is showing all available actions.](Docs/screenshot.png)
+   ![Screenshot showing the application window with the mapping action combobox showing all available actions.](Docs/screenshot.png)
 
    **A trigger** is something that Key2Joy will listen for. *E.g: a mouse move, key press, key release, etc...*
 

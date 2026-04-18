@@ -104,13 +104,6 @@
                     </Button>
                 </Grid>
 
-                <TextBlock Grid.Row="1"
-                           HorizontalAlignment="Center"
-                           Margin="5"
-                           Text="{x:Bind ViewModel.ArmErrorMessage, Mode=OneWay}"
-                           Visibility="{x:Bind ViewModel.ArmErrorMessage, Mode=OneWay, Converter={StaticResource StringToVisibilityConverter}}"
-                           Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}" />
-
                 <!-- Devices List -->
                 <ListView Grid.Row="1"
                           Padding="5"
@@ -145,6 +138,15 @@
                                 Try connecting the Key2Joy device.
                     </TextBlock>
                 </StackPanel>
+
+                <TextBlock Grid.Row="1"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           Margin="5"
+                           TextWrapping="Wrap"
+                           Text="{x:Bind ViewModel.ArmErrorMessage, Mode=OneWay}"
+                           Visibility="{x:Bind ViewModel.ArmErrorMessage, Mode=OneWay, Converter={StaticResource StringToVisibilityConverter}}"
+                           Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}" />
             </Grid>
         </Grid>
 

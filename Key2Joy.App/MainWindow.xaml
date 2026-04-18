@@ -140,12 +140,14 @@
                                             Click="MenuTestControllerGamepadTester_Click" />
                             </MenuFlyoutSubItem>
                         </MenuFlyoutSubItem>
-                        <MenuFlyoutItem x:Name="MenuViewLog"
+                        <MenuFlyoutSubItem Text="View Script Output">
+                            <MenuFlyoutItem x:Name="MenuViewLog"
                                         Text="View Log File"
                                         Click="MenuViewLog_Click" />
-                        <MenuFlyoutItem x:Name="MenuViewEventViewer"
+                            <MenuFlyoutItem x:Name="MenuViewEventViewer"
                                         Text="View Event Viewer"
                                         Click="MenuViewEventViewer_Click" />
+                        </MenuFlyoutSubItem>
                         <MenuFlyoutSeparator />
                         <MenuFlyoutItem x:Name="MenuConfig"
                                         Text="Configuration..."
