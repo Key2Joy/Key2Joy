@@ -4,7 +4,6 @@ using Key2Joy.Contracts.Mapping;
 using Key2Joy.Mapping.Triggers;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.Mapping.Triggers.Logic;
-using Key2Joy.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 

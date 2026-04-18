@@ -14,7 +14,7 @@
     <Grid Loaded="RootGrid_Loaded">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="320" />
         </Grid.RowDefinitions>
 
         <!-- Main Section -->
@@ -151,7 +151,6 @@
         </Grid>
 
         <controls:MappingControl x:Name="MappingControl"
-                                 Grid.Row="1"
-                                 Height="260" />
+                                 Grid.Row="1" />
     </Grid>
 </Page>

@@ -4,32 +4,19 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Key2Joy.App.UserControls.Actions.Logic"
-    xmlns:actions="using:Key2Joy.App.UserControls.Actions"
-    xmlns:contracts="using:Key2Joy.Contracts.Mapping.Actions"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <StackPanel Spacing="8">
-        <!-- Embedded ActionControl for picking child actions -->
-        <actions:ActionControl x:Name="embeddedActionControl" />
+        <ScrollViewer MaxHeight="400"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="ActionsPanel"
+                        Spacing="4" />
+        </ScrollViewer>
 
-        <StackPanel Orientation="Horizontal" Spacing="8">
-            <Button Content="Add"
-                    IsEnabled="{x:Bind CanAdd, Mode=OneWay}"
-                    Click="AddButton_Click" />
-            <Button Content="Remove"
-                    Click="RemoveButton_Click" />
-        </StackPanel>
-
-        <ListView ItemsSource="{x:Bind ChildActions}"
-                  SelectedItem="{x:Bind SelectedChildAction, Mode=TwoWay}"
-                  MinHeight="80">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Name}" />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Button Content="Add Action"
+                HorizontalAlignment="Left"
+                Click="AddActionButton_Click" />
     </StackPanel>
 </UserControl>
