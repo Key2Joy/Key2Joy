@@ -15,9 +15,9 @@ public partial class MappedOptionViewModel
     [ObservableProperty]
     public partial bool IsSelected { get; set; }
 
-    public AbstractTrigger Trigger => Option.Trigger;
+    public AbstractTrigger Trigger => this.Option.Trigger;
 
-    public AbstractAction Action => Option.Action;
+    public AbstractAction Action => this.Option.Action;
 
     public bool HasChildren => this.Children.Count > 0;
 

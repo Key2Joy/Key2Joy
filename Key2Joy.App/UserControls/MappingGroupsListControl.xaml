@@ -86,6 +86,7 @@
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate x:DataType="pages:MappedOptionViewModel">
                                                         <Grid Tapped="MappingItem_Tapped"
+                                                              DoubleTapped="MappingItem_DoubleTapped"
                                                               RightTapped="MappingItem_RightTapped"
                                                               Background="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource SelectedItemBackgroundConverter}}"
                                                               CornerRadius="4"

@@ -74,6 +74,14 @@
                         </MenuFlyoutItem>
                     </MenuBarItem>
                     <MenuBarItem Title="Mappings">
+                        <MenuFlyoutItem x:Name="MenuNewMapping"
+                                        Text="New Mapping"
+                                        Click="MenuNewMapping_Click">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="N" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
                         <MenuFlyoutItem x:Name="MenuExpandAllMappings"
                                         Text="Expand All"
                                         Click="MenuExpandAllMappings_Click" />

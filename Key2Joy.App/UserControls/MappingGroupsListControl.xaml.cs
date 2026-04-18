@@ -142,37 +142,10 @@ public sealed partial class MappingGroupsListControl : UserControl
     private void MappingItem_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
     {
         var element = sender as FrameworkElement;
-        var stackPanel = element?.Parent as StackPanel;
+        var vm = element?.Tag as MappedOptionViewModel;
 
-        if (stackPanel == null || stackPanel.Children.Count < 2)
-        {
-            return;
-        }
-
-        var childrenPanel = stackPanel.Children[1] as ItemsControl;
-
-        if (childrenPanel == null)
-        {
-            return;
-        }
-
-        ToggleButton? toggleButton = null;
-
-        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
-        {
-            if (VisualTreeHelper.GetChild(element, i) is ToggleButton tb)
-            {
-                toggleButton = tb;
-                break;
-            }
-        }
-
-        if (toggleButton == null || toggleButton.Visibility == Visibility.Collapsed)
-        {
-            return;
-        }
-
-        SetExpanded(toggleButton, childrenPanel, !toggleButton.IsChecked.Value);
+        this.EditMappingRequested?.Invoke(this, vm?.Option);
+        e.Handled = true;
     }
 
     private void ExpandToggle_Click(object sender, RoutedEventArgs e)

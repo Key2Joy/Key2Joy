@@ -23,7 +23,6 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
 
         this.MappingControl.MappingCreated += this.MappingControl_MappingCreated;
         this.MappingControl.MappingDeleted += this.MappingControl_MappingDeleted;
-        this.MappingControl.MappingDeselected += this.MappingControl_MappingDeselected;
 
         this.MappingGroupsList.EditMappingRequested += this.MappingGroupsList_EditMappingRequested;
         this.MappingGroupsList.GenerateReversesRequested += this.MappingGroupsList_GenerateReversesRequested;
@@ -36,6 +35,7 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
     {
         this.ViewModel.SelectMapping(mappedOption);
         this.MappingControl.SelectMapping(mappedOption);
+        this.ViewModel.IsDrawerOpen = true;
     }
 
     private async void MappingGroupsList_GenerateReversesRequested(object? sender, IList<MappedOption> mappedOptions)
@@ -95,12 +95,14 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
     private void MappingControl_MappingCreated(object sender, Key2Joy.Mapping.MappedOption mappedOption)
     {
         this.ViewModel.HandleMappingCreated(mappedOption);
+        this.ViewModel.IsDrawerOpen = false;
         this.DeselectSelectedMapping();
     }
 
     private void MappingControl_MappingDeleted(object sender, Key2Joy.Mapping.MappedOption mappedOption)
     {
         this.ViewModel.HandleMappingDeleted(mappedOption);
+        this.ViewModel.IsDrawerOpen = false;
         this.DeselectSelectedMapping();
     }
 
@@ -108,12 +110,32 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
     {
         this.ViewModel.SelectMapping(null);
         this.MappingControl.SelectMapping(null);
+        this.ViewModel.IsDrawerOpen = false;
     }
 
     private void MappingGroupsList_MappingSelected(object sender, MappedOption option)
     {
         this.ViewModel.SelectMapping(option);
         this.MappingControl.SelectMapping(option);
+    }
+
+    private void NewMappingFab_Click(object sender, EventArgs e)
+    {
+        this.OpenDrawerForNewMapping();
+    }
+
+    public void OpenDrawerForNewMapping()
+    {
+        this.ViewModel.SelectMapping(null);
+        this.MappingControl.SelectMapping(null);
+        this.ViewModel.IsDrawerOpen = true;
+    }
+
+    private void MappingDrawer_Closed(object sender, EventArgs e)
+    {
+        this.ViewModel.SelectMapping(null);
+        this.MappingGroupsList.ClearSelection();
+        this.MappingControl.SelectMapping(null);
     }
 
     public bool RunAppCommand(AppCommand command)
@@ -151,6 +173,7 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
         this.ViewModel.DeselectSelectedMapping();
         this.MappingGroupsList.ClearSelection();
         this.MappingControl.SelectMapping(null);
+        this.ViewModel.IsDrawerOpen = false;
     }
 
     public void DeleteSelectedMapping()
@@ -164,6 +187,7 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
 
         this.MappingControl.SelectMapping(null);
         this.ViewModel.HandleMappingDeleted(option);
+        this.ViewModel.IsDrawerOpen = false;
     }
 
     public void ExpandAllMappings() => this.MappingGroupsList.ExpandAll();

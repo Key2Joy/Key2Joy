@@ -62,7 +62,7 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
                 this.configState.SelectedViewMappingGroupType = enumValue;
                 this.SetupGroupingRadioMenu();
 
-                mappingPage?.RefreshMappingList();
+                this.mappingPage?.RefreshMappingList();
             };
 
             this.MenuGroupBySubItem.Items.Add(radio);
@@ -97,6 +97,9 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
 
     private void MenuDeselectMapping_Click(object sender, RoutedEventArgs e)
         => this.mappingPage?.DeselectSelectedMapping();
+
+    private void MenuNewMapping_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.OpenDrawerForNewMapping();
 
     private void MenuDeleteSelectedMapping_Click(object sender, RoutedEventArgs e)
         => this.mappingPage?.DeleteSelectedMapping();

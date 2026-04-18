@@ -49,6 +49,9 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
     [ObservableProperty]
     public partial bool HasSelectedMapping { get; set; } = false;
 
+    [ObservableProperty]
+    public partial bool IsDrawerOpen { get; set; } = false;
+
     private bool isSettingProfile;
 
     private MappedOptionViewModel selectedMappedOption;
@@ -86,7 +89,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
     public void SetSelectedProfile(MappingProfile profile)
     {
-        isSettingProfile = true;
+        this.isSettingProfile = true;
 
         this.SelectedProfile = profile;
         this.configState.LastLoadedProfile = profile.FilePath;
@@ -105,7 +108,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         }
 
         this.ProfileName = profile.Name;
-        isSettingProfile = false;
+        this.isSettingProfile = false;
 
         this.UpdateFilter();
     }

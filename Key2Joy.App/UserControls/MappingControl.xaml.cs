@@ -37,7 +37,6 @@ public sealed partial class MappingControl : UserControl
 
     public event EventHandler<MappedOption> MappingCreated;
     public event EventHandler<MappedOption> MappingDeleted;
-    public event EventHandler<MappedOption> MappingDeselected;
 
     private bool dominantReverseCheckedState;
 
@@ -172,16 +171,6 @@ public sealed partial class MappingControl : UserControl
         this.MappedOptionReverse = null;
         this.IsEditing = false;
         MappingDeleted?.Invoke(this, toDelete);
-    }
-
-    [RelayCommand]
-    private void DeselectMapping()
-    {
-        var toDeselect = this.MappedOption;
-        this.MappedOption = null;
-        this.MappedOptionReverse = null;
-        this.IsEditing = false;
-        MappingDeselected?.Invoke(this, toDeselect);
     }
 
     private void ShowError(string title, string message)

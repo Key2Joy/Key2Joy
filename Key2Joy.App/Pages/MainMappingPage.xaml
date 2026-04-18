@@ -12,26 +12,21 @@
     mc:Ignorable="d">
 
     <Grid Loaded="RootGrid_Loaded">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="320" />
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="200" />
+        </Grid.ColumnDefinitions>
 
-        <!-- Main Section -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="200" />
-            </Grid.ColumnDefinitions>
-
-            <Grid Grid.Column="0">
+        <!-- Left column: mapping list area + drawer overlay -->
+        <Grid Grid.Column="0">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <!-- Search and Profile -->
-                <Grid Padding="10,0">
+                <Grid Padding="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
@@ -77,80 +72,92 @@
                                                    MappingSelected="MappingGroupsList_MappingSelected" />
             </Grid>
 
-            <!-- Connect & Devices List -->
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <controls:FloatingActionButtonControl x:Name="NewMappingFab"
+                                                  Click="NewMappingFab_Click"
+                                                  HorizontalAlignment="Right"
+                                                  VerticalAlignment="Bottom" />
 
-                <Grid ColumnSpacing="10"
-                      Padding="10,0,10,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Connect when untoggled, disconnect when toggled -->
-                    <ToggleButton x:Name="ArmedToggleButton"
-                                  HorizontalAlignment="Stretch"
-                                  IsChecked="{x:Bind ViewModel.Armed, Mode=TwoWay}"
-                                  Content="{x:Bind ViewModel.ArmedButtonText, Mode=OneWay}"/>
-
-                    <!-- Refresh Button -->
-                    <Button Grid.Column="1"
-                            Command="{x:Bind ViewModel.RefreshDevicesCommand}">
-                        <FontIcon Glyph="&#xE72C;" />
-                    </Button>
-                </Grid>
-
-                <!-- Devices List -->
-                <ListView Grid.Row="1"
-                          Padding="5"
-                          SelectionMode="None"
-                          ItemsSource="{x:Bind ViewModel.Devices}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="input:IGamePadInfo">
-                            <StackPanel Orientation="Vertical"
-                                        Spacing="5"
-                                        Margin="10">
-                                <controls:DeviceControl DeviceIndex="{x:Bind Index}"
-                                                        DeviceName="{x:Bind Name}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-
-                <!-- Devices List Empty State -->
-                <StackPanel Visibility="{x:Bind ViewModel.DevicesCount, Mode=OneWay, Converter={StaticResource VisibleWhenZeroConverter}}"
-                            Grid.Row="1"
-                            Padding="5"
-                            Orientation="Vertical"
-                            HorizontalAlignment="Center"
-                            Opacity=".5">
-                    <TextBlock TextAlignment="Center">
-                                No devices found.
-                    </TextBlock>
-
-                    <TextBlock Margin="0,20"
-                                       TextWrapping="Wrap"
-                                       TextAlignment="Center">
-                                Try connecting the Key2Joy device.
-                    </TextBlock>
-                </StackPanel>
-
-                <TextBlock Grid.Row="1"
-                           HorizontalAlignment="Center"
-                           TextAlignment="Center"
-                           Margin="5"
-                           TextWrapping="Wrap"
-                           Text="{x:Bind ViewModel.ArmErrorMessage, Mode=OneWay}"
-                           Visibility="{x:Bind ViewModel.ArmErrorMessage, Mode=OneWay, Converter={StaticResource StringToVisibilityConverter}}"
-                           Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}" />
-            </Grid>
+            <controls:DrawerControl x:Name="MappingDrawer"
+                                    IsOpen="{x:Bind ViewModel.IsDrawerOpen, Mode=TwoWay}"
+                                    DrawerHeight="500"
+                                    CloseOnOverlayTap="True"
+                                    DrawerClosed="MappingDrawer_Closed">
+                <controls:DrawerControl.DrawerContent>
+                    <controls:MappingControl x:Name="MappingControl" />
+                </controls:DrawerControl.DrawerContent>
+            </controls:DrawerControl>
         </Grid>
 
-        <controls:MappingControl x:Name="MappingControl"
-                                 Grid.Row="1" />
+        <!-- Connect & Devices List -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid ColumnSpacing="10"
+                  Padding="10,0,10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Connect when untoggled, disconnect when toggled -->
+                <ToggleButton x:Name="ArmedToggleButton"
+                              HorizontalAlignment="Stretch"
+                              IsChecked="{x:Bind ViewModel.Armed, Mode=TwoWay}"
+                              Content="{x:Bind ViewModel.ArmedButtonText, Mode=OneWay}"/>
+
+                <!-- Refresh Button -->
+                <Button Grid.Column="1"
+                        Command="{x:Bind ViewModel.RefreshDevicesCommand}">
+                    <FontIcon Glyph="&#xE72C;" />
+                </Button>
+            </Grid>
+
+            <!-- Devices List -->
+            <ListView Grid.Row="1"
+                      Padding="5"
+                      SelectionMode="None"
+                      ItemsSource="{x:Bind ViewModel.Devices}">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="input:IGamePadInfo">
+                        <StackPanel Orientation="Vertical"
+                                    Spacing="5"
+                                    Margin="10">
+                            <controls:DeviceControl DeviceIndex="{x:Bind Index}"
+                                                    DeviceName="{x:Bind Name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Devices List Empty State -->
+            <StackPanel Visibility="{x:Bind ViewModel.DevicesCount, Mode=OneWay, Converter={StaticResource VisibleWhenZeroConverter}}"
+                        Grid.Row="1"
+                        Padding="5"
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        Opacity=".5">
+                <TextBlock TextAlignment="Center">
+                            No devices found.
+                </TextBlock>
+
+                <TextBlock Margin="0,20"
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Center">
+                            Try connecting the Key2Joy device.
+                </TextBlock>
+            </StackPanel>
+
+            <TextBlock Grid.Row="1"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="5"
+                       TextWrapping="Wrap"
+                       Text="{x:Bind ViewModel.ArmErrorMessage, Mode=OneWay}"
+                       Visibility="{x:Bind ViewModel.ArmErrorMessage, Mode=OneWay, Converter={StaticResource StringToVisibilityConverter}}"
+                       Foreground="{ThemeResource SystemControlErrorTextForegroundBrush}" />
+        </Grid>
     </Grid>
 </Page>
