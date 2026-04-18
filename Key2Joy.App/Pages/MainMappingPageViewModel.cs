@@ -353,9 +353,9 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
     public void HandleMappingCreated(MappedOption mappedOption)
     {
-        var isExisting = this.MappedOptions.Any(vm => vm.Option == mappedOption);
+        var existingVm = this.MappedOptions.FirstOrDefault(vm => vm.Option == mappedOption);
 
-        if (!isExisting)
+        if (existingVm == null)
         {
             this.AddMapping(mappedOption);
 
@@ -363,6 +363,13 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
             {
                 this.AddMapping(child);
             }
+        }
+        else
+        {
+            // Rebuild the VM in-place so the UI reflects updated trigger/action/children
+            var index = this.MappedOptions.IndexOf(existingVm);
+            this.MappedOptions[index] = new MappedOptionViewModel(mappedOption);
+            this.UpdateFilter();
         }
 
         this.SelectedProfile?.Save();
