@@ -11,28 +11,46 @@ jobs:
     outputs:
       versionid: ${{ steps.build-step.outputs.versionid }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET CLI
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 10.0.x
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        id: build-step
-        shell: pwsh
-        run: |
-          # Start the build and store all output (letting it also be printed to the console)
-          $output = ""
-          . .\Support\Build.ps1 Release ${{ github.sha }} | Tee-Object -Variable output
+    - uses: actions/checkout@v3
+    - name: Setup .NET CLI
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 10.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      id: build-step
+      shell: pwsh
+      run: |
+        # Derive version ID from git sha (first 10 chars)
+        $shaShort = "${{ github.sha }}".Substring(0, 10)
+        $versionSuffix = "alpha.$shaShort"
 
-          # Get the version ID from the last line of the output
-          $versionId = $output | Select-Object -Last 1
+        # Read version prefix from Core project
+        $versionPrefix = [xml](Get-Content Core/Key2Joy.Core/Key2Joy.Core.csproj) |
+          Select-Xml -XPath "/Project/PropertyGroup/VersionPrefix" |
+          Select-Object -ExpandProperty Node |
+          Select-Object -ExpandProperty "#text"
 
-          # Set the output variable for this step
-          echo "versionid=$versionId" >> $env:GITHUB_OUTPUT
-      - name: Cache the build output
-        uses: actions/cache@v3
-        with:
-          path: ${{ github.workspace }}
-          key: ${{ runner.os }}-build-${{ github.sha }}
+        $fullVersionId = "$versionPrefix-$versionSuffix"
+        Write-Output "Building Key2Joy $fullVersionId"
+
+        dotnet publish Key2Joy.App/Key2Joy.App.csproj `
+          -c Release `
+          -r win-x64 `
+          -p:Platform=x64 `
+          -p:SelfContained=true `
+          -p:WindowsAppSDKSelfContained=true `
+          -p:WindowsPackageType=None `
+          -p:PublishSingleFile=false `
+          -p:PublishTrimmed=false `
+          -p:PublishReadyToRun=false `
+          -p:PublishProfile= `
+          -o bin\Key2Joy.App\Release\win-x64
+
+        echo "versionid=$fullVersionId" >> $env:GITHUB_OUTPUT
+    - name: Cache the build output
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}
+        key: ${{ runner.os }}-build-${{ github.sha }}

@@ -12,28 +12,38 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Restore build from cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ github.workspace }}
-          key: ${{ runner.os }}-build-${{ github.sha }}
-      - name: Archive Pre-release
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: "zip"
-          directory: 'bin\Key2Joy.Gui\Release'
-          filename: "pre-release.zip"
-      - name: Create GitHub Pre-release
-        uses: ncipollo/release-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          name: ${{ inputs.versionid }}
-          tag: ${{ inputs.versionid }}
-          prerelease: true
-          generateReleaseNotes: true
-          artifacts: "bin/Key2Joy.Gui/Release/pre-release.zip"
-          body: |
-            # 🔧 ${{ inputs.versionid }}
-            This release was automatically generated based on the last successful test run.
+    - name: Restore build from cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}
+        key: ${{ runner.os }}-build-${{ github.sha }}
+    - name: Archive Pre-release
+      uses: thedoctor0/zip-release@0.7.6
+      with:
+        type: "zip"
+        directory: 'bin\Key2Joy.App\Release\win-x64'
+        filename: "pre-release.zip"
+    - name: Build release body
+      shell: pwsh
+      run: |
+        $header = @"
+        # 🔧 ${{ inputs.versionid }}
+        This release was automatically generated based on the last successful test run.
 
-            This version of Key2Joy is not ready for use, but can be used for testing purposes.
+        This version of Key2Joy is not ready for use, but can be used for testing purposes.
+
+        ---
+
+        "@
+        $install = (Get-Content INSTALL.md | Select-Object -Skip 1) -join "`n"
+        "$header$install" | Set-Content pre-release-body.md
+    - name: Create GitHub Pre-release
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: ${{ inputs.versionid }}
+        tag: ${{ inputs.versionid }}
+        prerelease: true
+        generateReleaseNotes: true
+        artifacts: "bin/Key2Joy.App/Release/win-x64/pre-release.zip"
+        bodyFile: pre-release-body.md

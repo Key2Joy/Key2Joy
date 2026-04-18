@@ -41,86 +41,86 @@ jobs:
 
   create-release:
     runs-on: windows-latest
-    needs: [build]
+    needs: [ build ]
     permissions:
       contents: write
     steps:
-      - name: Restore build from cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ github.workspace }}
-          key: ${{ runner.os }}-build-${{ github.sha }}
+    - name: Restore build from cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}
+        key: ${{ runner.os }}-build-${{ github.sha }}
 
-      - name: Archive Release
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: "zip"
-          directory: 'bin\Key2Joy.Gui\Release'
-          filename: "Key2Joy-${{ inputs.version_tag }}.zip"
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.6
+      with:
+        type: "zip"
+        directory: 'bin\Key2Joy.App\Release\win-x64'
+        filename: "Key2Joy-${{ inputs.version_tag }}.zip"
 
-      - name: Build release notes
-        id: release-notes
-        shell: pwsh
-        run: |
-          $releaseNotes = @"
-          ${{ inputs.intro_text }}
+    - name: Build release notes
+      id: release-notes
+      shell: pwsh
+      run: |
+        $releaseNotes = @"
+        ${{ inputs.intro_text }}
 
-          "@
+        "@
 
-          # Add New Features section if provided
-          if ("${{ inputs.new_features }}" -ne "") {
-            $releaseNotes += @"
-
-          ## ✨ New Features
-          ${{ inputs.new_features }}
-
-          "@
-          }
-
-          # Add Changes section if provided
-          if ("${{ inputs.changes }}" -ne "") {
-            $releaseNotes += @"
-
-          ## 🔄 Changes
-          ${{ inputs.changes }}
-
-          "@
-          }
-
-          # Add Bugs section if provided
-          if ("${{ inputs.bugs }}" -ne "") {
-            $releaseNotes += @"
-
-          ## 🐛 Bug Fixes
-          ${{ inputs.bugs }}
-
-          "@
-          }
-
-          # Add footer
+        # Add New Features section if provided
+        if ("${{ inputs.new_features }}" -ne "") {
           $releaseNotes += @"
 
-          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ inputs.previous_version_tag }}...${{ inputs.version_tag }}
+        ## ✨ New Features
+        ${{ inputs.new_features }}
 
-          ## Getting started
-          1. Extract all files from the accompanying zip ``Key2Joy-${{ inputs.version_tag }}.zip`` to a single location on your computer.
-          2. Start ``Key2Joy.exe``
+        "@
+        }
 
-          [📖 Learn how to use Key2Joy in the README](https://github.com/Key2Joy/Key2Joy)
-          "@
+        # Add Changes section if provided
+        if ("${{ inputs.changes }}" -ne "") {
+          $releaseNotes += @"
 
-          # Save to environment variable for the release step
-          # Using a here-string to preserve multiline content
-          "RELEASE_NOTES<<EOF" | Out-File -FilePath $env:GITHUB_ENV -Append
-          $releaseNotes | Out-File -FilePath $env:GITHUB_ENV -Append
-          "EOF" | Out-File -FilePath $env:GITHUB_ENV -Append
+        ## 🔄 Changes
+        ${{ inputs.changes }}
 
-      - name: Create GitHub Release
-        uses: ncipollo/release-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          name: "${{ inputs.emoji }} ${{ inputs.title }}"
-          tag: ${{ inputs.version_tag }}
-          prerelease: false
-          artifacts: "bin/Key2Joy.Gui/Release/Key2Joy-${{ inputs.version_tag }}.zip"
-          body: ${{ env.RELEASE_NOTES }}
+        "@
+        }
+
+        # Add Bugs section if provided
+        if ("${{ inputs.bugs }}" -ne "") {
+          $releaseNotes += @"
+
+        ## 🐛 Bug Fixes
+        ${{ inputs.bugs }}
+
+        "@
+        }
+
+        # Add footer
+        $releaseNotes += @"
+
+        **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ inputs.previous_version_tag }}...${{ inputs.version_tag }}
+
+        ## Getting started
+        1. Extract all files from the accompanying zip ``Key2Joy-${{ inputs.version_tag }}.zip`` to a single location on your computer.
+        2. Start ``Key2Joy.exe``
+
+        [📖 Learn how to use Key2Joy in the README](https://github.com/Key2Joy/Key2Joy)
+        "@
+
+        # Save to environment variable for the release step
+        # Using a here-string to preserve multiline content
+        "RELEASE_NOTES<<EOF" | Out-File -FilePath $env:GITHUB_ENV -Append
+        $releaseNotes | Out-File -FilePath $env:GITHUB_ENV -Append
+        "EOF" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+    - name: Create GitHub Release
+      uses: ncipollo/release-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: "${{ inputs.emoji }} ${{ inputs.title }}"
+        tag: ${{ inputs.version_tag }}
+        prerelease: false
+        artifacts: "bin/Key2Joy.App/Release/win-x64/Key2Joy-${{ inputs.version_tag }}.zip"
+        body: ${{ env.RELEASE_NOTES }}
