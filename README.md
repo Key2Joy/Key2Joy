@@ -8,7 +8,7 @@
 
 <div align="center">
 
-# ![](Key2Joy.Gui/Graphics/Icons/icon256.png?raw=true)<br> Key2Joy
+# ![](Key2Joy.App/Assets/Icons/icon256.png?raw=true)<br> Key2Joy
 
 **Simulate a Joystick/Controller/Gamepad using your keyboard, mouse or other triggers.**
 
@@ -40,7 +40,7 @@ In addition to simply simulating a button being pressed on the Joystick, you can
 
 ### Using Key2Joy with a Graphical User Interface
 
-1. Start **![](Key2Joy.Gui/Graphics/Icons/icon16.png?raw=true) Key2Joy.exe**
+1. Start **![](Key2Joy.App/Assets/Icons/icon16.png?raw=true) Key2Joy.exe**
 
 2. *(First time only)* Accept installation of the Scp Virtual Bus Driver
 

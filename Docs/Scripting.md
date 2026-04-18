@@ -1,4 +1,4 @@
-# ![Key2Joy Logo](../Key2Joy.Gui/Graphics/Icons/icon32.png?raw=true) Key2Joy - Scripting
+# ![Key2Joy Logo](../Key2Joy.App/Assets/Icons/icon32.png?raw=true) Key2Joy - Scripting
 
 Using action scripts you can bind a complex sequence of actions to a
 trigger.

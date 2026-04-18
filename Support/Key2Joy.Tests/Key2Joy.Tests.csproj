@@ -9,9 +9,10 @@
     <Copyright>Copyright © 2026 luttje</Copyright>
     <PackageProjectUrl>https://github.com/luttje/Key2Joy</PackageProjectUrl>
     <VersionPrefix>0.8.0</VersionPrefix>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <BaseOutputPath>bin\$(MSBuildProjectName)</BaseOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -46,8 +47,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Key2Joy.Contracts\Key2Joy.Contracts.csproj" />
     <ProjectReference Include="..\..\Core\Key2Joy.Core\Key2Joy.Core.csproj" />
+    <ProjectReference Include="..\..\Key2Joy.App\Key2Joy.App.csproj" />
     <ProjectReference Include="..\..\Key2Joy.Cmd\Key2Joy.Cmd.csproj" />
-    <ProjectReference Include="..\..\Key2Joy.Gui\Key2Joy.Gui.csproj" />
     <ProjectReference Include="..\BuildMarkdownDocs\BuildMarkdownDocs.csproj" />
   </ItemGroup>
 

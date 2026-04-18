@@ -38,7 +38,7 @@ public class MockConfigManager : ConfigManager
 
     private static string AdjustAndWriteContents(string contents, string targetPath)
     {
-        var assemblyPath = Path.GetDirectoryName(typeof(Gui.Program).Assembly.Location);
+        var assemblyPath = Path.GetDirectoryName(typeof(MockConfigManager).Assembly.Location);
 
         static string EscapePath(string path) => path.Replace("\\", "\\\\");
 

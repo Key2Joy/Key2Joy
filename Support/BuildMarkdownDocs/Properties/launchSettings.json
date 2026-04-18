@@ -2,7 +2,7 @@
   "profiles": {
     "BuildMarkdownDocs": {
       "commandName": "Project",
-      "commandLineArgs": "..\\..\\..\\..\\..\\bin\\Key2Joy.Gui\\Release ..\\..\\..\\..\\..\\bin\\DocumentationFiles ..\\..\\..\\..\\..\\Docs --filter markdown-doc"
+      "commandLineArgs": "..\\..\\..\\..\\..\\bin\\Key2Joy.App\\x64\\Release\\net9.0-windows10.0.19041.0\\win-x64 ..\\..\\..\\..\\..\\bin\\DocumentationFiles ..\\..\\..\\..\\..\\Docs --filter markdown-doc"
     }
   }
 }
