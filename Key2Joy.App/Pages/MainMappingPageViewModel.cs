@@ -175,6 +175,8 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
             {
                 Armed = false;
                 ArmErrorMessage = ex.Message;
+
+                System.Media.SystemSounds.Hand.Play();
             }
         }
         else if (Key2JoyManager.Instance.GetIsArmed())

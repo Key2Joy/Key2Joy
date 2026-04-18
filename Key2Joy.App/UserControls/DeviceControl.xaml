@@ -46,7 +46,7 @@
 
             <TextBlock x:Name="IndexTextBlock"
                        Grid.Column="1"
-                       Text="?"
+                       Text="0"
                        Style="{StaticResource DeviceIndexStyle}"/>
         </Grid>
 
