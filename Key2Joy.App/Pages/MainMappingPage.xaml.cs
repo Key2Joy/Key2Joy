@@ -8,18 +8,25 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Key2Joy.App.Pages;
 
-public sealed partial class MainMappingPage : Page, IAcceptAppCommands
+public sealed partial class MainMappingPage : Page, IAcceptAppCommands, IInvokeOnUI
 {
     public MainMappingPageViewModel ViewModel { get; } = new();
 
-    public MainMappingPage()
-    {
-        this.InitializeComponent();
-    }
+    public MainMappingPage() => this.InitializeComponent();
 
     private void RootGrid_Loaded(object sender, RoutedEventArgs e)
     {
         this.ViewModel.Initialize();
+
+        // Ensure the manager knows which window handle catches all inputs
+        Key2JoyManager.Instance.SetHandlerWithInvoke(this);
+        Key2JoyManager.Instance.StatusChanged += (s, ev) =>
+        {
+            if (ev.Profile != null)
+            {
+                this.SetSelectedProfile(ev.Profile);
+            }
+        };
 
         this.MappingControl.MappingCreated += this.MappingControl_MappingCreated;
         this.MappingControl.MappingDeleted += this.MappingControl_MappingDeleted;
@@ -31,7 +38,7 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
         this.MappingGroupsList.ChooseNewParentRequested += this.MappingGroupsList_ChooseNewParentRequested;
     }
 
-    private void MappingGroupsList_EditMappingRequested(object? sender, MappedOption mappedOption)
+    private void MappingGroupsList_EditMappingRequested(object? sender, MappedOption? mappedOption)
     {
         this.ViewModel.SelectMapping(mappedOption);
         this.MappingControl.SelectMapping(mappedOption);
@@ -69,7 +76,7 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
         this.ViewModel.GenerateReversesForMappings(mappedOptions);
     }
 
-    private void MappingGroupsList_RemoveMappingRequested(object? sender, MappedOption mappedOption)
+    private void MappingGroupsList_RemoveMappingRequested(object? sender, MappedOption? mappedOption)
     {
         if (mappedOption == null)
         {
@@ -92,25 +99,18 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
         this.DeselectSelectedMapping();
     }
 
-    private void MappingControl_MappingCreated(object sender, Key2Joy.Mapping.MappedOption mappedOption)
+    private void MappingControl_MappingCreated(object? sender, MappedOption mappedOption)
     {
         this.ViewModel.HandleMappingCreated(mappedOption);
         this.ViewModel.IsDrawerOpen = false;
         this.DeselectSelectedMapping();
     }
 
-    private void MappingControl_MappingDeleted(object sender, Key2Joy.Mapping.MappedOption mappedOption)
+    private void MappingControl_MappingDeleted(object? sender, MappedOption mappedOption)
     {
         this.ViewModel.HandleMappingDeleted(mappedOption);
         this.ViewModel.IsDrawerOpen = false;
         this.DeselectSelectedMapping();
-    }
-
-    private void MappingControl_MappingDeselected(object sender, Key2Joy.Mapping.MappedOption mappedOption)
-    {
-        this.ViewModel.SelectMapping(null);
-        this.MappingControl.SelectMapping(null);
-        this.ViewModel.IsDrawerOpen = false;
     }
 
     private void MappingGroupsList_MappingSelected(object sender, MappedOption option)
@@ -119,10 +119,7 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
         this.MappingControl.SelectMapping(option);
     }
 
-    private void NewMappingFab_Click(object sender, EventArgs e)
-    {
-        this.OpenDrawerForNewMapping();
-    }
+    private void NewMappingFab_Click(object sender, EventArgs e) => this.OpenDrawerForNewMapping();
 
     public void OpenDrawerForNewMapping()
     {
@@ -165,7 +162,7 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
         return false;
     }
 
-    public MappingProfile CreateNewProfile(string nameSuffix = default)
+    public MappingProfile CreateNewProfile(string? nameSuffix = default)
         => this.ViewModel.CreateNewProfile(nameSuffix);
 
     public void DeselectSelectedMapping()
@@ -200,4 +197,10 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands
 
     public void RefreshMappingList()
         => this.ViewModel.RefreshMappingList();
+
+    public object Invoke(Delegate method)
+        => this.DispatcherQueue.TryEnqueue(() => method.DynamicInvoke());
+
+    public object Invoke(Delegate method, params object[] arguments)
+        => this.DispatcherQueue.TryEnqueue(() => method.DynamicInvoke(arguments));
 }

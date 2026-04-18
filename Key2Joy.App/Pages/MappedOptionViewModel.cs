@@ -7,8 +7,7 @@ using Key2Joy.Mapping;
 
 namespace Key2Joy.App.Pages;
 
-[ObservableObject]
-public partial class MappedOptionViewModel
+public partial class MappedOptionViewModel : ObservableObject
 {
     public MappedOption Option { get; }
 
@@ -27,7 +26,7 @@ public partial class MappedOptionViewModel
     {
         this.Option = option;
         this.Children = option.Children
-            .Select(child => new MappedOptionViewModel(child))
+            .Select(static child => new MappedOptionViewModel(child))
             .ToList();
     }
 }

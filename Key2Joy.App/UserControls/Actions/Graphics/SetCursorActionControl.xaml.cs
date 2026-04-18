@@ -1,12 +1,12 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Mapping.Actions.Graphics;
 using Microsoft.UI.Xaml.Controls;
-using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
 
@@ -17,6 +17,11 @@ namespace Key2Joy.App.UserControls.Actions.Graphics;
     ImageResourceName = "ms-appx:///Assets/Icons/cursor.png"
 )]
 [ObservableObject]
+[SuppressMessage(
+    "CommunityToolkit.Mvvm.SourceGenerators.ObservableObjectGenerator",
+    "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
+    Justification = "Cannot inherit from ObservableObject, must remain UserControl"
+)]
 public sealed partial class SetCursorActionControl : UserControl, IActionOptionsControl
 {
     public event EventHandler? OptionsChanged;

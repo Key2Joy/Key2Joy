@@ -12,7 +12,7 @@ namespace Key2Joy.App.Pages;
 public sealed partial class ConfigPage : Page
 {
     private readonly ConfigState configState;
-    private readonly List<(PropertyInfo Property, ConfigControlAttribute Attribute, FrameworkElement Control)> configControls = new();
+    private readonly List<(PropertyInfo Property, ConfigControlAttribute Attribute, FrameworkElement Control)> configControls = [];
 
     public ConfigPage()
     {
@@ -30,6 +30,12 @@ public sealed partial class ConfigPage : Page
             var property = kvp.Key;
             var attribute = kvp.Value;
             var value = property.GetValue(this.configState);
+
+            if (value == null)
+            {
+                // TODO: In what cases would we get a null value here? Should we handle it differently?
+                continue;
+            }
 
             var (settingsCard, control) = this.MakeSettingsCard(attribute, value);
 
@@ -66,7 +72,9 @@ public sealed partial class ConfigPage : Page
                 {
                     IsOn = (bool)value,
                 };
+
                 toggle.Toggled += this.OnControlValueChanged;
+
                 return toggle;
             }
 
@@ -79,7 +87,9 @@ public sealed partial class ConfigPage : Page
                     Value = Convert.ToDouble(value),
                     SpinButtonPlacementMode = NumberBoxSpinButtonPlacementMode.Compact,
                 };
+
                 numberBox.ValueChanged += this.OnControlValueChanged;
+
                 return numberBox;
             }
 
@@ -90,14 +100,20 @@ public sealed partial class ConfigPage : Page
                     Text = value?.ToString() ?? string.Empty,
                     MaxLength = textAttr.MaxLength,
                 };
+
                 textBox.TextChanged += this.OnControlValueChanged;
+
                 return textBox;
             }
 
             case EnumConfigControlAttribute enumAttr:
             {
                 var enumValues = Enum.GetValues(enumAttr.EnumType);
-                var selected = Enum.Parse(enumAttr.EnumType, value.ToString());
+                var enumString = value.ToString();
+                var selected = enumString != null
+                    ? Enum.Parse(enumAttr.EnumType, enumString)
+                    : null;
+
                 var comboBox = new ComboBox
                 {
                     HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -110,23 +126,22 @@ public sealed partial class ConfigPage : Page
 
                 comboBox.SelectedIndex = Array.IndexOf(enumValues, selected);
                 comboBox.SelectionChanged += this.OnControlValueChanged;
+
                 return comboBox;
             }
+
+            default:
+                throw new NotImplementedException("ConfigControlAttribute type not implemented: " + attribute.GetType().Name);
         }
-
-        throw new NotImplementedException("ConfigControlAttribute type not implemented: " + attribute.GetType().Name);
     }
 
-    private void OnControlValueChanged(object sender, object e)
-    {
-        this.SaveAll();
-    }
+    private void OnControlValueChanged(object sender, object e) => this.SaveAll();
 
     private void SaveAll()
     {
         foreach (var (property, attribute, control) in this.configControls)
         {
-            var value = this.GetControlValue(attribute, control);
+            var value = GetControlValue(attribute, control);
             value = value == null
                 ? value
                 : Convert.ChangeType(value, property.PropertyType);
@@ -134,23 +149,13 @@ public sealed partial class ConfigPage : Page
         }
     }
 
-    private object GetControlValue(ConfigControlAttribute attribute, FrameworkElement control)
-    {
-        switch (attribute)
+    private static object GetControlValue(ConfigControlAttribute attribute, FrameworkElement control)
+        => attribute switch
         {
-            case BooleanConfigControlAttribute:
-                return ((ToggleSwitch)control).IsOn;
-
-            case NumericConfigControlAttribute:
-                return ((NumberBox)control).Value;
-
-            case TextConfigControlAttribute:
-                return ((TextBox)control).Text;
-
-            case EnumConfigControlAttribute:
-                return ((ComboBox)control).SelectedItem;
-        }
-
-        throw new NotImplementedException("ConfigControlAttribute type not implemented: " + attribute.GetType().Name);
-    }
+            BooleanConfigControlAttribute => ((ToggleSwitch)control).IsOn,
+            NumericConfigControlAttribute => ((NumberBox)control).Value,
+            TextConfigControlAttribute => ((TextBox)control).Text,
+            EnumConfigControlAttribute => ((ComboBox)control).SelectedItem,
+            _ => throw new NotImplementedException("ConfigControlAttribute type not implemented: " + attribute.GetType().Name),
+        };
 }

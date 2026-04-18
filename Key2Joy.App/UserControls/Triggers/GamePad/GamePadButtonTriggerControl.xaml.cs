@@ -1,12 +1,14 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Key2Joy.Mapping.Triggers;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.LowLevelInput;
 using Key2Joy.LowLevelInput.XInput;
+using Key2Joy.Mapping.Triggers;
 using Key2Joy.Mapping.Triggers.GamePad;
 using Key2Joy.Util;
 using Microsoft.UI.Xaml;
@@ -19,15 +21,17 @@ namespace Key2Joy.App.UserControls.Triggers.GamePad;
     ImageResourceName = "ms-appx:///Assets/Icons/joystick.png"
 )]
 [ObservableObject]
+[SuppressMessage(
+    "CommunityToolkit.Mvvm.SourceGenerators.ObservableObjectGenerator",
+    "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
+    Justification = "Cannot inherit from ObservableObject, must remain UserControl"
+)]
 public sealed partial class GamePadButtonTriggerControl : UserControl, ITriggerOptionsControl
 {
     private const string TEXT_CHANGE = "(press any button to select it)";
     private const string TEXT_CHANGE_INSTRUCTION = "(click to change)";
-    private const string TEXT_LAST_GAMEPAD = "Last GamePad used was #{0}";
 
-    public event EventHandler OptionsChanged;
-
-    public ObservableCollection<PressState> AvailablePressStates { get; } = new();
+    public ObservableCollection<PressState> AvailablePressStates { get; } = [];
 
     [ObservableProperty]
     public partial string ButtonBindText { get; set; } = TEXT_CHANGE_INSTRUCTION;
@@ -40,6 +44,10 @@ public sealed partial class GamePadButtonTriggerControl : UserControl, ITriggerO
 
     [ObservableProperty]
     public partial double GamePadIndex { get; set; } = 0;
+
+    private readonly CompositeFormat textLastGamepad = CompositeFormat.Parse("Last GamePad used was #{0}");
+
+    public event EventHandler? OptionsChanged;
 
     private readonly IXInputService xInputService;
     private GamePadButton button;
@@ -65,7 +73,7 @@ public sealed partial class GamePadButtonTriggerControl : UserControl, ITriggerO
         };
     }
 
-    private void XInputService_StateChanged(object sender, DeviceStateChangedEventArgs e)
+    private void XInputService_StateChanged(object? sender, DeviceStateChangedEventArgs e)
     {
         var buttons = e.NewState.Gamepad.GetPressedButtonsList();
 
@@ -78,7 +86,11 @@ public sealed partial class GamePadButtonTriggerControl : UserControl, ITriggerO
 
         this.DispatcherQueue.TryEnqueue(() =>
         {
-            this.LastGamePadLabel = string.Format(TEXT_LAST_GAMEPAD, e.DeviceIndex);
+            this.LastGamePadLabel = string.Format(
+                System.Globalization.CultureInfo.InvariantCulture,
+                this.textLastGamepad,
+                e.DeviceIndex
+            );
             this.UpdateButtonDisplay();
             this.StopTrapping();
         });

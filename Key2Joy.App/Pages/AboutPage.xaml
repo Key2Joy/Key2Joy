@@ -45,7 +45,7 @@
                                 Spacing="8"
                                 Margin="0,12,0,0">
                         <HyperlinkButton Content="GitHub"
-                                         NavigateUri="https://github.com/luttje/Key2Joy"
+                                         NavigateUri="https://github.com/Key2Joy/Key2Joy"
                                          Padding="8,4" />
                     </StackPanel>
                 </StackPanel>

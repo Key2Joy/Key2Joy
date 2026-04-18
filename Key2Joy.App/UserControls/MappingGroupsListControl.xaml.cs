@@ -20,18 +20,18 @@ namespace Key2Joy.App.UserControls;
 [DependencyProperty<int>("FilteredMappedOptionsCount")]
 public sealed partial class MappingGroupsListControl : UserControl
 {
-    public event EventHandler<MappedOption> MappingSelected;
+    public event EventHandler<MappedOption?>? MappingSelected;
 
     /// <summary>Fired when the user wants to edit or add a mapping. Argument is <c>null</c> for "add new".</summary>
-    public event EventHandler<MappedOption> EditMappingRequested;
+    public event EventHandler<MappedOption?>? EditMappingRequested;
 
-    public event EventHandler<IList<MappedOption>> GenerateReversesRequested;
+    public event EventHandler<IList<MappedOption>>? GenerateReversesRequested;
 
-    public event EventHandler<MappedOption> RemoveMappingRequested;
+    public event EventHandler<MappedOption?>? RemoveMappingRequested;
 
-    public event EventHandler<MappedOption> MakeMappingParentlessRequested;
+    public event EventHandler<MappedOption>? MakeMappingParentlessRequested;
 
-    public event EventHandler<(MappedOption Child, MappedOption NewParent)> ChooseNewParentRequested;
+    public event EventHandler<(MappedOption Child, MappedOption NewParent)>? ChooseNewParentRequested;
 
     private readonly List<MappedOptionViewModel> selectedItems = [];
 
@@ -48,7 +48,7 @@ public sealed partial class MappingGroupsListControl : UserControl
         selectedItems.Clear();
     }
 
-    private void SetSingleSelection(MappedOptionViewModel vm)
+    private void SetSingleSelection(MappedOptionViewModel? vm)
     {
         foreach (var item in this.selectedItems)
         {
@@ -219,7 +219,7 @@ public sealed partial class MappingGroupsListControl : UserControl
 
                 ToggleButton? toggleButton = null;
 
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parentRow); i++)
+                for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parentRow); i++)
                 {
                     if (VisualTreeHelper.GetChild(parentRow, i) is ToggleButton tb)
                     {

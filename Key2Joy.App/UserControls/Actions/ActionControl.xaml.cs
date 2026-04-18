@@ -16,14 +16,12 @@ namespace Key2Joy.App.UserControls.Actions;
 [DependencyProperty<object>("ActionContent")]
 public sealed partial class ActionControl : UserControl
 {
+    public event EventHandler<ActionChangedEventArgs>? ActionChanged;
     public bool IsTopLevel { get; set; }
+    public IActionOptionsControl? Options { get; private set; }
+    public AbstractAction? Action { get; private set; }
 
-    public IActionOptionsControl Options { get; private set; }
-    public AbstractAction Action { get; private set; }
-
-    public event EventHandler<ActionChangedEventArgs> ActionChanged;
-
-    private AbstractAction pendingSelectAction;
+    private AbstractAction? pendingSelectAction;
 
     public ActionControl()
     {
@@ -43,7 +41,7 @@ public sealed partial class ActionControl : UserControl
         var actionTypeFactories = ActionsRepository.GetAllActions(this.IsTopLevel);
 
         this.ActionsAvailable = actionTypeFactories
-            .Select(kvp =>
+            .Select(static kvp =>
             {
                 var mappingControlFactory = MappingControlRepository.GetMappingControlFactory(kvp.Value.FullTypeName);
                 var customImage = mappingControlFactory?.ImageResourceName;
@@ -57,7 +55,7 @@ public sealed partial class ActionControl : UserControl
                     ImageUri = new Uri(customImage ?? "ms-appx:///Assets/StoreLogo.png")
                 };
             })
-            .Where(acbi => acbi.MappingControlFactory != null)
+            .Where(static acbi => acbi.MappingControlFactory != null)
             .ToList();
 
         if (this.pendingSelectAction != null)
@@ -77,7 +75,7 @@ public sealed partial class ActionControl : UserControl
 
         var typeFactory = this.ActionSelected.TypeFactory;
 
-        if (this.Action == null || this.Action.GetType().FullName != typeFactory.FullTypeName)
+        if (typeFactory != null && (this.Action == null || this.Action.GetType().FullName != typeFactory.FullTypeName))
         {
             this.Action = CoreAction.MakeAction(typeFactory);
         }
@@ -99,7 +97,7 @@ public sealed partial class ActionControl : UserControl
         actionFullTypeName = MappingTypeHelper.EnsureSimpleTypeName(actionFullTypeName);
 
         var match = this.ActionsAvailable
-            .FirstOrDefault(a => a.TypeFactory.FullTypeName == actionFullTypeName);
+            .FirstOrDefault(a => a.TypeFactory?.FullTypeName == actionFullTypeName);
 
         if (match == null)
         {
@@ -113,7 +111,7 @@ public sealed partial class ActionControl : UserControl
     public bool CanMappingSave(AbstractMappedOption mappedOption)
         => this.Options?.CanMappingSave(mappedOption.Action) ?? false;
 
-    partial void OnActionSelectedChanged(ActionComboBoxItem selectedAction)
+    partial void OnActionSelectedChanged(ActionComboBoxItem? newValue)
     {
         // Unsubscribe from old options
         if (this.Options != null)
@@ -121,7 +119,7 @@ public sealed partial class ActionControl : UserControl
             this.Options.OptionsChanged -= this.OnOptionsChanged;
         }
 
-        if (selectedAction == null)
+        if (newValue == null)
         {
             this.Options = null;
             this.Action = null;
@@ -130,11 +128,11 @@ public sealed partial class ActionControl : UserControl
             return;
         }
 
-        var newOptions = selectedAction.MappingControlFactory.CreateInstance<IActionOptionsControl>();
+        var newOptions = newValue.MappingControlFactory?.CreateInstance<IActionOptionsControl>();
         this.Options = newOptions;
         this.ActionContent = newOptions;
 
-        newOptions.OptionsChanged += this.OnOptionsChanged;
+        newOptions?.OptionsChanged += this.OnOptionsChanged;
 
         this.BuildAction();
     }
@@ -145,5 +143,5 @@ public sealed partial class ActionControl : UserControl
         this.ActionSelected = null;
     }
 
-    private void OnOptionsChanged(object sender, EventArgs e) => this.BuildAction();
+    private void OnOptionsChanged(object? sender, EventArgs e) => this.BuildAction();
 }

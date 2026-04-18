@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml.Media;
 
 namespace Key2Joy.App.Utils;
 
-public class SelectedItemBackgroundConverter : IValueConverter
+public partial class SelectedItemBackgroundConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {

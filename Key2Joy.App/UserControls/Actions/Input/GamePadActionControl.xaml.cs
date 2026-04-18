@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Key2Joy.Contracts.Mapping;
@@ -18,6 +19,11 @@ namespace Key2Joy.App.UserControls.Actions.Input;
     ImageResourceName = "ms-appx:///Assets/Icons/joystick.png"
 )]
 [ObservableObject]
+[SuppressMessage(
+    "CommunityToolkit.Mvvm.SourceGenerators.ObservableObjectGenerator",
+    "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
+    Justification = "Cannot inherit from ObservableObject, must remain UserControl"
+)]
 public sealed partial class GamePadActionControl : UserControl, IActionOptionsControl
 {
     public event EventHandler? OptionsChanged;

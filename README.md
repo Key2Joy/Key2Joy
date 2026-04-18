@@ -1,7 +1,7 @@
 > [!WARNING]
-> Due to critical bugs impacting input processing in the 0.7.x releases, it's recommended to use [version 0.6.0](https://github.com/luttje/Key2Joy/releases/tag/0.6.0) or 0.8.0 and later.
+> Due to critical bugs impacting input processing in the 0.7.x releases, it's recommended to use [version 0.6.0](https://github.com/Key2Joy/Key2Joy/releases/tag/0.6.0) or 0.8.0 and later.
 >
-> Contributions are welcome! If you'd like to help, feel free to submit a [Pull Request](https://github.com/luttje/Key2Joy/pulls).
+> Contributions are welcome! If you'd like to help, feel free to submit a [Pull Request](https://github.com/Key2Joy/Key2Joy/pulls).
 >
 > Thanks for your understanding.
 >
@@ -12,8 +12,8 @@
 
 **Simulate a Joystick/Controller/Gamepad using your keyboard, mouse or other triggers.**
 
-[![build-test-and-pre-release](https://github.com/luttje/Key2Joy/actions/workflows/build-test-and-pre-release.yml/badge.svg)](https://github.com/luttje/Key2Joy/actions/workflows/build-test-and-pre-release.yml)
-[![Test Code Coverage Status](https://coveralls.io/repos/github/luttje/Key2Joy/badge.svg?branch=main)](https://coveralls.io/github/luttje/Key2Joy?branch=main)
+[![build-test-and-pre-release](https://github.com/Key2Joy/Key2Joy/actions/workflows/build-test-and-pre-release.yml/badge.svg)](https://github.com/Key2Joy/Key2Joy/actions/workflows/build-test-and-pre-release.yml)
+[![Test Code Coverage Status](https://coveralls.io/repos/github/Key2Joy/Key2Joy/badge.svg?branch=main)](https://coveralls.io/github/Key2Joy/Key2Joy?branch=main)
 
 </div>
 
@@ -29,7 +29,7 @@ In addition to simply simulating a button being pressed on the Joystick, you can
 ## Installation
 
 1. *(Optional)* I advise you [create a System Restore Point](https://support.microsoft.com/en-us/windows/create-a-system-restore-point-77e02e2a-3298-c869-9974-ef5658ea3be9)
-2. Download a binary from the [releases of this repo](https://github.com/luttje/Key2Joy/releases)
+2. Download a binary from the [releases of this repo](https://github.com/Key2Joy/Key2Joy/releases)
 3. Extract all files to the same location
 
 ## Usage
@@ -62,7 +62,7 @@ In addition to simply simulating a button being pressed on the Joystick, you can
    *In the default profile there is also a mapping that stops Key2Joy from listening using the `Escape`-key. Don't forget to include such a mapping for your custom profiles.*
 
 > [!NOTE]
-> Check out the [🐕‍🦺 Tips & Tricks](https://github.com/luttje/Key2Joy/discussions/categories/-tips-tricks) category in the discussions for tips and tricks. Certain inputs may be tricky to configure, but there's usually a way to get it working.
+> Check out the [🐕‍🦺 Tips & Tricks](https://github.com/Key2Joy/Key2Joy/discussions/categories/-tips-tricks) category in the discussions for tips and tricks. Certain inputs may be tricky to configure, but there's usually a way to get it working.
 
 > [!WARNING]
 > Please be careful using this tool in multiplayer/competitive games. It may be considered cheating and get you banned. Some games may only ban you after a while, so don't assume you're safe just because you haven't been banned yet.

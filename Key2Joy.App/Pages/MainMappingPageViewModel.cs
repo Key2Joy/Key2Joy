@@ -16,14 +16,13 @@ using Key2Joy.Util;
 
 namespace Key2Joy.App.Pages;
 
-[ObservableObject]
-public partial class MainMappingPageViewModel : IInvokeOnUI
+public partial class MainMappingPageViewModel : ObservableObject
 {
-    public ObservableCollection<MappedOptionViewModel> MappedOptions { get; } = new();
-    public ObservableCollection<MappingGroupViewModel> FilteredMappingGroups { get; } = new();
-    public ObservableCollection<IGamePadInfo> Devices { get; } = new();
+    public ObservableCollection<MappedOptionViewModel> MappedOptions { get; } = [];
+    public ObservableCollection<MappingGroupViewModel> FilteredMappingGroups { get; } = [];
+    public ObservableCollection<IGamePadInfo> Devices { get; } = [];
 
-    public MappingProfile SelectedProfile { get; private set; }
+    public MappingProfile? SelectedProfile { get; private set; }
 
     [ObservableProperty]
     public partial bool Armed { get; set; }
@@ -32,7 +31,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
     public partial string ArmedButtonText { get; set; } = "Connect";
 
     [ObservableProperty]
-    public partial string ArmErrorMessage { get; set; }
+    public partial string? ArmErrorMessage { get; set; }
 
     [ObservableProperty]
     public partial string SearchText { get; set; } = "";
@@ -54,15 +53,12 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
     private bool isSettingProfile;
 
-    private MappedOptionViewModel selectedMappedOption;
+    private MappedOptionViewModel? selectedMappedOption;
 
     private readonly ConfigState configState;
 
     public MainMappingPageViewModel()
-    {
-        this.configState = ServiceContainer.Get<IConfigManager>()
-            .GetConfigState();
-    }
+        => this.configState = ServiceContainer.Get<IConfigManager>().GetConfigState();
 
     public void Initialize()
     {
@@ -72,20 +68,15 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         {
             this.SetSelectedProfile(lastLoadedProfile);
         }
-
-        // Ensure the manager knows which window handle catches all inputs
-        Key2JoyManager.Instance.SetHandlerWithInvoke(this);
-        Key2JoyManager.Instance.StatusChanged += (s, ev) =>
-        {
-            if (ev.Profile != null)
-            {
-                this.SetSelectedProfile(ev.Profile);
-            }
-        };
     }
 
     public void RefreshMappingList()
-        => this.SetSelectedProfile(this.SelectedProfile);
+    {
+        if (this.SelectedProfile != null)
+        {
+            this.SetSelectedProfile(this.SelectedProfile);
+        }
+    }
 
     public void SetSelectedProfile(MappingProfile profile)
     {
@@ -163,12 +154,12 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
     /// <summary>
     /// Called automatically when the Armed property changes. We use this to arm or disarm the mappings in the manager, and to refresh the device list.
     /// </summary>
-    /// <param name="isArmed"></param>
-    partial void OnArmedChanged(bool isArmed)
+    /// <param name="value"></param>
+    partial void OnArmedChanged(bool value)
     {
-        ArmedButtonText = isArmed ? "Disconnect" : "Connect";
+        ArmedButtonText = value ? "Disconnect" : "Connect";
 
-        if (isArmed)
+        if (value)
         {
             try
             {
@@ -300,13 +291,10 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         this.FilteredMappedOptionsCount = this.FilteredMappingGroups.Sum(g => g.Items.Count);
     }
 
-    public void SelectMapping(MappedOption option)
+    public void SelectMapping(MappedOption? option)
     {
-        if (this.selectedMappedOption != null)
-        {
-            this.selectedMappedOption.IsSelected = false;
-            this.selectedMappedOption = null;
-        }
+        this.selectedMappedOption?.IsSelected = false;
+        this.selectedMappedOption = null;
 
         if (option == null)
         {
@@ -343,14 +331,16 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
     public void DeselectSelectedMapping()
         => this.SelectMapping(null);
 
-    public MappedOption GetSelectedMappingOption()
+    public MappedOption? GetSelectedMappingOption()
         => this.selectedMappedOption?.Option;
 
-    public MappingProfile CreateNewProfile(string nameSuffix = default)
+    public MappingProfile CreateNewProfile(string? nameSuffix = default)
     {
         MappingProfile profile = new($"{this.ProfileName}{nameSuffix}", this.SelectedProfile?.MappedOptions);
+
         this.SetSelectedProfile(profile);
         profile.Save();
+
         return profile;
     }
 
@@ -386,7 +376,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
     public void AddAllGamePadMappings(bool pressOnly = false, bool releaseOnly = false)
     {
-        List<MappedOption> range = new();
+        List<MappedOption> range = [];
 
         if (pressOnly)
         {
@@ -411,7 +401,7 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
 
     public void AddAllKeyboardMappings(bool pressOnly = false, bool releaseOnly = false)
     {
-        List<MappedOption> range = new();
+        List<MappedOption> range = [];
 
         if (pressOnly)
         {
@@ -508,10 +498,4 @@ public partial class MainMappingPageViewModel : IInvokeOnUI
         this.SelectedProfile.Save();
         this.SetSelectedProfile(this.SelectedProfile);
     }
-
-    public object Invoke(Delegate method)
-        => method.DynamicInvoke();
-
-    public object Invoke(Delegate method, params object[] arguments)
-        => method.DynamicInvoke(arguments);
 }

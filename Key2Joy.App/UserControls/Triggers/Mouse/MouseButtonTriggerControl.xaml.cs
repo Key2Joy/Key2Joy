@@ -1,11 +1,12 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Key2Joy.Contracts.Mapping;
-using Key2Joy.Mapping.Triggers;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.LowLevelInput;
+using Key2Joy.Mapping.Triggers;
 using Key2Joy.Mapping.Triggers.Mouse;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -17,7 +18,12 @@ namespace Key2Joy.App.UserControls.Triggers.Mouse;
     ImageResourceName = "ms-appx:///Assets/Icons/mouse.png"
 )]
 [ObservableObject]
-public sealed partial class MouseButtonTriggerControl : UserControl, ITriggerOptionsControl
+[SuppressMessage(
+    "CommunityToolkit.Mvvm.SourceGenerators.ObservableObjectGenerator",
+    "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
+    Justification = "Cannot inherit from ObservableObject, must remain UserControl"
+)]
+public sealed partial class MouseButtonTriggerControl : UserControl, ITriggerOptionsControl, IDisposable
 {
     private const string TEXT_HOVER_INSTRUCTION = "(hover here, then click a mouse button to set it as the trigger)";
 
@@ -30,7 +36,7 @@ public sealed partial class MouseButtonTriggerControl : UserControl, ITriggerOpt
     [ObservableProperty]
     public partial PressState SelectedPressState { get; set; }
 
-    private Key2Joy.LowLevelInput.Mouse.Buttons mouseButtons;
+    private LowLevelInput.Mouse.Buttons mouseButtons;
     private bool isMouseOver;
     private GlobalInputHook? globalMouseHook;
 
@@ -42,17 +48,20 @@ public sealed partial class MouseButtonTriggerControl : UserControl, ITriggerOpt
         this.globalMouseHook = new GlobalInputHook();
         this.globalMouseHook.MouseInputEvent += this.OnMouseInputEvent;
 
-        this.Unloaded += (s, e) =>
-        {
-            if (this.globalMouseHook == null)
-            {
-                return;
-            }
+        // Without this we run into an exception. Seems like Dispose for this User Control is not called.
+        this.Unloaded += (s, e) => this.CleanupMouseHook();
+    }
 
-            this.globalMouseHook.MouseInputEvent -= this.OnMouseInputEvent;
-            this.globalMouseHook.Dispose();
-            this.globalMouseHook = null;
-        };
+    private void CleanupMouseHook()
+    {
+        if (this.globalMouseHook == null)
+        {
+            return;
+        }
+
+        this.globalMouseHook.MouseInputEvent -= this.OnMouseInputEvent;
+        this.globalMouseHook.Dispose();
+        this.globalMouseHook = null;
     }
 
     private void LoadPressStates()
@@ -74,7 +83,7 @@ public sealed partial class MouseButtonTriggerControl : UserControl, ITriggerOpt
 
         try
         {
-            var buttons = Key2Joy.LowLevelInput.Mouse.ButtonsFromEvent(e, out var isDown);
+            var buttons = LowLevelInput.Mouse.ButtonsFromEvent(e, out var isDown);
             if (!isDown)
             {
                 return;
@@ -116,7 +125,7 @@ public sealed partial class MouseButtonTriggerControl : UserControl, ITriggerOpt
         var thisTrigger = (MouseButtonTrigger)trigger;
         this.mouseButtons = thisTrigger.MouseButtons;
         this.SelectedPressState = thisTrigger.PressState;
-        if (this.mouseButtons != Key2Joy.LowLevelInput.Mouse.Buttons.None)
+        if (this.mouseButtons != LowLevelInput.Mouse.Buttons.None)
         {
             this.ButtonBindText = $"{this.mouseButtons} {TEXT_HOVER_INSTRUCTION}";
         }
@@ -130,4 +139,6 @@ public sealed partial class MouseButtonTriggerControl : UserControl, ITriggerOpt
     }
 
     bool ITriggerOptionsControl.CanMappingSave(AbstractTrigger trigger) => true;
+
+    public void Dispose() => this.CleanupMouseHook();
 }

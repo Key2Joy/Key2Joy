@@ -6,12 +6,10 @@ namespace Key2Joy.App.UserControls;
 
 public sealed partial class FloatingActionButtonControl : UserControl
 {
-    public event EventHandler Click;
+    public event EventHandler? Click;
 
     public FloatingActionButtonControl()
-    {
-        this.InitializeComponent();
-    }
+        => this.InitializeComponent();
 
     private void FabButton_Click(object sender, RoutedEventArgs e)
         => Click?.Invoke(this, EventArgs.Empty);

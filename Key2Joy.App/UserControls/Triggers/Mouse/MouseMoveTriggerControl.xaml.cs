@@ -1,10 +1,11 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Key2Joy.Contracts.Mapping;
-using Key2Joy.Mapping.Triggers;
 using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.Mapping;
+using Key2Joy.Mapping.Triggers;
 using Key2Joy.Mapping.Triggers.Mouse;
 using Microsoft.UI.Xaml.Controls;
 
@@ -15,6 +16,11 @@ namespace Key2Joy.App.UserControls.Triggers.Mouse;
     ImageResourceName = "ms-appx:///Assets/Icons/mouse.png"
 )]
 [ObservableObject]
+[SuppressMessage(
+    "CommunityToolkit.Mvvm.SourceGenerators.ObservableObjectGenerator",
+    "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
+    Justification = "Cannot inherit from ObservableObject, must remain UserControl"
+)]
 public sealed partial class MouseMoveTriggerControl : UserControl, ITriggerOptionsControl
 {
     public event EventHandler? OptionsChanged;

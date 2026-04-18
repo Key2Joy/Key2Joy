@@ -3,27 +3,30 @@ using Key2Joy.Contracts.Mapping.Triggers;
 
 namespace Key2Joy.Mapping.Triggers;
 
+/// <summary>
+/// Defines the contract for a control that manages options for a trigger in a user interface.
+/// </summary>
 public interface ITriggerOptionsControl
 {
     /// <summary>
     /// Called to setup the options panel with a trigger
     /// </summary>
     /// <param name="trigger"></param>
-    void Select(AbstractTrigger trigger);
+    public void Select(AbstractTrigger trigger);
 
     /// <summary>
     /// Called when the options panel should modify a resulting trigger
     /// </summary>
     /// <param name="trigger"></param>
-    void Setup(AbstractTrigger trigger);
+    public void Setup(AbstractTrigger trigger);
 
     /// <summary>
     /// Called when the mapping is saving and can still be stopped
     /// </summary>
-    bool CanMappingSave(AbstractTrigger trigger);
+    public bool CanMappingSave(AbstractTrigger trigger);
 
     /// <summary>
     /// Called when the options on a trigger change
     /// </summary>
-    event EventHandler OptionsChanged;
+    public event EventHandler? OptionsChanged;
 }

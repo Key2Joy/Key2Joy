@@ -13,25 +13,25 @@ internal class MappingContextMenuBuilder
     /// Fired when the user wants to edit or create a mapping.
     /// The argument is the <see cref="MappedOption"/> to edit, or <c>null</c> to create a new one.
     /// </summary>
-    public event EventHandler<MappedOption> SelectEditMapping;
+    public event EventHandler<MappedOption?>? SelectEditMapping;
 
-    public event EventHandler SelectGenerateReverseMappings;
+    public event EventHandler? SelectGenerateReverseMappings;
 
-    public event EventHandler SelectRemoveMappings;
+    public event EventHandler? SelectRemoveMappings;
 
-    public event EventHandler<MappedOption> SelectMakeMappingParentless;
+    public event EventHandler<MappedOption>? SelectMakeMappingParentless;
 
-    public event EventHandler<(MappedOption Child, MappedOption NewParent)> SelectChooseNewParent;
+    public event EventHandler<(MappedOption Child, MappedOption NewParent)>? SelectChooseNewParent;
 
     private readonly IList<MappedOptionViewModel> selectedItems;
 
     // Tracks the mapping that is waiting for the user to pick its new parent.
-    private static MappedOption currentChildChoosingParent;
+    private static MappedOption? currentChildChoosingParent;
 
     internal MappingContextMenuBuilder(IList<MappedOptionViewModel> selectedItems)
         => this.selectedItems = selectedItems;
 
-    private static MenuFlyoutItem CreateItem(string text, string glyph = null)
+    private static MenuFlyoutItem CreateItem(string text, string? glyph = null)
     {
         var item = new MenuFlyoutItem { Text = text };
 

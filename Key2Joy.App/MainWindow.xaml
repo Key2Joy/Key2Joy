@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     Activated="Window_Activated"
     Closed="Window_Closed"
-    Title="Key2Joy.App">
+    Title="Key2Joy">
 
     <Window.SystemBackdrop>
         <MicaBackdrop />

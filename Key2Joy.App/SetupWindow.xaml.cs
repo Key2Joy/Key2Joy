@@ -51,14 +51,11 @@ public sealed partial class SetupWindow : Window
         }
     }
 
-    private void CreateSystemRestorePointButton_Click(object sender, RoutedEventArgs e)
+    private void CreateSystemRestorePointButton_Click(object sender, RoutedEventArgs e) => Process.Start(new ProcessStartInfo
     {
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = "SystemPropertiesProtection.exe",
-            UseShellExecute = true
-        });
-    }
+        FileName = "SystemPropertiesProtection.exe",
+        UseShellExecute = true
+    });
 
     private static bool IsRunningAsAdministrator()
     {

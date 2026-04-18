@@ -7,12 +7,12 @@ namespace Key2Joy.App.UserControls.Actions.Logic;
 
 public sealed partial class SequenceActionControlItem : UserControl
 {
-    public event EventHandler RequestedRemove;
-    public event EventHandler RequestedMoveUp;
-    public event EventHandler RequestedMoveDown;
-    public event EventHandler ActionChanged;
+    public event EventHandler? RequestedRemove;
+    public event EventHandler? RequestedMoveUp;
+    public event EventHandler? RequestedMoveDown;
+    public event EventHandler? ActionChanged;
 
-    public AbstractAction Action => this.actionControl.Action;
+    public AbstractAction? Action => this.actionControl.Action;
 
     public SequenceActionControlItem()
     {
@@ -32,7 +32,7 @@ public sealed partial class SequenceActionControlItem : UserControl
         }
     }
 
-    private void ActionControl_ActionChanged(object sender, ActionChangedEventArgs e)
+    private void ActionControl_ActionChanged(object? sender, ActionChangedEventArgs e)
         => ActionChanged?.Invoke(this, EventArgs.Empty);
 
     private void RemoveButton_Click(object sender, RoutedEventArgs e)

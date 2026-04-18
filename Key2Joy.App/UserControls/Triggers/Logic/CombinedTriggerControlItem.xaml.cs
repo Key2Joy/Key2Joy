@@ -1,6 +1,5 @@
 using System;
 using Key2Joy.Contracts.Mapping.Triggers;
-using Key2Joy.Mapping.Triggers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -8,11 +7,11 @@ namespace Key2Joy.App.UserControls.Triggers.Logic;
 
 public sealed partial class CombinedTriggerControlItem : UserControl
 {
-    public event EventHandler RequestedRemove;
+    public event EventHandler? RequestedRemove;
 
-    public event EventHandler TriggerChanged;
+    public event EventHandler? TriggerChanged;
 
-    public AbstractTrigger Trigger => this.triggerControl.Trigger;
+    public AbstractTrigger? Trigger => this.triggerControl.Trigger;
 
     public CombinedTriggerControlItem()
     {
@@ -33,7 +32,7 @@ public sealed partial class CombinedTriggerControlItem : UserControl
         }
     }
 
-    private void TriggerControl_TriggerChanged(object sender, TriggerChangedEventArgs e)
+    private void TriggerControl_TriggerChanged(object? sender, TriggerChangedEventArgs e)
         => TriggerChanged?.Invoke(this, EventArgs.Empty);
 
     private void RemoveButton_Click(object sender, RoutedEventArgs e)

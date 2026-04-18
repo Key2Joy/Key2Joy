@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Mapping.Triggers;
 using Key2Joy.Contracts.Mapping.Triggers;
@@ -15,12 +14,12 @@ namespace Key2Joy.App.UserControls.Triggers.Logic;
 )]
 public sealed partial class CombinedTriggerControl : UserControl, ITriggerOptionsControl
 {
-    public event EventHandler OptionsChanged;
+    public event EventHandler? OptionsChanged;
 
     public CombinedTriggerControl()
         => this.InitializeComponent();
 
-    private CombinedTriggerControlItem AddTriggerControl(AbstractTrigger trigger = null)
+    private CombinedTriggerControlItem AddTriggerControl(AbstractTrigger? trigger = null)
     {
         var item = new CombinedTriggerControlItem
         {
@@ -65,7 +64,7 @@ public sealed partial class CombinedTriggerControl : UserControl, ITriggerOption
     {
         var thisTrigger = (CombinedTrigger)trigger;
 
-        thisTrigger.Triggers = new List<AbstractTrigger>();
+        thisTrigger.Triggers = [];
 
         foreach (var child in this.TriggersPanel.Children)
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Key2Joy.Contracts.Mapping;
@@ -15,6 +16,11 @@ namespace Key2Joy.App.UserControls.Actions.Scripting;
     ImageResourceName = "ms-appx:///Assets/Icons/script_code.png"
 )]
 [ObservableObject]
+[SuppressMessage(
+    "CommunityToolkit.Mvvm.SourceGenerators.ObservableObjectGenerator",
+    "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
+    Justification = "Cannot inherit from ObservableObject, must remain UserControl"
+)]
 public sealed partial class ScriptActionControl : UserControl, IActionOptionsControl
 {
     public event EventHandler? OptionsChanged;
@@ -95,10 +101,7 @@ public sealed partial class ScriptActionControl : UserControl, IActionOptionsCon
         thisAction.Script = this.IsScriptPath ? this.ScriptFilePath : this.Script;
     }
 
-    bool IActionOptionsControl.CanMappingSave(AbstractAction action)
-    {
-        return true;
-    }
+    bool IActionOptionsControl.CanMappingSave(AbstractAction action) => true;
 
     private async Task ShowSecurityWarningAsync()
     {

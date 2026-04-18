@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net;
 using System.Text.Json;
 
@@ -6,7 +6,7 @@ namespace Key2Joy.Setup.AppReleases;
 
 internal static class ReleaseManager
 {
-    private const string RELEASES_URL = "https://api.github.com/repos/luttje/Key2Joy/releases";
+    private const string RELEASES_URL = "https://api.github.com/repos/Key2Joy/Key2Joy/releases";
     private static Release[] releases = null;
 
     internal static Release[] GetReleases()

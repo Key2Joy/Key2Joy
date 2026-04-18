@@ -1,11 +1,11 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Key2Joy.Contracts.Mapping;
-using Key2Joy.Mapping.Triggers;
 using Key2Joy.Contracts.Mapping.Triggers;
+using Key2Joy.Mapping.Triggers;
 using Key2Joy.Mapping.Triggers.GamePad;
-using Key2Joy.Util;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Key2Joy.App.UserControls.Triggers.GamePad;
@@ -15,11 +15,16 @@ namespace Key2Joy.App.UserControls.Triggers.GamePad;
     ImageResourceName = "ms-appx:///Assets/Icons/joystick.png"
 )]
 [ObservableObject]
+[SuppressMessage(
+    "CommunityToolkit.Mvvm.SourceGenerators.ObservableObjectGenerator",
+    "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
+    Justification = "Cannot inherit from ObservableObject, must remain UserControl"
+)]
 public sealed partial class GamePadTriggerTriggerControl : UserControl, ITriggerOptionsControl
 {
-    public event EventHandler OptionsChanged;
+    public event EventHandler? OptionsChanged;
 
-    public ObservableCollection<GamePadSide> AvailableTriggerSides { get; } = new();
+    public ObservableCollection<GamePadSide> AvailableTriggerSides { get; } = [];
 
     [ObservableProperty]
     public partial GamePadSide SelectedTriggerSide { get; set; }
@@ -37,7 +42,7 @@ public sealed partial class GamePadTriggerTriggerControl : UserControl, ITrigger
     {
         this.InitializeComponent();
 
-        foreach (GamePadSide side in Enum.GetValues(typeof(GamePadSide)))
+        foreach (var side in Enum.GetValues<GamePadSide>())
         {
             this.AvailableTriggerSides.Add(side);
         }

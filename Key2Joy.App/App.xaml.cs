@@ -14,32 +14,27 @@ namespace Key2Joy.App;
 /// </summary>
 public partial class App : Application
 {
-    public static Window CurrentWindow { get; private set; }
+    public static Window? CurrentWindow { get; private set; }
 
     private static bool shouldStartMinimized;
-    private static Action cleanupHandle;
+    private static Action? cleanupHandle;
 
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
-    public App()
-    {
-        this.InitializeComponent();
-    }
+    public App() => this.InitializeComponent();
 
     /// <summary>
     /// Invoked when the application is launched.
     /// </summary>
-    /// <param name="_">Details about the launch request and process.</param>
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs _)
+    /// <param name="args">Details about the launch request and process.</param>
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         cleanupHandle = Key2JoyManager.InitHandle(OnRunAppCommand);
-        var args = Environment.GetCommandLineArgs();
+        var commandLineArguments = Environment.GetCommandLineArgs();
 
-        ApplicationConfiguration.Initialize();
-
-        foreach (var arg in args)
+        foreach (var arg in commandLineArguments)
         {
             if (arg == "--minimized")
             {
@@ -57,7 +52,7 @@ public partial class App : Application
             MappingProfile.ExtractDefaultIfNotExists();
             var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
 
-            window.Closed += (_, _) => cleanupHandle();
+            window.Closed += static (_, _) => cleanupHandle?.Invoke();
 
             try
             {
@@ -65,6 +60,8 @@ public partial class App : Application
             }
             catch
             {
+                window.Activate();
+
                 var dialog = new ContentDialog
                 {
                     Title = "Key2Joy",

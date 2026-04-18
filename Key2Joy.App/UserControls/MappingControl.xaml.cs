@@ -1,27 +1,32 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Key2Joy.App.UserControls.Actions;
 using Key2Joy.App.UserControls.Triggers;
 using Key2Joy.Mapping;
-using Key2Joy.Mapping.Triggers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Key2Joy.App.UserControls;
 
 [ObservableObject]
+[SuppressMessage(
+    "CommunityToolkit.Mvvm.SourceGenerators.ObservableObjectGenerator",
+    "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
+    Justification = "Cannot inherit from ObservableObject, must remain UserControl"
+)]
 public sealed partial class MappingControl : UserControl
 {
     [ObservableProperty]
     public partial bool CreateOrUpdateReverseMapping { get; set; }
 
     [ObservableProperty]
-    public partial TriggerComboBoxItem SelectedTrigger { get; set; }
+    public partial TriggerComboBoxItem? SelectedTrigger { get; set; }
 
     [ObservableProperty]
-    public partial ActionComboBoxItem SelectedAction { get; set; }
+    public partial ActionComboBoxItem? SelectedAction { get; set; }
 
     [ObservableProperty]
     public partial bool IsEditing { get; set; }
@@ -32,11 +37,11 @@ public sealed partial class MappingControl : UserControl
     [ObservableProperty]
     public partial string SaveButtonText { get; set; } = "Create Mapping";
 
-    public MappedOption MappedOption { get; private set; } = null;
-    public MappedOption MappedOptionReverse { get; private set; } = null;
+    public MappedOption? MappedOption { get; private set; }
+    public MappedOption? MappedOptionReverse { get; private set; }
 
-    public event EventHandler<MappedOption> MappingCreated;
-    public event EventHandler<MappedOption> MappingDeleted;
+    public event EventHandler<MappedOption>? MappingCreated;
+    public event EventHandler<MappedOption>? MappingDeleted;
 
     private bool dominantReverseCheckedState;
 
@@ -146,7 +151,7 @@ public sealed partial class MappingControl : UserControl
         this.IsEditing = false;
     }
 
-    public void SelectMapping(MappedOption mappedOption)
+    public void SelectMapping(MappedOption? mappedOption)
     {
         if (mappedOption == null)
         {
@@ -167,6 +172,12 @@ public sealed partial class MappingControl : UserControl
     private void DeleteMapping()
     {
         var toDelete = this.MappedOption;
+
+        if (toDelete == null)
+        {
+            return;
+        }
+
         this.MappedOption = null;
         this.MappedOptionReverse = null;
         this.IsEditing = false;

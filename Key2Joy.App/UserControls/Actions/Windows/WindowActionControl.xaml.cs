@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,24 +17,32 @@ namespace Key2Joy.App.UserControls.Actions.Windows;
     ImageResourceName = "ms-appx:///Assets/Icons/application_xp_terminal.png"
 )]
 [ObservableObject]
+[SuppressMessage(
+    "CommunityToolkit.Mvvm.SourceGenerators.ObservableObjectGenerator",
+    "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
+    Justification = "Cannot inherit from ObservableObject, must remain UserControl"
+)]
 public sealed partial class WindowActionControl : UserControl, IActionOptionsControl
 {
-    [DllImport("user32.dll")]
-    private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-    [DllImport("user32.dll")]
-    private static extern bool IsWindowVisible(IntPtr hWnd);
-    [DllImport("user32.dll")]
-    private static extern long GetWindowLong(IntPtr hWnd, int nIndex);
-    [DllImport("kernel32.dll")]
-    private static extern IntPtr OpenProcess(uint dwDesiredAccess, bool bInheritHandle, uint dwProcessId);
-    [DllImport("kernel32.dll")]
-    private static extern bool CloseHandle(IntPtr hObject);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool IsWindowVisible(IntPtr hWnd);
+    [LibraryImport("user32.dll")]
+    private static partial long GetWindowLong(IntPtr hWnd, int nIndex);
+    [LibraryImport("kernel32.dll")]
+    private static partial IntPtr OpenProcess(uint dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwProcessId);
+    [LibraryImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool CloseHandle(IntPtr hObject);
+    [LibraryImport("user32.dll")]
+    private static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
     [DllImport("psapi.dll", CharSet = CharSet.Unicode)]
     private static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, StringBuilder lpExeName, ref int lpdwSize);
-    [DllImport("user32.dll")]
-    private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 
     private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
     private const int GWL_EXSTYLE = -20;
@@ -91,7 +100,7 @@ public sealed partial class WindowActionControl : UserControl, IActionOptionsCon
 
     private static string GetExecutableFileName(IntPtr hWnd)
     {
-        GetWindowThreadProcessId(hWnd, out var pid);
+        var _ = GetWindowThreadProcessId(hWnd, out var pid);
 
         var hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid);
 
@@ -176,16 +185,10 @@ public sealed partial class WindowActionControl : UserControl, IActionOptionsCon
         await dialog.ShowAsync();
     }
 
-    public sealed class WindowInfo
+    public sealed class WindowInfo(IntPtr handle, string identifier)
     {
-        public IntPtr Handle { get; }
-        public string Identifier { get; }
-
-        public WindowInfo(IntPtr handle, string identifier)
-        {
-            this.Handle = handle;
-            this.Identifier = identifier;
-        }
+        public IntPtr Handle { get; } = handle;
+        public string Identifier { get; } = identifier;
 
         public override string ToString() => this.Identifier;
     }

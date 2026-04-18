@@ -14,7 +14,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.Storage.Pickers;
 using Windows.Foundation;
-using WinRT.Interop;
 
 namespace Key2Joy.App;
 
@@ -37,7 +36,7 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
         this.ExtendsContentIntoTitleBar = true;
         this.SetTitleBar(this.TitleBar);
 
-        this.MainFrame.Navigate(typeof(Pages.MainMappingPage));
+        this.MainFrame.Navigate(typeof(MainMappingPage));
 
         this.SetupGroupingRadioMenu();
     }
@@ -192,12 +191,12 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
     private void MenuTestControllerGamepadTester_Click(object sender, RoutedEventArgs e)
         => OpenUrl("https://gamepad-tester.com");
 
-    private async void MenuConfig_Click(object sender, RoutedEventArgs e)
+    private void MenuConfig_Click(object sender, RoutedEventArgs e)
         => this.NavigateWithBackButton(typeof(ConfigPage));
 
     private async void MenuViewLog_Click(object sender, RoutedEventArgs e)
     {
-        var logFile = Key2Joy.Contracts.Output.GetLogPath();
+        var logFile = Contracts.Output.GetLogPath();
         if (!File.Exists(logFile))
         {
             await ShowError(
@@ -225,7 +224,7 @@ public sealed partial class MainWindow : Window, IAcceptAppCommands
     private void MenuViewSource_Click(object sender, RoutedEventArgs e)
         => OpenUrl("https://github.com/Key2Joy/Key2Joy");
 
-    private async void MenuAbout_Click(object sender, RoutedEventArgs e)
+    private void MenuAbout_Click(object sender, RoutedEventArgs e)
         => this.NavigateWithBackButton(typeof(AboutPage));
 
     private void NavigateWithBackButton(Type type)

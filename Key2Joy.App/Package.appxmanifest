@@ -10,14 +10,14 @@
 
   <Identity
     Name="4e923a74-ed44-47b7-aa97-266a56a6502d"
-    Publisher="CN=twl"
+    Publisher="CN=Key2Joy"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="4e923a74-ed44-47b7-aa97-266a56a6502d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Key2Joy.App</DisplayName>
-    <PublisherDisplayName>twl</PublisherDisplayName>
+    <DisplayName>Key2Joy</DisplayName>
+    <PublisherDisplayName>Key2Joy</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -48,6 +48,5 @@
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
-    <systemai:Capability Name="systemAIModels"/>
   </Capabilities>
 </Package>

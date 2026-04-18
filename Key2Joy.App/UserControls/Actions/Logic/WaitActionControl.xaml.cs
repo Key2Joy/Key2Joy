@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
@@ -12,6 +13,11 @@ namespace Key2Joy.App.UserControls.Actions.Logic;
     ImageResourceName = "ms-appx:///Assets/Icons/clock.png"
 )]
 [ObservableObject]
+[SuppressMessage(
+    "CommunityToolkit.Mvvm.SourceGenerators.ObservableObjectGenerator",
+    "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
+    Justification = "Cannot inherit from ObservableObject, must remain UserControl"
+)]
 public sealed partial class WaitActionControl : UserControl, IActionOptionsControl
 {
     public event EventHandler? OptionsChanged;

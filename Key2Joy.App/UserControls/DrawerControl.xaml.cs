@@ -13,8 +13,8 @@ namespace Key2Joy.App.UserControls;
 [DependencyProperty<bool>("CloseOnOverlayTap")]
 public sealed partial class DrawerControl : UserControl
 {
-    public event EventHandler DrawerOpened;
-    public event EventHandler DrawerClosed;
+    public event EventHandler? DrawerOpened;
+    public event EventHandler? DrawerClosed;
 
     private static readonly TimeSpan AnimationDuration = TimeSpan.FromMilliseconds(300);
 
@@ -126,9 +126,7 @@ public sealed partial class DrawerControl : UserControl
         }
     }
 
-    private void GripBar_PointerPressed(object sender, PointerRoutedEventArgs e)
-    {
+    private void GripBar_PointerPressed(object sender, PointerRoutedEventArgs e) =>
         // Toggle drawer on grip bar click
         this.IsOpen = !this.IsOpen;
-    }
 }

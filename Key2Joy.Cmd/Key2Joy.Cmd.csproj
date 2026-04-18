@@ -7,7 +7,7 @@
     <Product>Key2Joy</Product>
     <Description>Control Key2Joy from the command line</Description>
     <Copyright>Copyright © 2026 luttje</Copyright>
-    <PackageProjectUrl>https://github.com/luttje/Key2Joy</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/Key2Joy/Key2Joy</PackageProjectUrl>
     <VersionPrefix>0.8.0</VersionPrefix>
     <TargetFramework>net9.0-windows</TargetFramework>
     <LangVersion>latest</LangVersion>

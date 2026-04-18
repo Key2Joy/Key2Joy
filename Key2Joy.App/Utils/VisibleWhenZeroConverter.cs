@@ -8,7 +8,7 @@ namespace Key2Joy.App.Utils;
 /// Provides a value converter that returns a visible state when the input is zero, and a collapsed state
 /// otherwise.
 /// </summary>
-public class VisibleWhenZeroConverter : IValueConverter
+public partial class VisibleWhenZeroConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {

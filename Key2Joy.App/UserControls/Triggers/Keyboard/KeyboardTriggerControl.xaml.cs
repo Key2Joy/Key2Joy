@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Key2Joy.Contracts.Mapping;
@@ -8,7 +9,6 @@ using Key2Joy.LowLevelInput;
 using Key2Joy.Mapping.Triggers;
 using Key2Joy.Mapping.Triggers.Keyboard;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Input;
 
 namespace Key2Joy.App.UserControls.Triggers.Keyboard;
 
@@ -17,7 +17,12 @@ namespace Key2Joy.App.UserControls.Triggers.Keyboard;
     ImageResourceName = "ms-appx:///Assets/Icons/keyboard.png"
 )]
 [ObservableObject]
-public sealed partial class KeyboardTriggerControl : UserControl, ITriggerOptionsControl
+[SuppressMessage(
+    "CommunityToolkit.Mvvm.SourceGenerators.ObservableObjectGenerator",
+    "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
+    Justification = "Cannot inherit from ObservableObject, must remain UserControl"
+)]
+public sealed partial class KeyboardTriggerControl : UserControl, ITriggerOptionsControl, IDisposable
 {
     private const string TEXT_CHANGE = "(press any key to select it as the trigger)";
     private const string TEXT_CHANGE_INSTRUCTION = "(click here, then press any key to set it as the trigger)";
@@ -45,17 +50,20 @@ public sealed partial class KeyboardTriggerControl : UserControl, ITriggerOption
         this.globalKeyboardHook = new GlobalInputHook();
         this.globalKeyboardHook.KeyboardInputEvent += this.OnKeyInputEvent;
 
-        this.Unloaded += (s, e) =>
-        {
-            if (this.globalKeyboardHook == null)
-            {
-                return;
-            }
+        // Without this we run into an exception. Seems like Dispose for this User Control is not called.
+        this.Unloaded += (s, e) => this.CleanupKeyboardHook();
+    }
 
-            this.globalKeyboardHook.KeyboardInputEvent -= this.OnKeyInputEvent;
-            this.globalKeyboardHook.Dispose();
-            this.globalKeyboardHook = null;
-        };
+    private void CleanupKeyboardHook()
+    {
+        if (this.globalKeyboardHook == null)
+        {
+            return;
+        }
+
+        this.globalKeyboardHook.KeyboardInputEvent -= this.OnKeyInputEvent;
+        this.globalKeyboardHook.Dispose();
+        this.globalKeyboardHook = null;
     }
 
     private void LoadPressStates()
@@ -154,4 +162,6 @@ public sealed partial class KeyboardTriggerControl : UserControl, ITriggerOption
 
     private void KeyBindTextBox_GotFocus(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         => this.StartTrapping();
+
+    public void Dispose() => this.CleanupKeyboardHook();
 }

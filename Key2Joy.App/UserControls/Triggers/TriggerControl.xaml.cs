@@ -16,14 +16,14 @@ namespace Key2Joy.App.UserControls.Triggers;
 [DependencyProperty<object>("TriggerContent")]
 public sealed partial class TriggerControl : UserControl
 {
-    public bool IsTopLevel { get; set; }
+    public bool? IsTopLevel { get; set; }
 
-    public ITriggerOptionsControl Options { get; private set; }
-    public AbstractTrigger Trigger { get; private set; }
+    public ITriggerOptionsControl? Options { get; private set; }
+    public AbstractTrigger? Trigger { get; private set; }
 
-    public event EventHandler<TriggerChangedEventArgs> TriggerChanged;
+    public event EventHandler<TriggerChangedEventArgs>? TriggerChanged;
 
-    private AbstractTrigger pendingSelectTrigger;
+    private AbstractTrigger? pendingSelectTrigger;
 
     public TriggerControl()
     {
@@ -40,10 +40,10 @@ public sealed partial class TriggerControl : UserControl
 
     private void LoadTriggers()
     {
-        var triggerTypeFactories = TriggersRepository.GetAllTriggers(this.IsTopLevel);
+        var triggerTypeFactories = TriggersRepository.GetAllTriggers(this.IsTopLevel ?? false);
 
         this.TriggersAvailable = triggerTypeFactories
-            .Select(kvp =>
+            .Select(static kvp =>
             {
                 var mappingControlFactory = MappingControlRepository.GetMappingControlFactory(kvp.Value.FullTypeName);
                 var customImage = mappingControlFactory?.ImageResourceName;
@@ -57,7 +57,7 @@ public sealed partial class TriggerControl : UserControl
                     ImageUri = new Uri(customImage ?? "ms-appx:///Assets/StoreLogo.png")
                 };
             })
-            .Where(acbi => acbi.MappingControlFactory != null)
+            .Where(static acbi => acbi.MappingControlFactory != null)
             .ToList();
 
         if (this.pendingSelectTrigger != null)
@@ -78,9 +78,17 @@ public sealed partial class TriggerControl : UserControl
         var attribute = this.TriggerSelected.TriggerAttribute;
         var typeFactory = this.TriggerSelected.TypeFactory;
 
-        if (this.Trigger == null || this.Trigger.GetType().FullName != typeFactory.FullTypeName)
+        if (
+            attribute != null
+            && typeFactory != null
+            &&
+            (
+                this.Trigger == null
+                || this.Trigger.GetType().FullName != typeFactory.FullTypeName
+            )
+        )
         {
-            this.Trigger = typeFactory.CreateInstance(new object[] { attribute.NameFormat });
+            this.Trigger = typeFactory.CreateInstance([attribute.NameFormat]);
         }
 
         this.Options?.Setup(this.Trigger);
@@ -98,7 +106,7 @@ public sealed partial class TriggerControl : UserControl
 
         var match = trigger != null
             ? this.TriggersAvailable
-                .FirstOrDefault(t => t.TypeFactory.FullTypeName == trigger.GetType().FullName)
+                .FirstOrDefault(t => t.TypeFactory?.FullTypeName == trigger.GetType().FullName)
             : null;
 
 
@@ -114,7 +122,7 @@ public sealed partial class TriggerControl : UserControl
     public bool CanMappingSave(AbstractMappedOption mappedOption)
         => this.Options?.CanMappingSave(mappedOption.Trigger) ?? false;
 
-    partial void OnTriggerSelectedChanged(TriggerComboBoxItem? selectedTrigger)
+    partial void OnTriggerSelectedChanged(TriggerComboBoxItem? newValue)
     {
         // Unsubscribe from old options
         if (this.Options != null)
@@ -122,7 +130,7 @@ public sealed partial class TriggerControl : UserControl
             this.Options.OptionsChanged -= this.OnOptionsChanged;
         }
 
-        if (selectedTrigger == null)
+        if (newValue == null)
         {
             this.Options = null;
             this.TriggerContent = new Grid();
@@ -130,11 +138,11 @@ public sealed partial class TriggerControl : UserControl
             return;
         }
 
-        var newOptions = selectedTrigger.MappingControlFactory.CreateInstance<ITriggerOptionsControl>();
+        var newOptions = newValue.MappingControlFactory?.CreateInstance<ITriggerOptionsControl>();
         this.Options = newOptions;
         this.TriggerContent = newOptions;
 
-        newOptions.OptionsChanged += this.OnOptionsChanged;
+        newOptions?.OptionsChanged += this.OnOptionsChanged;
 
         this.BuildTrigger();
     }
@@ -145,5 +153,5 @@ public sealed partial class TriggerControl : UserControl
         this.TriggerSelected = null;
     }
 
-    private void OnOptionsChanged(object sender, EventArgs e) => this.BuildTrigger();
+    private void OnOptionsChanged(object? sender, EventArgs e) => this.BuildTrigger();
 }

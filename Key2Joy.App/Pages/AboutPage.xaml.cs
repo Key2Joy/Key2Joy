@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 
 namespace Key2Joy.App.Pages;
@@ -63,7 +62,7 @@ public sealed partial class AboutPage : Page
         }
     }
 
-    private static UIElement CreateCreditCard(CreditEntry credit)
+    private static Border CreateCreditCard(CreditEntry credit)
     {
         // Outer border styled as a WinUI card
         var border = new Border
@@ -140,10 +139,10 @@ public sealed partial class AboutPage : Page
 
     public static string AssemblyProduct
         => GetAttributeValue<AssemblyProductAttribute>(
-                asm => asm.GetCustomAttributes(typeof(AssemblyProductAttribute), false)
+                static asm => asm.GetCustomAttributes(typeof(AssemblyProductAttribute), false)
             )?.Product ?? string.Empty;
 
     public static string AssemblyCopyright => GetAttributeValue<AssemblyCopyrightAttribute>(
-                    asm => asm.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)
+                    static asm => asm.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)
                 )?.Copyright ?? string.Empty;
 }

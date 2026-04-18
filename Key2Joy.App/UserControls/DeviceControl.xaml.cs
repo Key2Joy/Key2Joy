@@ -7,17 +7,14 @@ namespace Key2Joy.App.UserControls;
 [DependencyProperty<string>("DeviceName")]
 public sealed partial class DeviceControl : UserControl
 {
-    public DeviceControl()
-    {
-        this.InitializeComponent();
-    }
+    public DeviceControl() => this.InitializeComponent();
 
     partial void OnDeviceIndexChanged(int newValue)
     {
         this.IndexTextBlock.Text = $"#{newValue}";
     }
 
-    partial void OnDeviceNameChanged(string newValue)
+    partial void OnDeviceNameChanged(string? newValue)
     {
         this.DeviceTextBlock.Text = newValue as string ?? string.Empty;
     }
