@@ -15,6 +15,8 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <PackageIcon>icon128.png</PackageIcon>
+    <ApplicationIcon>Assets\Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\Icons\application_osx_terminal.png" />
@@ -32,7 +34,6 @@
     <None Remove="Assets\Icons\door_out.png" />
     <None Remove="Assets\Icons\error.png" />
     <None Remove="Assets\Icons\film.png" />
-    <None Remove="Assets\Icons\icon128.png" />
     <None Remove="Assets\Icons\icon16.png" />
     <None Remove="Assets\Icons\icon256.png" />
     <None Remove="Assets\Icons\icon32.png" />
@@ -108,6 +109,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Key2Joy.Core\Key2Joy.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Assets\Icons\icon128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UserControls\TriggerControl.xaml">
