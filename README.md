@@ -137,7 +137,8 @@ Originally inspired by [JoyToKey](https://joytokey.net/en/), this project has si
 * [📦 DavidRieman/SimWinInput](https://github.com/DavidRieman/SimWinInput) - Simulate gamepads from .NET.
 * [📦 nefarius/ScpVBus](https://github.com/nefarius/ScpVBus) - The foundational driver enabling GamePad simulation.
 * [📦 NLua](https://github.com/NLua/NLua) - Enables Lua scripting for actions.
-* [📦 ObjectListView](https://objectlistview.sourceforge.net) - Used for mapping listings in the GUI.
+* [📦 HavenDV/DependencyPropertyGenerator](https://github.com/HavenDV/DependencyPropertyGenerator) - Generates dependency properties.
+* [📦 HavenDV/H.NotifyIcon](https://github.com/HavenDV/H.NotifyIcon) - Provides system tray notifications for WinUI.
 
 **Iconography**:
 
