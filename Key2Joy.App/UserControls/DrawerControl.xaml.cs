@@ -17,6 +17,7 @@ public sealed partial class DrawerControl : UserControl
     public event EventHandler? DrawerClosed;
 
     private static readonly TimeSpan AnimationDuration = TimeSpan.FromMilliseconds(300);
+    private static readonly Windows.UI.ViewManagement.UISettings UISettings = new();
 
     public DrawerControl()
     {
@@ -79,6 +80,12 @@ public sealed partial class DrawerControl : UserControl
 
     private void AnimateTranslateY(double from, double to)
     {
+        if (!UISettings.AnimationsEnabled)
+        {
+            this.DrawerTranslate.Y = to;
+            return;
+        }
+
         var animation = new DoubleAnimation
         {
             From = from,
@@ -100,6 +107,12 @@ public sealed partial class DrawerControl : UserControl
 
     private void AnimateOverlay(double from, double to)
     {
+        if (!UISettings.AnimationsEnabled)
+        {
+            this.Overlay.Opacity = to;
+            return;
+        }
+
         var animation = new DoubleAnimation
         {
             From = from,
