@@ -148,6 +148,24 @@ public sealed partial class MappingGroupsListControl : UserControl
         e.Handled = true;
     }
 
+    private void MappingItem_PointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        var element = sender as FrameworkElement;
+        if (element?.Tag is MappedOptionViewModel vm)
+        {
+            vm.IsHovered = true;
+        }
+    }
+
+    private void MappingItem_PointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        var element = sender as FrameworkElement;
+        if (element?.Tag is MappedOptionViewModel vm)
+        {
+            vm.IsHovered = false;
+        }
+    }
+
     private void ExpandToggle_Click(object sender, RoutedEventArgs e)
     {
         if (sender is not ToggleButton toggleButton)

@@ -14,6 +14,9 @@ public partial class MappedOptionViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsSelected { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsHovered { get; set; }
+
     public AbstractTrigger Trigger => this.Option.Trigger;
 
     public AbstractAction Action => this.Option.Action;

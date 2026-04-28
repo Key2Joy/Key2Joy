@@ -18,9 +18,7 @@
         <!-- Drawer panel sliding up from the bottom -->
         <Grid x:Name="DrawerPanel"
               VerticalAlignment="Bottom"
-              Background="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}"
-              BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
-              BorderThickness="0,1,0,0"
+              Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
               RenderTransformOrigin="0.5,1">
             <Grid.RenderTransform>
                 <TranslateTransform x:Name="DrawerTranslate" Y="0" />
@@ -37,7 +35,7 @@
                 <Border Width="40"
                         Height="4"
                         CornerRadius="2"
-                        Background="{ThemeResource TextFillColorSecondaryBrush}"
+                        Background="{ThemeResource SolidBackgroundFillColorBaseAltBrush}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center" />
             </Grid>

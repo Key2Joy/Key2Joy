@@ -7,6 +7,23 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver"
+                                 Color="{ThemeResource SystemAccentColorLight1}" />
+                    <SolidColorBrush x:Key="ButtonBackgroundPressed"
+                                 Color="{ThemeResource SystemAccentColorDark1}" />
+                    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver"
+                                 Color="{ThemeResource SystemAccentColorLight1}" />
+                    <SolidColorBrush x:Key="ButtonBorderBrushPressed"
+                                 Color="{ThemeResource SystemAccentColorDark1}" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Button x:Name="FabButton"
             Click="FabButton_Click"
             Width="56"
