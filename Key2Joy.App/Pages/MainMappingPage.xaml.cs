@@ -169,7 +169,9 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands, IInvokeO
     {
         this.ViewModel.DeselectSelectedMapping();
         this.MappingGroupsList.ClearSelection();
-        this.MappingControl.SelectMapping(null);
+        // We explicitly do not call this, as it would cause the MappingControl to reset, which would be jarringly visible for users
+        // with animations enabled:
+        // this.MappingControl.SelectMapping(null);
         this.ViewModel.IsDrawerOpen = false;
     }
 

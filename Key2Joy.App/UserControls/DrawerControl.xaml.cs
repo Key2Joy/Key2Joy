@@ -71,18 +71,17 @@ public sealed partial class DrawerControl : UserControl
 
     private void Close()
     {
-        this.AnimateTranslateY(this.DrawerTranslate.Y, this.DrawerHeight);
+        this.AnimateTranslateY(this.DrawerTranslate.Y, this.DrawerHeight, () => DrawerClosed?.Invoke(this, EventArgs.Empty));
         this.AnimateOverlay(this.Overlay.Opacity, 0);
         this.Overlay.IsHitTestVisible = false;
-
-        DrawerClosed?.Invoke(this, EventArgs.Empty);
     }
 
-    private void AnimateTranslateY(double from, double to)
+    private void AnimateTranslateY(double from, double to, Action? onCompleted = null)
     {
         if (!UISettings.AnimationsEnabled)
         {
             this.DrawerTranslate.Y = to;
+            onCompleted?.Invoke();
             return;
         }
 
@@ -102,6 +101,10 @@ public sealed partial class DrawerControl : UserControl
         storyboard.Children.Add(animation);
         Storyboard.SetTarget(animation, this.DrawerTranslate);
         Storyboard.SetTargetProperty(animation, "Y");
+        if (onCompleted != null)
+        {
+            storyboard.Completed += (_, _) => onCompleted();
+        }
         storyboard.Begin();
     }
 
