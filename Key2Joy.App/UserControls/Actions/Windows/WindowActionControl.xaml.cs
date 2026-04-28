@@ -1,14 +1,16 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
 using Key2Joy.Mapping.Actions.Windows;
 using Microsoft.UI.Xaml.Controls;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.System.Threading;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace Key2Joy.App.UserControls.Actions.Windows;
 
@@ -24,32 +26,6 @@ namespace Key2Joy.App.UserControls.Actions.Windows;
 )]
 public sealed partial class WindowActionControl : UserControl, IActionOptionsControl
 {
-    [LibraryImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static partial bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
-    [LibraryImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static partial bool IsWindowVisible(IntPtr hWnd);
-    [LibraryImport("user32.dll")]
-    private static partial long GetWindowLong(IntPtr hWnd, int nIndex);
-    [LibraryImport("kernel32.dll")]
-    private static partial IntPtr OpenProcess(uint dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwProcessId);
-    [LibraryImport("kernel32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static partial bool CloseHandle(IntPtr hObject);
-    [LibraryImport("user32.dll")]
-    private static partial uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-    [DllImport("psapi.dll", CharSet = CharSet.Unicode)]
-    private static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, StringBuilder lpExeName, ref int lpdwSize);
-    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-    private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
-
-    private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-    private const int GWL_EXSTYLE = -20;
-    private const long WS_EX_TOOLWINDOW = 0x80L;
-    private const long WS_EX_NOACTIVATE = 0x8000000L;
-    private const uint PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
-
     public event EventHandler? OptionsChanged;
     public ObservableCollection<WindowInfo> AvailableWindows { get; } = [];
 
@@ -68,28 +44,45 @@ public sealed partial class WindowActionControl : UserControl, IActionOptionsCon
     private void LoadWindows()
     {
         this.AvailableWindows.Clear();
-        EnumWindows((hWnd, _) =>
+
+        PInvoke.EnumWindows((hWnd, _) =>
         {
-            if (!IsWindowVisible(hWnd))
+            if (!PInvoke.IsWindowVisible(hWnd))
             {
                 return true;
             }
 
-            var title = new StringBuilder(256);
-            if (GetWindowText(hWnd, title, title.Capacity) == 0 || title.Length == 0)
+            // Stack-allocate a buffer for the window title
+            Span<char> titleBuffer = stackalloc char[256];
+            int length;
+
+            unsafe
+            {
+                fixed (char* pTitle = titleBuffer)
+                {
+                    length = PInvoke.GetWindowText(hWnd, pTitle, titleBuffer.Length);
+                }
+            }
+
+            if (length == 0)
             {
                 return true;
             }
 
-            var exStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
-            if ((exStyle & WS_EX_TOOLWINDOW) != 0 || (exStyle & WS_EX_NOACTIVATE) != 0)
+            var title = new string(titleBuffer[..length]);
+            var exStyle = (WINDOW_EX_STYLE)PInvoke.GetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
+
+            if (
+                exStyle.HasFlag(WINDOW_EX_STYLE.WS_EX_TOOLWINDOW)
+                || exStyle.HasFlag(WINDOW_EX_STYLE.WS_EX_NOACTIVATE)
+            )
             {
                 return true;
             }
 
             var exe = GetExecutableFileName(hWnd);
             var identifier = string.IsNullOrEmpty(exe)
-                ? title.ToString()
+                ? title
                 : $"{exe}{WindowAction.IdentifierSeparator}{title}";
 
             this.AvailableWindows.Add(new WindowInfo(hWnd, identifier));
@@ -100,35 +93,39 @@ public sealed partial class WindowActionControl : UserControl, IActionOptionsCon
 
     private static string GetExecutableFileName(IntPtr hWnd)
     {
-        var _ = GetWindowThreadProcessId(hWnd, out var pid);
+        uint pid;
 
-        var hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid);
+        unsafe
+        {
+            _ = PInvoke.GetWindowThreadProcessId((HWND)hWnd, &pid);
+        }
 
-        if (hProcess == IntPtr.Zero)
+        using var hProcess = PInvoke.OpenProcess_SafeHandle(
+            PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_LIMITED_INFORMATION,
+            false,
+            pid);
+
+        if (hProcess.IsInvalid)
         {
             return string.Empty;
         }
 
-        try
-        {
-            var sb = new StringBuilder(1024);
-            var size = sb.Capacity;
+        Span<char> buffer = stackalloc char[1024];
+        var size = (uint)buffer.Length;
 
-            try
-            {
-                if (QueryFullProcessImageName(hProcess, 0, sb, ref size))
-                {
-                    return System.IO.Path.GetFileName(sb.ToString());
-                }
-            }
-            catch (EntryPointNotFoundException) { }
-
-            return string.Empty;
-        }
-        finally
+        if (
+            PInvoke.QueryFullProcessImageName(
+                hProcess,
+                PROCESS_NAME_FORMAT.PROCESS_NAME_WIN32,
+                buffer,
+                ref size
+            )
+        )
         {
-            CloseHandle(hProcess);
+            return System.IO.Path.GetFileName(new string(buffer[..(int)size]));
         }
+
+        return string.Empty;
     }
 
     partial void OnWindowIdentifierChanged(string value)
