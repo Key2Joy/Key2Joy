@@ -9,8 +9,7 @@ namespace Key2Joy.Mapping.Actions.Logic;
 [Action(
     Description = "Cancels an interval previously established by calling SetInterval()",
     Visibility = MappingMenuVisibility.Never,
-    GroupName = "Logic",
-    GroupImage = "application_xp_terminal"
+    GroupName = "Logic"
 )]
 public class ClearIntervalAction : CoreAction
 {

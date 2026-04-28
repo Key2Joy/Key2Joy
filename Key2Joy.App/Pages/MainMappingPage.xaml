@@ -37,8 +37,9 @@
                     <StackPanel Orientation="Horizontal"
                                 Padding="10,0"
                                 Spacing="10">
-                        <Image Source="/Assets/Icons/magnifier.png"
-                               Height="16"/>
+                        <FontIcon Glyph="&#xE721;"
+                                  Margin="0,4,0,0"
+                                  FontSize="16" />
                         <TextBlock VerticalAlignment="Center">
                             Search
                         </TextBlock>
@@ -52,8 +53,9 @@
                                 Grid.Column="2"
                                 Padding="40,0,10,0"
                                 Spacing="10">
-                        <Image Source="/Assets/Icons/text_list_bullets.png"
-                               Height="16"/>
+                        <FontIcon Glyph="&#xE8FD;"
+                                  Margin="0,4,0,0"
+                                  FontSize="16" />
                         <TextBlock VerticalAlignment="Center">
                             Profile
                         </TextBlock>

@@ -12,8 +12,7 @@ namespace Key2Joy.Mapping.Actions.Logic;
 [Action(
     Description = "Sets a timer which executes a function or specified piece of code once the timer expires",
     Visibility = MappingMenuVisibility.Never,
-    GroupName = "Logic",
-    GroupImage = "application_xp_terminal"
+    GroupName = "Logic"
 )]
 public class SetTimeoutAction : CoreAction
 {

@@ -10,7 +10,7 @@ namespace Key2Joy.App.UserControls.Triggers.Logic;
 
 [MappingControl(
     ForType = typeof(CombinedTrigger),
-    ImageResourceName = "ms-appx:///Assets/Icons/link.png"
+    TextGlyph = "\uE71B"
 )]
 public sealed partial class CombinedTriggerControl : UserControl, ITriggerOptionsControl
 {

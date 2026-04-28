@@ -16,8 +16,7 @@ namespace Key2Joy.Mapping.Actions.Scripting;
 [Action(
     Description = "Lua Script Action",
     NameFormat = "Lua Script: {0}",
-    GroupName = "Scripting",
-    GroupImage = "script_code"
+    GroupName = "Scripting"
 )]
 public class LuaScriptAction : BaseScriptActionWithEnvironment<Lua>
 {

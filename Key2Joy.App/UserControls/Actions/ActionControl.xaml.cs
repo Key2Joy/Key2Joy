@@ -44,7 +44,7 @@ public sealed partial class ActionControl : UserControl
             .Select(static kvp =>
             {
                 var mappingControlFactory = MappingControlRepository.GetMappingControlFactory(kvp.Value.FullTypeName);
-                var customImage = mappingControlFactory?.ImageResourceName;
+                var textGlyph = mappingControlFactory?.TextGlyph;
 
                 return new ActionComboBoxItem
                 {
@@ -52,7 +52,7 @@ public sealed partial class ActionControl : UserControl
                     TypeFactory = kvp.Value,
                     Description = kvp.Key.Description,
                     MappingControlFactory = mappingControlFactory,
-                    ImageUri = new Uri(customImage ?? "ms-appx:///Assets/StoreLogo.png")
+                    TextGlyph = textGlyph ?? "\uE711",
                 };
             })
             .Where(static acbi => acbi.MappingControlFactory != null)

@@ -14,7 +14,7 @@ namespace Key2Joy.App.UserControls.Actions.Input;
 
 [MappingControl(
     ForType = typeof(GamePadTriggerAction),
-    ImageResourceName = "ms-appx:///Assets/Icons/joystick.png"
+    TextGlyph = "\uF10A"
 )]
 [ObservableObject]
 [SuppressMessage(

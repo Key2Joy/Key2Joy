@@ -11,8 +11,7 @@ namespace Key2Joy.Mapping.Actions.Logic;
     Description = "Timeout for a specified duration before executing a function",
     Visibility = MappingMenuVisibility.Never,
     NameFormat = "Timeout for {0}ms",
-    GroupName = "Logic",
-    GroupImage = "application_xp_terminal"
+    GroupName = "Logic"
 )]
 public class SetDelayedFunctionsAction : CoreAction
 {

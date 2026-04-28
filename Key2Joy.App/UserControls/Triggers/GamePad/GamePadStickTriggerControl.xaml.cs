@@ -13,7 +13,7 @@ namespace Key2Joy.App.UserControls.Triggers.GamePad;
 
 [MappingControl(
     ForType = typeof(GamePadStickTrigger),
-    ImageResourceName = "ms-appx:///Assets/Icons/joystick.png"
+    TextGlyph = "\uF108"
 )]
 [ObservableObject]
 [SuppressMessage(

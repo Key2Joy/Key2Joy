@@ -9,7 +9,7 @@ namespace Key2Joy.App.UserControls.Actions.Logic;
 
 [MappingControl(
     ForType = typeof(SequenceAction),
-    ImageResourceName = "ms-appx:///Assets/Icons/text_list_numbers.png"
+    TextGlyph = "\uF2C7"
 )]
 public sealed partial class SequenceActionControl : UserControl, IActionOptionsControl
 {

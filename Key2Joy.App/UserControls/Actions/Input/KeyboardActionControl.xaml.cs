@@ -12,7 +12,7 @@ namespace Key2Joy.App.UserControls.Actions.Input;
 
 [MappingControl(
     ForType = typeof(KeyboardAction),
-    ImageResourceName = "ms-appx:///Assets/Icons/keyboard.png"
+    TextGlyph = "\uE765"
 )]
 [ObservableObject]
 [SuppressMessage(

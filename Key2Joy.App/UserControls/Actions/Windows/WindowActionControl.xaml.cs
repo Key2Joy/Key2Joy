@@ -14,7 +14,7 @@ namespace Key2Joy.App.UserControls.Actions.Windows;
 
 [MappingControl(
     ForTypes = new[] { typeof(WindowMinimizeAction), typeof(WindowFocusAction) },
-    ImageResourceName = "ms-appx:///Assets/Icons/application_xp_terminal.png"
+    TextGlyph = "\uE923"
 )]
 [ObservableObject]
 [SuppressMessage(

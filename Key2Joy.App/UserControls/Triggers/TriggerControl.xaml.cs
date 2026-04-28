@@ -46,7 +46,7 @@ public sealed partial class TriggerControl : UserControl
             .Select(static kvp =>
             {
                 var mappingControlFactory = MappingControlRepository.GetMappingControlFactory(kvp.Value.FullTypeName);
-                var customImage = mappingControlFactory?.ImageResourceName;
+                var textGlyph = mappingControlFactory?.TextGlyph;
 
                 return new TriggerComboBoxItem
                 {
@@ -54,7 +54,7 @@ public sealed partial class TriggerControl : UserControl
                     TypeFactory = kvp.Value,
                     Description = kvp.Key.Description,
                     MappingControlFactory = mappingControlFactory,
-                    ImageUri = new Uri(customImage ?? "ms-appx:///Assets/StoreLogo.png")
+                    TextGlyph = textGlyph ?? "\uE711",
                 };
             })
             .Where(static acbi => acbi.MappingControlFactory != null)

@@ -37,12 +37,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Image x:Name="DeviceImage"
-                   Grid.Column="0"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Source="/Assets/Icons/connect.png"
-                   Stretch="None"/>
+            <FontIcon Grid.Column="0"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Glyph="&#xE71B;" />
 
             <TextBlock x:Name="IndexTextBlock"
                        Grid.Column="1"

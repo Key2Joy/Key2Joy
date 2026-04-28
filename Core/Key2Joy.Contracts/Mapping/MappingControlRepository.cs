@@ -28,14 +28,14 @@ public static class MappingControlRepository
 
             if (attribute.ForType != null)
             {
-                mappingControls.Add(attribute.ForType.FullName, new TypeMappingControlFactory(attribute.ForType.FullName, attribute.ImageResourceName, type));
+                mappingControls.Add(attribute.ForType.FullName, new TypeMappingControlFactory(attribute.ForType.FullName, attribute.TextGlyph, type));
             }
 
             if (attribute.ForTypes != null)
             {
                 foreach (var forType in attribute.ForTypes)
                 {
-                    mappingControls.Add(forType.FullName, new TypeMappingControlFactory(forType.FullName, attribute.ImageResourceName, type));
+                    mappingControls.Add(forType.FullName, new TypeMappingControlFactory(forType.FullName, attribute.TextGlyph, type));
                 }
             }
         }

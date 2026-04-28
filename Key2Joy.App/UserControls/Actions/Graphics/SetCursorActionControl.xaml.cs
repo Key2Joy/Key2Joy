@@ -14,7 +14,7 @@ namespace Key2Joy.App.UserControls.Actions.Graphics;
 
 [MappingControl(
     ForType = typeof(SetCursorAction),
-    ImageResourceName = "ms-appx:///Assets/Icons/cursor.png"
+    TextGlyph = "\uE8B0"
 )]
 [ObservableObject]
 [SuppressMessage(

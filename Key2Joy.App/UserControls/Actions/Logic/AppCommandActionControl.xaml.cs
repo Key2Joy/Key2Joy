@@ -11,7 +11,7 @@ namespace Key2Joy.App.UserControls.Actions.Logic;
 
 [MappingControl(
     ForType = typeof(AppCommandAction),
-    ImageResourceName = "ms-appx:///Assets/Icons/application_xp_terminal.png"
+    TextGlyph = "\uE756"
 )]
 [ObservableObject]
 [SuppressMessage(

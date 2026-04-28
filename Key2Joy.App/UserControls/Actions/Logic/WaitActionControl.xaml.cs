@@ -10,7 +10,7 @@ namespace Key2Joy.App.UserControls.Actions.Logic;
 
 [MappingControl(
     ForType = typeof(WaitAction),
-    ImageResourceName = "ms-appx:///Assets/Icons/clock.png"
+    TextGlyph = "\uE917"
 )]
 [ObservableObject]
 [SuppressMessage(

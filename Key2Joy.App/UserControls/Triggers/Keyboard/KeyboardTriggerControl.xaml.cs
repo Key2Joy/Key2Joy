@@ -14,7 +14,7 @@ namespace Key2Joy.App.UserControls.Triggers.Keyboard;
 
 [MappingControl(
     ForType = typeof(KeyboardTrigger),
-    ImageResourceName = "ms-appx:///Assets/Icons/keyboard.png"
+    TextGlyph = "\uE765"
 )]
 [ObservableObject]
 [SuppressMessage(

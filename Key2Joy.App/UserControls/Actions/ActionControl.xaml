@@ -38,12 +38,8 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Image Width="16"
-                                   Height="16">
-                                <Image.Source>
-                                    <BitmapImage UriSource="{x:Bind ImageUri}" />
-                                </Image.Source>
-                            </Image>
+                            <FontIcon FontSize="16"
+                                      Glyph="{x:Bind TextGlyph}"/>
 
                             <TextBlock Text="{x:Bind Description}"
                                        Grid.Column="1"/>

@@ -13,7 +13,7 @@ namespace Key2Joy.App.UserControls.Actions.Scripting;
 
 [MappingControl(
     ForType = typeof(LuaScriptAction),
-    ImageResourceName = "ms-appx:///Assets/Icons/script_code.png"
+    TextGlyph = "\uE943"
 )]
 [ObservableObject]
 [SuppressMessage(

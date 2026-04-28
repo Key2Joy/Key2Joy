@@ -12,8 +12,7 @@ namespace Key2Joy.Mapping.Actions.Graphics;
 [Action(
     Description = "Changes the system cursor",
     NameFormat = "Set system cursor to '{0}'",
-    GroupName = "Graphics",
-    GroupImage = "cursor"
+    GroupName = "Graphics"
 )]
 public class SetCursorAction : CoreAction
 {

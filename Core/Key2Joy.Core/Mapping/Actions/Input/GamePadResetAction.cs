@@ -13,8 +13,7 @@ namespace Key2Joy.Mapping.Actions.Input;
     Description = "GamePad Reset Simulation",
     Visibility = MappingMenuVisibility.Never,
     NameFormat = "Reset GamePad #{0}",
-    GroupName = "GamePad Simulation",
-    GroupImage = "joystick"
+    GroupName = "GamePad Simulation"
 )]
 public class GamePadResetAction : CoreAction
 {

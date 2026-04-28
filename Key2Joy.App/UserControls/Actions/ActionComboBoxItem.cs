@@ -12,5 +12,5 @@ public class ActionComboBoxItem
     public MappingTypeFactory<AbstractAction>? TypeFactory { get; set; }
     public MappingControlFactory? MappingControlFactory { get; set; }
     public string? Description { get; set; }
-    public Uri? ImageUri { get; set; }
+    public string? TextGlyph { get; set; }
 }

@@ -15,7 +15,7 @@ namespace Key2Joy.App.UserControls.Triggers.Mouse;
 
 [MappingControl(
     ForType = typeof(MouseButtonTrigger),
-    ImageResourceName = "ms-appx:///Assets/Icons/mouse.png"
+    TextGlyph = "\uE962"
 )]
 [ObservableObject]
 [SuppressMessage(

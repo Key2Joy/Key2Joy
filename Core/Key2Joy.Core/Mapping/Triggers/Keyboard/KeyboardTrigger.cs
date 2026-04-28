@@ -9,8 +9,7 @@ namespace Key2Joy.Mapping.Triggers.Keyboard;
 
 [Trigger(
     Description = "Keyboard Event",
-    GroupName = "Keyboard Triggers",
-    GroupImage = "keyboard"
+    GroupName = "Keyboard Triggers"
 )]
 public class KeyboardTrigger : CoreTrigger, IPressState, IProvideReverseAspect, IReturnInputHash, IEquatable<KeyboardTrigger>
 {

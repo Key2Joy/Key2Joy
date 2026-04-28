@@ -10,8 +10,7 @@ namespace Key2Joy.Mapping.Actions;
     Description = "Disabled Action",
     NameFormat = DisabledNameFormat,
     Visibility = MappingMenuVisibility.Never,
-    GroupName = "Requires Attention",
-    GroupImage = "cross"
+    GroupName = "Requires Attention"
 )]
 public class DisabledAction : CoreAction
 {

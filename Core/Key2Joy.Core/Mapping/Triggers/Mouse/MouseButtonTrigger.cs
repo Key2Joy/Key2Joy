@@ -8,8 +8,7 @@ namespace Key2Joy.Mapping.Triggers.Mouse;
 
 [Trigger(
     Description = "Mouse Button Event",
-    GroupName = "Mouse Triggers",
-    GroupImage = "mouse"
+    GroupName = "Mouse Triggers"
 )]
 public class MouseButtonTrigger : CoreTrigger, IPressState, IProvideReverseAspect, IReturnInputHash, IEquatable<MouseButtonTrigger>
 {
