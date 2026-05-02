@@ -140,10 +140,6 @@ Originally inspired by [JoyToKey](https://joytokey.net/en/), this project has si
 * [📦 HavenDV/DependencyPropertyGenerator](https://github.com/HavenDV/DependencyPropertyGenerator) - Generates dependency properties.
 * [📦 HavenDV/H.NotifyIcon](https://github.com/HavenDV/H.NotifyIcon) - Provides system tray notifications for WinUI.
 
-**Iconography**:
-
-* [Silk Icons pack by Mark James](https://github.com/legacy-icons/famfamfam-silk/blob/master/LICENSE.md) - Provides the GUI icons.
-
 ---
 
 ## License

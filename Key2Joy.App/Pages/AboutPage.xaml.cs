@@ -33,13 +33,6 @@ public sealed partial class AboutPage : Page
             "JoyToKey",
             "https://joytokey.net/en/"
         ),
-
-        new(
-            "Silk Icons",
-            "A great icon set used throughout the application.",
-            "Mark James",
-            "https://github.com/legacy-icons/famfamfam-silk"
-        ),
     ];
 
     public AboutPage()
