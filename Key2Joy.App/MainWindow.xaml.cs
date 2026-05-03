@@ -1,0 +1,318 @@
+using System;
+using System.Diagnostics;
+using System.IO;
+using CommunityToolkit.Mvvm.Input;
+using H.NotifyIcon;
+using Key2Joy.App.Pages;
+using Key2Joy.Config;
+using Key2Joy.Mapping;
+using Key2Joy.Mapping.Actions.Logic;
+using Key2Joy.Util;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Windows.Storage.Pickers;
+using Windows.Foundation;
+
+namespace Key2Joy.App;
+
+public sealed partial class MainWindow : Window, IAcceptAppCommands
+{
+    private MainMappingPage? mappingPage;
+    private readonly ConfigState configState;
+    private bool shouldStartMinimized;
+    private bool wantsToExit;
+
+    public MainWindow(bool shouldStartMinimized)
+    {
+        this.InitializeComponent();
+
+        this.shouldStartMinimized = shouldStartMinimized;
+
+        this.configState = ServiceContainer.Get<IConfigManager>()
+            .GetConfigState();
+
+        this.ExtendsContentIntoTitleBar = true;
+        this.SetTitleBar(this.TitleBar);
+
+        this.MainFrame.Navigate(typeof(MainMappingPage));
+
+        this.SetupGroupingRadioMenu();
+    }
+
+    private void SetupGroupingRadioMenu()
+    {
+        var enumValues = Enum.GetValues<ViewMappingGroupType>();
+        var selected = this.configState.SelectedViewMappingGroupType;
+
+        this.MenuGroupBySubItem.Items.Clear();
+
+        foreach (var enumValue in enumValues)
+        {
+            var radio = new RadioMenuFlyoutItem
+            {
+                Text = enumValue.ToString(),
+                IsChecked = enumValue == selected,
+            };
+
+            radio.Click += (s, e) =>
+            {
+                this.configState.SelectedViewMappingGroupType = enumValue;
+                this.SetupGroupingRadioMenu();
+
+                this.mappingPage?.RefreshMappingList();
+            };
+
+            this.MenuGroupBySubItem.Items.Add(radio);
+        }
+    }
+
+    public bool RunAppCommand(AppCommand command)
+    {
+        if (this.MainFrame.Content is IAcceptAppCommands page)
+        {
+            return page.RunAppCommand(command);
+        }
+
+        return false;
+    }
+
+    private void MainFrame_Navigated(object sender, NavigationEventArgs e)
+    {
+        if (this.MainFrame.Content is MainMappingPage page)
+        {
+            this.mappingPage = page;
+            page.ViewModel.PropertyChanged += (s, args) =>
+            {
+                if (args.PropertyName == nameof(MainMappingPageViewModel.HasSelectedMapping))
+                {
+                    this.MenuDeleteSelectedMapping.IsEnabled = page.ViewModel.HasSelectedMapping;
+                }
+            };
+            this.MenuDeleteSelectedMapping.IsEnabled = false;
+        }
+    }
+
+    private void MenuDeselectMapping_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.DeselectSelectedMapping();
+
+    private void MenuNewMapping_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.OpenDrawerForNewMapping();
+
+    private void MenuDeleteSelectedMapping_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.DeleteSelectedMapping();
+
+    private void MenuExpandAllMappings_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ExpandAllMappings();
+
+    private void MenuCollapseAllMappings_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.CollapseAllMappings();
+
+    private void MenuNewProfile_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.CreateNewProfile(" - Copy");
+
+    private async void MenuLoadProfile_Click(object sender, RoutedEventArgs e)
+    {
+        var picker = new FileOpenPicker(this.AppWindow.Id)
+        {
+            SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+        };
+        picker.FileTypeFilter.Add(MappingProfile.EXTENSION_REAL);
+
+        var file = await picker.PickSingleFileAsync();
+
+        if (file == null)
+        {
+            return;
+        }
+
+        var profile = MappingProfile.Load(file.Path);
+
+        if (profile == null)
+        {
+            await ShowError(
+                this.Content.XamlRoot,
+                "Failed to load profile!",
+                "The selected profile was corrupt!\n\nPlease help us by reporting this bug on GitHub."
+            );
+
+            return;
+        }
+
+        this.mappingPage?.SetSelectedProfile(profile);
+    }
+
+    private void MenuOpenProfileFolder_Click(object sender, RoutedEventArgs e)
+    {
+        var profile = this.mappingPage?.ViewModel.SelectedProfile;
+        if (profile == null)
+        {
+            Process.Start(new ProcessStartInfo { FileName = MappingProfile.GetSaveDirectory(), UseShellExecute = true });
+            return;
+        }
+
+        Process.Start("explorer.exe", $"/select, \"{profile.FilePath}\"");
+    }
+
+    private void MenuCloseToTray_Click(object sender, RoutedEventArgs e)
+        => this.Hide();
+
+    private void MenuExit_Click(object sender, RoutedEventArgs e)
+        => Application.Current.Exit();
+
+    private void MenuGamePadPressRelease_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllGamePadMappings();
+
+    private void MenuGamePadPress_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllGamePadMappings(pressOnly: true);
+
+    private void MenuGamePadRelease_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllGamePadMappings(releaseOnly: true);
+
+    private void MenuKeyboardPressRelease_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllKeyboardMappings();
+
+    private void MenuKeyboardPress_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllKeyboardMappings(pressOnly: true);
+
+    private void MenuKeyboardRelease_Click(object sender, RoutedEventArgs e)
+        => this.mappingPage?.ViewModel.AddAllKeyboardMappings(releaseOnly: true);
+
+    private void MenuTestKeyboard_Click(object sender, RoutedEventArgs e)
+        => OpenUrl("https://devicetests.com/keyboard-tester");
+
+    private void MenuTestMouse_Click(object sender, RoutedEventArgs e)
+        => OpenUrl("https://devicetests.com/mouse-test");
+
+    private void MenuTestControllerDeviceTests_Click(object sender, RoutedEventArgs e)
+        => OpenUrl("https://devicetests.com/controller-tester");
+
+    private void MenuTestControllerGamepadTester_Click(object sender, RoutedEventArgs e)
+        => OpenUrl("https://gamepad-tester.com");
+
+    private void MenuConfig_Click(object sender, RoutedEventArgs e)
+        => this.NavigateWithBackButton(typeof(ConfigPage));
+
+    private async void MenuViewLog_Click(object sender, RoutedEventArgs e)
+    {
+        var logFile = Contracts.Output.GetLogPath();
+        if (!File.Exists(logFile))
+        {
+            await ShowError(
+                this.Content.XamlRoot,
+                "Log file not found",
+                "The log file does not exist yet. Please wait for the app to write to it."
+            );
+            return;
+        }
+
+        Process.Start(new ProcessStartInfo { FileName = logFile, UseShellExecute = true });
+    }
+
+    private void MenuViewEventViewer_Click(object sender, RoutedEventArgs e)
+        => Process.Start(new ProcessStartInfo
+        {
+            FileName = "eventvwr.msc",
+            Arguments = "/c:Application",
+            UseShellExecute = true,
+        });
+
+    private void MenuReportProblem_Click(object sender, RoutedEventArgs e)
+        => OpenUrl("https://github.com/Key2Joy/Key2Joy/issues");
+
+    private void MenuViewSource_Click(object sender, RoutedEventArgs e)
+        => OpenUrl("https://github.com/Key2Joy/Key2Joy");
+
+    private void MenuAbout_Click(object sender, RoutedEventArgs e)
+        => this.NavigateWithBackButton(typeof(AboutPage));
+
+    private void NavigateWithBackButton(Type type)
+    {
+        this.MainFrame.Navigate(type);
+        this.TitleBar.IsBackButtonVisible = true;
+    }
+
+    private void TitleBar_BackRequested(TitleBar sender, object args)
+    {
+        this.MainFrame.GoBack();
+
+        if (this.MainFrame.CanGoBack)
+        {
+            return;
+        }
+
+        this.TitleBar.IsBackButtonVisible = false;
+    }
+
+    private void Window_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        var presenter = this.AppWindow.Presenter as OverlappedPresenter;
+
+        if (presenter == null)
+        {
+            return;
+        }
+
+        if (this.shouldStartMinimized)
+        {
+            this.shouldStartMinimized = false;
+            this.Hide();
+            return;
+        }
+
+        presenter.PreferredMinimumWidth ??= 750;
+        presenter.PreferredMinimumHeight ??= 750;
+    }
+
+    private void Window_Closed(object sender, WindowEventArgs args)
+    {
+        if (!this.wantsToExit && this.configState.ShouldCloseButtonMinimize)
+        {
+            args.Handled = true;
+            this.Hide();
+            return;
+        }
+
+        if (this.mappingPage != null && this.mappingPage.ViewModel.Armed)
+        {
+            this.mappingPage.ViewModel.Armed = false;
+        }
+    }
+
+    [RelayCommand]
+    private void ShowWindow()
+    {
+        this.AppWindow.Show();
+
+        var presenter = this.AppWindow.Presenter as OverlappedPresenter;
+
+        if (presenter != null && presenter.State == OverlappedPresenterState.Minimized)
+        {
+            presenter.Restore();
+        }
+    }
+
+    [RelayCommand]
+    private void ExitApplication()
+    {
+        this.wantsToExit = true;
+        Application.Current.Exit();
+    }
+
+    private static IAsyncOperation<ContentDialogResult> ShowError(XamlRoot root, string title, string message)
+    {
+        var contentDialog = new ContentDialog
+        {
+            Title = title,
+            Content = message,
+            CloseButtonText = "OK",
+            XamlRoot = root
+        };
+
+        return contentDialog.ShowAsync();
+    }
+
+    private static void OpenUrl(string url)
+        => Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
+}

@@ -11,8 +11,7 @@ namespace Key2Joy.Mapping.Actions.Logic;
     Description = "Multiple Actions in Sequence",
     Visibility = MappingMenuVisibility.OnlyTopLevel,
     NameFormat = "Run Sequence: {0}",
-    GroupName = "Logic",
-    GroupImage = "application_xp_terminal"
+    GroupName = "Logic"
 )]
 public class SequenceAction : CoreAction
 {

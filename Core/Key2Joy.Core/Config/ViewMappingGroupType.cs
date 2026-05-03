@@ -8,15 +8,15 @@ public enum ViewMappingGroupType
     /// <summary>
     /// No grouping
     /// </summary>
-    None,
+    None = 0,
 
     /// <summary>
     /// Group by action GroupName's
     /// </summary>
-    ByAction,
+    Action = 1,
 
     /// <summary>
     /// Group by trigger GroupName's
     /// </summary>
-    ByTrigger
+    Trigger = 2,
 }

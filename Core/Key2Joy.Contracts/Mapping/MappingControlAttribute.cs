@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Key2Joy.Contracts.Mapping;
 
@@ -7,5 +7,5 @@ public class MappingControlAttribute : Attribute
 {
     public Type ForType { get; set; }
     public Type[] ForTypes { get; set; }
-    public string ImageResourceName { get; set; } = "error";
+    public string TextGlyph { get; set; } = "\uE711";
 }

@@ -6,8 +6,7 @@ namespace Key2Joy.Mapping.Triggers.Mouse;
 
 [Trigger(
     Description = "Mouse Move Event",
-    GroupName = "Mouse Triggers",
-    GroupImage = "mouse"
+    GroupName = "Mouse Triggers"
 )]
 public class MouseMoveTrigger : CoreTrigger, IReturnInputHash
 {

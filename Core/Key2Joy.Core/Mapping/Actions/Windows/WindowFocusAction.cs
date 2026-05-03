@@ -9,8 +9,7 @@ namespace Key2Joy.Mapping.Actions.Windows;
 [Action(
     Description = "Focus a Window",
     NameFormat = "Focus Window '{0}'",
-    GroupName = "Windows",
-    GroupImage = "application_xp_terminal"
+    GroupName = "Windows"
 )]
 public class WindowFocusAction : WindowAction
 {

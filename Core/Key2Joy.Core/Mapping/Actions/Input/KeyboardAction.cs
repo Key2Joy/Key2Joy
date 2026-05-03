@@ -11,8 +11,7 @@ namespace Key2Joy.Mapping.Actions.Input;
 [Action(
     Description = "Keyboard Simulation",
     NameFormat = "{1} {0} on Keyboard",
-    GroupName = "Keyboard Simulation",
-    GroupImage = "keyboard"
+    GroupName = "Keyboard Simulation"
 )]
 public class KeyboardAction : CoreAction, IPressState, IProvideReverseAspect
 {

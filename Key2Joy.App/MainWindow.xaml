@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Key2Joy.App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Key2Joy.App"
+    xmlns:notify="using:H.NotifyIcon"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Activated="Window_Activated"
+    Closed="Window_Closed"
+    Title="Key2Joy">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <notify:TaskbarIcon ToolTipText="ToolTip"
+                            IconSource="/Assets/Icon.ico"
+                            MenuActivation="LeftOrRightClick"
+                            DoubleClickCommand="{x:Bind ShowWindowCommand}"
+                            PopupActivation="DoubleClick">
+            <notify:TaskbarIcon.ContextFlyout>
+                <MenuFlyout AreOpenCloseAnimationsEnabled="False">
+                    <MenuFlyoutItem Command="{x:Bind ShowWindowCommand}"
+                                    Text="Show"
+                    />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem Command="{x:Bind ExitApplicationCommand}"
+                                    Text="Exit"
+                    />
+                </MenuFlyout>
+            </notify:TaskbarIcon.ContextFlyout>
+        </notify:TaskbarIcon>
+
+        <TitleBar x:Name="TitleBar"
+                  Title="Key2Joy"
+                  IsBackButtonVisible="False"
+                  BackRequested="TitleBar_BackRequested">
+            <TitleBar.IconSource>
+                <ImageIconSource ImageSource="/Assets/Icon.ico" />
+            </TitleBar.IconSource>
+
+            <TitleBar.Content>
+                <MenuBar>
+                    <MenuBarItem Title="File">
+                        <MenuFlyoutItem x:Name="MenuNewProfile"
+                                        Text="New Profile"
+                                        Click="MenuNewProfile_Click" />
+                        <MenuFlyoutItem x:Name="MenuLoadProfile"
+                                        Text="Load Profile..."
+                                        Click="MenuLoadProfile_Click" />
+                        <MenuFlyoutItem x:Name="MenuOpenProfileFolder"
+                                        Text="Open Profile Folder"
+                                        Click="MenuOpenProfileFolder_Click" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="MenuCloseToTray"
+                                        Text="Close To Tray"
+                                        Click="MenuCloseToTray_Click" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="MenuExit"
+                                        Text="Exit"
+                                        Click="MenuExit_Click">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Menu" Key="F4" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                    </MenuBarItem>
+                    <MenuBarItem Title="Mappings">
+                        <MenuFlyoutItem x:Name="MenuNewMapping"
+                                        Text="New Mapping"
+                                        Click="MenuNewMapping_Click">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="N" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="MenuExpandAllMappings"
+                                        Text="Expand All"
+                                        Click="MenuExpandAllMappings_Click" />
+                        <MenuFlyoutItem x:Name="MenuCollapseAllMappings"
+                                        Text="Collapse All"
+                                        Click="MenuCollapseAllMappings_Click" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="MenuDeselectMapping"
+                                        Text="Deselect"
+                                        Click="MenuDeselectMapping_Click">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="Escape" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem x:Name="MenuDeleteSelectedMapping"
+                                        Text="Delete Selected"
+                                        Click="MenuDeleteSelectedMapping_Click">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="Delete" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutSubItem Text="Add All GamePad">
+                            <MenuFlyoutItem x:Name="MenuGamePadPressRelease"
+                                            Text="Press + Release"
+                                            Click="MenuGamePadPressRelease_Click" />
+                            <MenuFlyoutItem x:Name="MenuGamePadPress"
+                                            Text="Press Only"
+                                            Click="MenuGamePadPress_Click" />
+                            <MenuFlyoutItem x:Name="MenuGamePadRelease"
+                                            Text="Release Only"
+                                            Click="MenuGamePadRelease_Click" />
+                        </MenuFlyoutSubItem>
+                        <MenuFlyoutSubItem Text="Add All Keyboard">
+                            <MenuFlyoutItem x:Name="MenuKeyboardPressRelease"
+                                            Text="Press + Release"
+                                            Click="MenuKeyboardPressRelease_Click" />
+                            <MenuFlyoutItem x:Name="MenuKeyboardPress"
+                                            Text="Press Only"
+                                            Click="MenuKeyboardPress_Click" />
+                            <MenuFlyoutItem x:Name="MenuKeyboardRelease"
+                                            Text="Release Only"
+                                            Click="MenuKeyboardRelease_Click" />
+                        </MenuFlyoutSubItem>
+                    </MenuBarItem>
+                    <MenuBarItem Title="View">
+                        <MenuFlyoutSubItem x:Name="MenuGroupBySubItem"
+                                           Text="Group By" />
+                    </MenuBarItem>
+                    <MenuBarItem Title="Tools">
+                        <MenuFlyoutSubItem Text="Test Mappings">
+                            <MenuFlyoutItem x:Name="MenuTestKeyboard"
+                                            Text="Test Keyboard"
+                                            Click="MenuTestKeyboard_Click" />
+                            <MenuFlyoutItem x:Name="MenuTestMouse"
+                                            Text="Test Mouse"
+                                            Click="MenuTestMouse_Click" />
+                            <MenuFlyoutSubItem Text="Test GamePad">
+                                <MenuFlyoutItem x:Name="MenuTestControllerDeviceTests"
+                                            Text="devicetests.com"
+                                            Click="MenuTestControllerDeviceTests_Click" />
+                                <MenuFlyoutItem x:Name="MenuTestControllerGamepadTester"
+                                            Text="gamepad-tester.com"
+                                            Click="MenuTestControllerGamepadTester_Click" />
+                            </MenuFlyoutSubItem>
+                        </MenuFlyoutSubItem>
+                        <MenuFlyoutSubItem Text="View Script Output">
+                            <MenuFlyoutItem x:Name="MenuViewLog"
+                                        Text="View Log File"
+                                        Click="MenuViewLog_Click" />
+                            <MenuFlyoutItem x:Name="MenuViewEventViewer"
+                                        Text="View Event Viewer"
+                                        Click="MenuViewEventViewer_Click" />
+                        </MenuFlyoutSubItem>
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="MenuConfig"
+                                        Text="Configuration..."
+                                        Click="MenuConfig_Click">
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="F1" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
+                        </MenuFlyoutItem>
+                    </MenuBarItem>
+                    <MenuBarItem Title="Help">
+                        <MenuFlyoutItem x:Name="MenuReportProblem"
+                                        Text="Report a Problem"
+                                        Click="MenuReportProblem_Click" />
+                        <MenuFlyoutItem x:Name="MenuViewSource"
+                                        Text="View Source Code"
+                                        Click="MenuViewSource_Click" />
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem x:Name="MenuAbout"
+                                        Text="About"
+                                        Click="MenuAbout_Click" />
+                    </MenuBarItem>
+                </MenuBar>
+            </TitleBar.Content>
+        </TitleBar>
+
+        <Frame x:Name="MainFrame"
+               Navigated="MainFrame_Navigated"
+               Grid.Row="1" />
+    </Grid>
+</Window>

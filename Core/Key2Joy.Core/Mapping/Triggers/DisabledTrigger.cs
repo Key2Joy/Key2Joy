@@ -7,8 +7,7 @@ namespace Key2Joy.Mapping.Triggers;
     Description = "Disabled Trigger",
     NameFormat = DisabledNameFormat,
     Visibility = MappingMenuVisibility.Never,
-    GroupName = "Requires Attention",
-    GroupImage = "cross"
+    GroupName = "Requires Attention"
 )]
 public class DisabledTrigger : CoreTrigger
 {

@@ -9,8 +9,7 @@ namespace Key2Joy.Mapping.Actions.Windows;
 [Action(
     Description = "Minimize a Window",
     NameFormat = "Minimize Window '{0}'",
-    GroupName = "Windows",
-    GroupImage = "application_xp_terminal"
+    GroupName = "Windows"
 )]
 public class WindowMinimizeAction : WindowAction
 {

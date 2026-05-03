@@ -1,4 +1,4 @@
-# ![Key2Joy Logo](../Key2Joy.Gui/Graphics/Icons/icon32.png?raw=true) Key2Joy - Scripting
+# ![Key2Joy Logo](../Key2Joy.App/Assets/Icons/icon32.png?raw=true) Key2Joy - Scripting
 
 Using action scripts you can bind a complex sequence of actions to a
 trigger.
@@ -57,26 +57,26 @@ uses [NLua](https://github.com/NLua/NLua)*
 
     ![Screenshot of Key2Joy showing the mapping form being configured with a keyboard trigger and Lua action](screenshot-scripting.png)
 
-2. In Key2Joy click **Create New Mapping** *(Button marked A in the screenshot)*
+2. In Key2Joy ensure nothing is selected and navigate to the **Creating a new mapping** section at the bottom of the app.
 
-3. Choose the trigger **Keyboard Event** *(Section B in the screenshot)*
+3. Choose the trigger **Keyboard Event** *(Section A in the screenshot)*
 
-4. Click the marked area and press the "F"-key on your keyboard
+4. Click the **Keyboard Key** input and press the "F"-key on your keyboard
 
-5. Select **Release** from the dropdown. This ensures the script will only run
-   once when the F-key is released.
+5. Select **Release** from the dropdown. This ensures the script will only run once when the F-key is released.
 
-6. For the action we'll choose: **Lua Script Action** *(Section C in the
-   screenshot)*
+6. For the action we'll choose: **Lua Script Action** *(Section B in the screenshot)*
 
 7. Uncheck **Direct Input** so we can select the `test.lua` script we created
    earlier.
 
 8. Click **Browse**, navigate to the `test.lua` file and select it.
 
-9. Save the mapping.
+9. Confirm that you trust the script and click **OK** in the warning dialog.
 
-Now when you enable the mappings *(Check the `Arm Mappings` checkbox in the top right of
+10. Save the mapping by clicking the **Create Mapping** button in the bottom right.
+
+Now when you enable the mappings *(Click the `Connect` button in the top right of
 Key2Joy)* you can run that Lua script by pressing and releasing the F-key
 on your keyboard.
 

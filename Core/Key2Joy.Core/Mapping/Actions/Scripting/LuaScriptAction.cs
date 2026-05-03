@@ -16,8 +16,7 @@ namespace Key2Joy.Mapping.Actions.Scripting;
 [Action(
     Description = "Lua Script Action",
     NameFormat = "Lua Script: {0}",
-    GroupName = "Scripting",
-    GroupImage = "script_code"
+    GroupName = "Scripting"
 )]
 public class LuaScriptAction : BaseScriptActionWithEnvironment<Lua>
 {
@@ -154,7 +153,7 @@ public class LuaScriptAction : BaseScriptActionWithEnvironment<Lua>
         => base.OnStartListening(listener, ref otherActions);
 
     public override void OnStopListening(AbstractTriggerListener listener)
-        => base.OnStopListening(listener);// environment.Dispose(); // Uncomment this to cause NullReferenceException problem on NLua state described here: https://github.com/luttje/Key2Joy/pull/39#issuecomment-1581537603
+        => base.OnStopListening(listener);// environment.Dispose(); // Uncomment this to cause NullReferenceException problem on NLua state described here: https://github.com/Key2Joy/Key2Joy/pull/39#issuecomment-1581537603
 
     /// <summary>
     /// Returns a function that, when called, will return the next value in the collection.

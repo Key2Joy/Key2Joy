@@ -11,8 +11,7 @@ namespace Key2Joy.Mapping.Actions.Logic;
 [Action(
     Description = "App Command",
     NameFormat = "Run App Command '{0}'",
-    GroupName = "Logic",
-    GroupImage = "application_xp_terminal"
+    GroupName = "Logic"
 )]
 public class AppCommandAction : CoreAction
 {

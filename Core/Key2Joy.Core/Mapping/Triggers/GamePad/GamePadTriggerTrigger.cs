@@ -7,8 +7,7 @@ namespace Key2Joy.Mapping.Triggers.GamePad;
 
 [Trigger(
     Description = "GamePad Trigger Pull Event",
-    GroupName = "GamePad Triggers",
-    GroupImage = "joystick"
+    GroupName = "GamePad Triggers"
 )]
 public class GamePadTriggerTrigger : CoreTrigger, IReturnInputHash, IEquatable<GamePadTriggerTrigger>
 {

@@ -20,6 +20,7 @@ public class MappingProfile
 
     public const string DEFAULT_PROFILE_PATH = "default-profile";
     public const string EXTENSION = ".k2j.json";
+    public const string EXTENSION_REAL = ".json";
 
     public const string BACKUP_EXTENSION = ".bak";
     public const string SAVE_DIR = "Profiles";
@@ -69,7 +70,19 @@ public class MappingProfile
     }
 
     public void RemoveMapping(MappedOption mappedOption)
-        => this.MappedOptions.Remove(mappedOption);
+    {
+        // Remove all children first (stored as separate top-level entries with a ParentGuid)
+        var children = this.MappedOptions
+            .Where(mo => mo.ParentGuid.HasValue && mo.ParentGuid.Value == mappedOption.Guid)
+            .ToList();
+
+        foreach (var child in children)
+        {
+            this.MappedOptions.Remove(child);
+        }
+
+        this.MappedOptions.Remove(mappedOption);
+    }
 
     public bool TryGetMappedOption(AbstractTrigger trigger, out MappedOption mappedOption)
     {

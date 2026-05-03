@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Key2Joy.App.UserControls.DrawerControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="DrawerRoot">
+        <!-- Semi-transparent overlay that captures clicks to close -->
+        <Border x:Name="Overlay"
+                Background="#80000000"
+                Opacity="0"
+                IsHitTestVisible="False"
+                Tapped="Overlay_Tapped" />
+
+        <!-- Drawer panel sliding up from the bottom -->
+        <Grid x:Name="DrawerPanel"
+              VerticalAlignment="Bottom"
+              Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+              RenderTransformOrigin="0.5,1">
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="DrawerTranslate" Y="0" />
+            </Grid.RenderTransform>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Height="16"
+                  Background="Transparent"
+                  PointerPressed="GripBar_PointerPressed">
+                <Border Width="40"
+                        Height="4"
+                        CornerRadius="2"
+                        Background="{ThemeResource SolidBackgroundFillColorBaseAltBrush}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+            </Grid>
+
+            <!-- Content presenter for whatever is placed inside the drawer -->
+            <ContentPresenter x:Name="DrawerContentPresenter"
+                              Grid.Row="1"
+                              Content="{x:Bind DrawerContent, Mode=OneWay}" />
+        </Grid>
+    </Grid>
+</UserControl>

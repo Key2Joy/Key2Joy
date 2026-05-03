@@ -1,0 +1,11 @@
+EnumWindows
+IsWindowVisible
+GetWindowLong
+OpenProcess
+GetWindowThreadProcessId
+QueryFullProcessImageName
+GetWindowText
+WINDOW_LONG_PTR_INDEX
+PROCESS_NAME_FORMAT
+PROCESS_ACCESS_RIGHTS
+WINDOW_EX_STYLE

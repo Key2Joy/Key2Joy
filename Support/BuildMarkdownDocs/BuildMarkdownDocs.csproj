@@ -7,7 +7,7 @@
     <Product>Key2Joy</Product>
     <Description>Simulate a game controller with your mouse and keyboard</Description>
     <Copyright>Copyright © 2026 luttje</Copyright>
-    <PackageProjectUrl>https://github.com/luttje/Key2Joy</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/Key2Joy/Key2Joy</PackageProjectUrl>
     <VersionPrefix>0.8.0</VersionPrefix>
     <TargetFramework>net9.0-windows7.0</TargetFramework>
     <LangVersion>latest</LangVersion>

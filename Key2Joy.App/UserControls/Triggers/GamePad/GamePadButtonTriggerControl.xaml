@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Key2Joy.App.UserControls.Triggers.GamePad.GamePadButtonTriggerControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Key2Joy.App.UserControls.Triggers.GamePad"
+    xmlns:input="using:Key2Joy.LowLevelInput"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Spacing="8">
+        <Grid ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="GamePad Button:"
+                       VerticalAlignment="Center"/>
+
+            <!-- TODO: Unfocus trick — focus this invisible box to release capture -->
+            <TextBox x:Name="UnfocusTextBox"
+                     MinWidth="0"
+                     MinHeight="0"
+                     Width="0"
+                     Height="0" />
+
+            <TextBox x:Name="ButtonBindTextBox"
+                     Grid.Column="1"
+                     IsReadOnly="True"
+                     Text="{x:Bind ButtonBindText, Mode=OneWay}"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Stretch"
+                     GotFocus="ButtonBindTextBox_GotFocus" />
+
+            <ComboBox Grid.Column="2"
+                      SelectedItem="{x:Bind SelectedPressState, Mode=TwoWay}"
+                      ItemsSource="{x:Bind AvailablePressStates}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="input:PressState">
+                        <TextBlock Text="{x:Bind Converter={StaticResource EnumToStringConverter}}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+
+        <TextBlock Text="{x:Bind LastGamePadLabel, Mode=OneWay}"
+                   Visibility="{x:Bind LastGamePadLabel, Converter={StaticResource StringToVisibilityConverter}, Mode=OneWay}"
+                   FontStyle="Italic"
+                   Opacity="0.7" />
+
+        <Grid ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="GamePad Index:"
+                       VerticalAlignment="Center"/>
+            <NumberBox Grid.Column="1"
+                       HorizontalAlignment="Stretch"
+                       SpinButtonPlacementMode="Inline"
+                       Minimum="0"
+                       Maximum="3"
+                       SmallChange="1"
+                       Value="{x:Bind GamePadIndex, Mode=TwoWay}" />
+        </Grid>
+    </StackPanel>
+</UserControl>

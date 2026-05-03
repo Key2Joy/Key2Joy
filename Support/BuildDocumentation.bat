@@ -6,7 +6,7 @@ set LOCAL=%~dp0
 set TARGET=Release
 set BUILD_DIR=%2
 
-if "%BUILD_DIR%"=="" set BUILD_DIR=%LOCAL%..\bin\Key2Joy.Gui\%TARGET%
+if "%BUILD_DIR%"=="" set BUILD_DIR=%LOCAL%..\bin\Key2Joy.App\x64\%TARGET%\net9.0-windows10.0.19041.0\win-x64
 
 if "%TARGET%" == "Debug" goto skip
 

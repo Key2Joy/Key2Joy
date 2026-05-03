@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Key2Joy.App.UserControls.Actions.Input.KeyboardActionControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Key2Joy.App.UserControls.Actions.Input"
+    xmlns:input="using:Key2Joy.LowLevelInput"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid ColumnSpacing="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Keyboard Key:"
+                   VerticalAlignment="Center"/>
+
+        <ComboBox Grid.Column="1"
+                  HorizontalAlignment="Stretch"
+                  SelectedItem="{x:Bind SelectedKey, Mode=TwoWay}"
+                  ItemsSource="{x:Bind AvailableKeys}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="input:KeyboardKey">
+                    <TextBlock Text="{x:Bind Converter={StaticResource EnumToStringConverter}}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <ComboBox Grid.Column="2"
+                  SelectedItem="{x:Bind SelectedPressState, Mode=TwoWay}"
+                  ItemsSource="{x:Bind AvailablePressStates}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="input:PressState">
+                    <TextBlock Text="{x:Bind Converter={StaticResource EnumToStringConverter}}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+    </Grid>
+</UserControl>

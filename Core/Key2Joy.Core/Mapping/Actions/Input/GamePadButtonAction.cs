@@ -15,8 +15,7 @@ namespace Key2Joy.Mapping.Actions.Input;
 [Action(
     Description = "GamePad/Controller Simulation",
     NameFormat = "{1} {0} on GamePad #{2}",
-    GroupName = "GamePad Simulation",
-    GroupImage = "joystick"
+    GroupName = "GamePad Simulation"
 )]
 public class GamePadButtonAction : CoreAction, IPressState, IProvideReverseAspect
 {

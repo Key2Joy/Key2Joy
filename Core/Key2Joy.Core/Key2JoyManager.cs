@@ -48,7 +48,7 @@ public class Key2JoyManager : IKey2JoyManager
     private static AppCommandRunner commandRunner;
     private MappingProfile armedProfile;
     private List<AbstractTriggerListener> armedListeners;
-    private IHaveHandleAndInvoke handleAndInvoker;
+    private IInvokeOnUI handleAndInvoker;
     private static readonly List<MappingTypeFactory<AbstractAction>> actionFactories = new();
     private static readonly List<MappingTypeFactory<AbstractTrigger>> triggerFactories = new();
     private static readonly List<MappingControlFactory> mappingControlFactories = new();
@@ -68,12 +68,9 @@ public class Key2JoyManager : IKey2JoyManager
     }
 
     /// <summary>
-    /// Ensures Key2Joy is running and ready to accept commands as long as the main loop does not end.
+    /// Initializes the app, requires manually calling the returned action on cleanup (when the app closes).
     /// </summary>
-    /// <param name="commandRunner"></param>
-    /// <param name="mainLoop"></param>
-    /// <param name="configManager">Optionally a custom config manager (probably only useful for unit testing)</param>
-    public static void InitSafely(AppCommandRunner commandRunner, Action mainLoop, IConfigManager configManager = null)
+    public static Action InitHandle(AppCommandRunner commandRunner, IConfigManager configManager = null)
     {
         instance = new Key2JoyManager();
         ServiceContainer.Register<IKey2JoyManager>(instance);
@@ -97,15 +94,32 @@ public class Key2JoyManager : IKey2JoyManager
 
         var interopServer = new InteropServer(instance, commandRepository);
 
+        interopServer.RestartListening();
+
+        return () =>
+        {
+            interopServer.StopListening();
+            gamePadService.ShutDown();
+        };
+    }
+
+    /// <summary>
+    /// Ensures Key2Joy is running and ready to accept commands as long as the main loop does not end.
+    /// </summary>
+    /// <param name="commandRunner"></param>
+    /// <param name="mainLoop"></param>
+    /// <param name="configManager">Optionally a custom config manager (probably only useful for unit testing)</param>
+    public static void InitSafely(AppCommandRunner commandRunner, Action mainLoop, IConfigManager configManager = null)
+    {
+        var handle = InitHandle(commandRunner, configManager);
+
         try
         {
-            interopServer.RestartListening();
             mainLoop();
         }
         finally
         {
-            interopServer.StopListening();
-            gamePadService.ShutDown();
+            handle();
         }
     }
 
@@ -122,7 +136,7 @@ public class Key2JoyManager : IKey2JoyManager
 
     internal static bool RunAppCommand(AppCommand command) => commandRunner != null && commandRunner(command);
 
-    public void SetHandlerWithInvoke(IHaveHandleAndInvoke handleAndInvoker)
+    public void SetHandlerWithInvoke(IInvokeOnUI handleAndInvoker)
     {
         this.handleAndInvoker = handleAndInvoker;
 

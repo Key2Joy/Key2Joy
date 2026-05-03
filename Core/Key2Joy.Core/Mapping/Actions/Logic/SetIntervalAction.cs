@@ -11,8 +11,7 @@ namespace Key2Joy.Mapping.Actions.Logic;
 [Action(
     Description = "Repeatedly calls a function or executes a code snippet, with a fixed time delay between each call",
     Visibility = MappingMenuVisibility.Never,
-    GroupName = "Logic",
-    GroupImage = "application_xp_terminal"
+    GroupName = "Logic"
 )]
 public class SetIntervalAction : CoreAction
 {

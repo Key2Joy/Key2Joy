@@ -10,8 +10,7 @@ namespace Key2Joy.Mapping.Actions.Logic;
 [Action(
     Description = "Shows a MessageBox containing text",
     NameFormat = "Show MessageBox with '{0}' for text",
-    GroupName = "Logic",
-    GroupImage = "application_xp_terminal"
+    GroupName = "Logic"
 )]
 public class MessageBoxAction : CoreAction
 {

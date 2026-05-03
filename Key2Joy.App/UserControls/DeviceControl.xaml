@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Key2Joy.App.UserControls.DeviceControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Key2Joy.App.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <Style x:Key="DeviceIndexStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="DeviceNameStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26"/>
+            <RowDefinition Height="21"/>
+            <RowDefinition Height="1"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0"
+              HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="39"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <FontIcon Grid.Column="0"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Glyph="&#xE71B;" />
+
+            <TextBlock x:Name="IndexTextBlock"
+                       Grid.Column="1"
+                       Text="0"
+                       Style="{StaticResource DeviceIndexStyle}"/>
+        </Grid>
+
+        <TextBlock x:Name="DeviceTextBlock"
+                   Grid.Row="1"
+                   Text="Device Name"
+                   Style="{StaticResource DeviceNameStyle}"/>
+
+        <Border Grid.Row="2"
+                Background="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"
+                Height="1"
+                HorizontalAlignment="Stretch"/>
+    </Grid>
+</UserControl>

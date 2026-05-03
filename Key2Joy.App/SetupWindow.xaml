@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Key2Joy.App.SetupWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Key2Joy.App"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Activated="Window_Activated"
+    Title="Key2Joy - First-Time Setup">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid Margin="20"
+          RowSpacing="8"
+          SizeChanged="OnRootSizeChanged">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Text="Key2Joy First-Time Setup"
+            FontSize="18"
+            FontFamily="Microsoft Sans Serif"/>
+
+        <TextBlock
+            Grid.Row="1"
+            Text="In order for Key2Joy to function correctly, you need to install the SCP Virtual Bus driver.&#x0a;You might want to create a system restore point prior to installation."
+            TextWrapping="Wrap"/>
+
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Horizontal"
+            HorizontalAlignment="Right"
+            Spacing="8"
+            Margin="0,10,0,0">
+
+            <Button
+                x:Name="CreateSystemRestorePointButton"
+                Content="Create System Restore Point"
+                Click="CreateSystemRestorePointButton_Click"/>
+
+            <Button
+                x:Name="InstallButton"
+                Click="InstallButton_Click">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <FontIcon Glyph="&#xE74B;"/>
+                    <TextBlock Text="Install"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

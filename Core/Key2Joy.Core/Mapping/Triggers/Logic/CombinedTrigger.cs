@@ -10,8 +10,7 @@ namespace Key2Joy.Mapping.Triggers.Logic;
 [Trigger(
     Description = "Multiple Triggers Combined",
     Visibility = MappingMenuVisibility.OnlyTopLevel,
-    GroupName = "Logic Triggers",
-    GroupImage = "application_xp_terminal"
+    GroupName = "Logic Triggers"
 )]
 public class CombinedTrigger : CoreTrigger, IEquatable<CombinedTrigger>
 {

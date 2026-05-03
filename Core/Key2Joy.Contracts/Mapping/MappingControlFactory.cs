@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Forms;
 
 namespace Key2Joy.Contracts.Mapping;
 
@@ -9,15 +8,15 @@ namespace Key2Joy.Contracts.Mapping;
 public abstract class MappingControlFactory
 {
     public string ForTypeFullName { get; private set; }
-    public string ImageResourceName { get; private set; }
+    public string TextGlyph { get; private set; }
 
-    public MappingControlFactory(string forTypeFullName, string imageResourceName)
+    public MappingControlFactory(string forTypeFullName, string textGlyph)
     {
         this.ForTypeFullName = forTypeFullName;
-        this.ImageResourceName = imageResourceName;
+        this.TextGlyph = textGlyph;
     }
 
-    public virtual T CreateInstance<T>() where T : Control => (T)Activator.CreateInstance(this.ToType());
+    public virtual T CreateInstance<T>() => (T)Activator.CreateInstance(this.ToType());
 
     public abstract Type ToType();
     public virtual string GetTypeName() => this.ToType().FullName;
@@ -30,8 +29,8 @@ public class TypeMappingControlFactory : MappingControlFactory
 {
     private readonly Type controlType;
 
-    public TypeMappingControlFactory(string forTypeFullName, string imageResourceName, Type controlType)
-        : base(forTypeFullName, imageResourceName) => this.controlType = controlType;
+    public TypeMappingControlFactory(string forTypeFullName, string textGlyph, Type controlType)
+        : base(forTypeFullName, textGlyph) => this.controlType = controlType;
 
     public override Type ToType() => this.controlType;
 }

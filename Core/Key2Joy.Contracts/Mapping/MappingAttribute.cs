@@ -25,11 +25,6 @@ public abstract class MappingAttribute : Attribute, IComparable<MappingAttribute
     /// </summary>
     public string GroupName { get; set; }
 
-    /// <summary>
-    /// Image for the group the aspect should be categorized under.
-    /// </summary>
-    public string GroupImage { get; set; }
-
     public override string ToString() => this.Description;
 
     public override int GetHashCode() => this.Description.GetHashCode();
