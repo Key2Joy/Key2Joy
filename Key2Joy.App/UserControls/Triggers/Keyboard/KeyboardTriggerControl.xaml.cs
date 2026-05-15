@@ -8,7 +8,9 @@ using Key2Joy.Contracts.Mapping.Triggers;
 using Key2Joy.LowLevelInput;
 using Key2Joy.Mapping.Triggers;
 using Key2Joy.Mapping.Triggers.Keyboard;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace Key2Joy.App.UserControls.Triggers.Keyboard;
 
@@ -64,6 +66,7 @@ public sealed partial class KeyboardTriggerControl : UserControl, ITriggerOption
         this.globalKeyboardHook.KeyboardInputEvent -= this.OnKeyInputEvent;
         this.globalKeyboardHook.Dispose();
         this.globalKeyboardHook = null;
+        this.UnblockKeyboardAccelerators();
     }
 
     private void LoadPressStates()
@@ -143,6 +146,7 @@ public sealed partial class KeyboardTriggerControl : UserControl, ITriggerOption
     {
         this.KeyBindText = TEXT_CHANGE;
         this.isTrapping = true;
+        this.BlockKeyboardAccelerators();
     }
 
     private void StopTrapping()
@@ -151,8 +155,22 @@ public sealed partial class KeyboardTriggerControl : UserControl, ITriggerOption
 
         // TODO: Somehow lose focus from the binding textbox without an invisible UnfocusTextBox?
         // We lose focus so the user can just click it again to change the keybind without having to first focus something else
-        this.UnfocusTextBox.Focus(Microsoft.UI.Xaml.FocusState.Programmatic);
+        this.UnfocusTextBox.Focus(FocusState.Programmatic);
+
+        // Delay unblocking by 1s: even deferring to the next dispatcher tick is not enough because
+        // the key-up event still passes through WinUI's accelerator pipeline and would trigger
+        // menu items (e.g. Escape closing the mapping drawer).
+        Task.Delay(1000).ContinueWith(_ => this.DispatcherQueue.TryEnqueue(this.UnblockKeyboardAccelerators));
     }
+
+    private void BlockKeyboardAccelerators()
+        => this.ProcessKeyboardAccelerators += this.OnProcessKeyboardAcceleratorsWhileTrapping;
+
+    private void UnblockKeyboardAccelerators()
+        => this.ProcessKeyboardAccelerators -= this.OnProcessKeyboardAcceleratorsWhileTrapping;
+
+    private void OnProcessKeyboardAcceleratorsWhileTrapping(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
+        => args.Handled = true;
 
     private void UpdateKeys()
     {
@@ -160,7 +178,7 @@ public sealed partial class KeyboardTriggerControl : UserControl, ITriggerOption
         OptionsChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    private void KeyBindTextBox_GotFocus(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private void KeyBindTextBox_GotFocus(object sender, RoutedEventArgs e)
         => this.StartTrapping();
 
     public void Dispose() => this.CleanupKeyboardHook();
