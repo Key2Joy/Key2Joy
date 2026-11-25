@@ -59,7 +59,8 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     public float InputScaleY { get; set; } = -1;
 
     /// <summary>
-    /// After how many milliseconds should the stick be reset to 0,0?
+    /// After how many milliseconds should the stick be reset to the center?
+    /// Only the axes this action moved are reset.
     /// </summary>
     public int ResetAfterIdleTimeInMs { get; set; } = 500;
 
@@ -69,6 +70,14 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     public int GamePadIndex { get; set; }
 
     private readonly System.Timers.Timer noInputTimer;
+
+    /// <summary>
+    /// Whether this action moved the X/Y axis since the last reset. Used so the
+    /// reset only centers the axes this action is responsible for, leaving axes
+    /// driven by other mappings alone.
+    /// </summary>
+    private volatile bool hasMovedX;
+    private volatile bool hasMovedY;
 
     public GamePadStickAction(string name) : base(name)
     {
@@ -232,6 +241,16 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
             state.RightStickY = this.GetStickValue(state.RightStickY, deltaY);
         }
 
+        if (deltaX != 0)
+        {
+            this.hasMovedX = true;
+        }
+
+        if (deltaY != 0)
+        {
+            this.hasMovedY = true;
+        }
+
         if (state.LeftStickX != 0
             || state.LeftStickY != 0
             || state.RightStickX != 0
@@ -248,24 +267,49 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     }
 
     /// <summary>
-    /// Resets the stick to the center position if there was no input for a while
+    /// Resets the axes this action moved to the center position if there was no
+    /// input for a while
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void NoInputTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
     {
+        var resetX = this.hasMovedX;
+        var resetY = this.hasMovedY;
+        this.hasMovedX = false;
+        this.hasMovedY = false;
+
+        if (!resetX && !resetY)
+        {
+            return;
+        }
+
         var gamePad = ServiceContainer.Get<ISimulatedGamePadService>().GetGamePad(this.GamePadIndex);
         var state = gamePad.GetState();
 
         if (this.Side == GamePadSide.Left)
         {
-            state.LeftStickX = 0;
-            state.LeftStickY = 0;
+            if (resetX)
+            {
+                state.LeftStickX = 0;
+            }
+
+            if (resetY)
+            {
+                state.LeftStickY = 0;
+            }
         }
         else
         {
-            state.RightStickX = 0;
-            state.RightStickY = 0;
+            if (resetX)
+            {
+                state.RightStickX = 0;
+            }
+
+            if (resetY)
+            {
+                state.RightStickY = 0;
+            }
         }
 
         gamePad.Update();
