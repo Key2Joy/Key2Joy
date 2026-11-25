@@ -346,15 +346,23 @@ public partial class MainMappingPageViewModel : ObservableObject
 
     public void HandleMappingCreated(MappedOption mappedOption)
     {
+        // Children (e.g. a reverse mapping created while editing an existing mapping) are
+        // stored as separate entries in the profile, so they must be added too. Mappings
+        // already in the profile (e.g. when editing a child) must not be added again.
+        this.EnsureInProfile(mappedOption);
+
+        foreach (var child in mappedOption.Children)
+        {
+            this.EnsureInProfile(child);
+        }
+
         var existingVm = this.MappedOptions.FirstOrDefault(vm => vm.Option == mappedOption);
 
         if (existingVm == null)
         {
-            this.AddMapping(mappedOption);
-
-            foreach (var child in mappedOption.Children)
+            if (!mappedOption.IsChild)
             {
-                this.AddMapping(child);
+                this.MappedOptions.Add(new MappedOptionViewModel(mappedOption));
             }
         }
         else
@@ -362,10 +370,21 @@ public partial class MainMappingPageViewModel : ObservableObject
             // Rebuild the VM in-place so the UI reflects updated trigger/action/children
             var index = this.MappedOptions.IndexOf(existingVm);
             this.MappedOptions[index] = new MappedOptionViewModel(mappedOption);
-            this.UpdateFilter();
         }
 
+        this.UpdateFilter();
         this.SelectedProfile?.Save();
+    }
+
+    private void EnsureInProfile(MappedOption mappedOption)
+    {
+        if (this.SelectedProfile == null
+            || this.SelectedProfile.MappedOptions.Any(mo => mo.Guid == mappedOption.Guid))
+        {
+            return;
+        }
+
+        this.SelectedProfile.AddMapping(mappedOption);
     }
 
     public void HandleMappingDeleted(MappedOption mappedOption)
