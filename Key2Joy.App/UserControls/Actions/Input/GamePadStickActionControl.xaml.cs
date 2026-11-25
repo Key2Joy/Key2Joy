@@ -22,11 +22,12 @@ namespace Key2Joy.App.UserControls.Actions.Input;
     "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
     Justification = "Cannot inherit from ObservableObject, must remain UserControl"
 )]
-public sealed partial class GamePadStickActionControl : UserControl, IActionOptionsControl
+public sealed partial class GamePadStickActionControl : UserControl, IActionOptionsControl, IReverseMappingAwareOptionsControl
 {
     public event EventHandler? OptionsChanged;
     public ObservableCollection<GamePadSide> AvailableSides { get; } = [];
     public ObservableCollection<int> AvailableGamePadIndices { get; } = [];
+    public ObservableCollection<GamePadStickInputMode> AvailableInputModes { get; } = [.. Enum.GetValues<GamePadStickInputMode>()];
 
     [ObservableProperty]
     public partial GamePadSide SelectedSide { get; set; }
@@ -46,6 +47,29 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
     public partial double InputScaleY { get; set; } = -1;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsSpeedSettingsVisible), nameof(IsResetAfterVisible))]
+    public partial GamePadStickInputMode SelectedInputMode { get; set; } = GamePadStickInputMode.Accumulate;
+
+    [ObservableProperty]
+    public partial double SpeedFullDeflection { get; set; } = 2000;
+
+    [ObservableProperty]
+    public partial double SpeedSmoothingMs { get; set; } = 20;
+
+    [ObservableProperty]
+    public partial double SpeedCurve { get; set; } = 1;
+
+    [ObservableProperty]
+    public partial double SpeedMinimumOutput { get; set; } = 0;
+
+    public bool IsSpeedSettingsVisible => this.IsInputMode && this.SelectedInputMode == GamePadStickInputMode.Speed;
+
+    /// <summary>
+    /// Speed mode returns the stick by itself, so it doesn't use the reset.
+    /// </summary>
+    public bool IsResetAfterVisible => !this.IsSpeedSettingsVisible;
+
+    [ObservableProperty]
     public partial double ExactX { get; set; } = 0;
 
     [ObservableProperty]
@@ -53,6 +77,17 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
 
     [ObservableProperty]
     public partial double ResetAfterMs { get; set; } = 500;
+
+    /// <summary>
+    /// When the mapping also creates a reverse mapping (e.g. on key release), that
+    /// reverse returns the stick. A reset would center the stick while the key is still
+    /// held, so it's not used.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsResetAfterAvailable))]
+    public partial bool CreatesReverseMapping { get; set; }
+
+    public bool IsResetAfterAvailable => !this.CreatesReverseMapping;
 
     public GamePadStickActionControl()
     {
@@ -100,6 +135,8 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
     partial void OnIsInputModeChanged(bool value)
     {
         this.OnPropertyChanged(nameof(IsExactMode));
+        this.OnPropertyChanged(nameof(IsSpeedSettingsVisible));
+        this.OnPropertyChanged(nameof(IsResetAfterVisible));
         OptionsChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -107,6 +144,21 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
         => OptionsChanged?.Invoke(this, EventArgs.Empty);
 
     partial void OnInputScaleYChanged(double value)
+        => OptionsChanged?.Invoke(this, EventArgs.Empty);
+
+    partial void OnSelectedInputModeChanged(GamePadStickInputMode value)
+        => OptionsChanged?.Invoke(this, EventArgs.Empty);
+
+    partial void OnSpeedFullDeflectionChanged(double value)
+        => OptionsChanged?.Invoke(this, EventArgs.Empty);
+
+    partial void OnSpeedSmoothingMsChanged(double value)
+        => OptionsChanged?.Invoke(this, EventArgs.Empty);
+
+    partial void OnSpeedCurveChanged(double value)
+        => OptionsChanged?.Invoke(this, EventArgs.Empty);
+
+    partial void OnSpeedMinimumOutputChanged(double value)
         => OptionsChanged?.Invoke(this, EventArgs.Empty);
 
     partial void OnExactXChanged(double value)
@@ -128,6 +180,11 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
         this.InputScaleY = thisAction.InputScaleY;
         this.ExactX = thisAction.DeltaX ?? 0;
         this.ExactY = thisAction.DeltaY ?? 0;
+        this.SelectedInputMode = thisAction.InputMode;
+        this.SpeedFullDeflection = thisAction.SpeedFullDeflection;
+        this.SpeedSmoothingMs = thisAction.SpeedSmoothingMs;
+        this.SpeedCurve = thisAction.SpeedCurve;
+        this.SpeedMinimumOutput = thisAction.SpeedMinimumOutput;
         this.ResetAfterMs = thisAction.ResetAfterIdleTimeInMs;
     }
 
@@ -138,10 +195,19 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
         thisAction.GamePadIndex = this.SelectedGamePadIndex;
         thisAction.InputScaleX = (float)this.InputScaleX;
         thisAction.InputScaleY = (float)this.InputScaleY;
-        thisAction.DeltaX = this.IsInputMode ? null : (short?)this.ExactX;
-        thisAction.DeltaY = this.IsInputMode ? null : (short?)this.ExactY;
-        thisAction.ResetAfterIdleTimeInMs = (int)this.ResetAfterMs;
+        thisAction.DeltaX = this.IsInputMode ? null : (float)this.ExactX;
+        thisAction.DeltaY = this.IsInputMode ? null : (float)this.ExactY;
+        thisAction.InputMode = this.SelectedInputMode;
+        thisAction.SpeedFullDeflection = (float)this.SpeedFullDeflection;
+        thisAction.SpeedSmoothingMs = (int)this.SpeedSmoothingMs;
+        thisAction.SpeedCurve = (float)this.SpeedCurve;
+        thisAction.SpeedMinimumOutput = (float)this.SpeedMinimumOutput;
+        // 0 means never reset
+        thisAction.ResetAfterIdleTimeInMs = this.CreatesReverseMapping ? 0 : (int)this.ResetAfterMs;
     }
+
+    void IReverseMappingAwareOptionsControl.SetCreatesReverseMapping(bool createsReverseMapping)
+        => this.CreatesReverseMapping = createsReverseMapping;
 
     bool IActionOptionsControl.CanMappingSave(AbstractAction action) => true;
 }

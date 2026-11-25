@@ -30,6 +30,7 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands, IInvokeO
 
         this.MappingControl.MappingCreated += this.MappingControl_MappingCreated;
         this.MappingControl.MappingDeleted += this.MappingControl_MappingDeleted;
+        this.MappingControl.ChildMappingsRemoved += this.MappingControl_ChildMappingsRemoved;
 
         this.MappingGroupsList.EditMappingRequested += this.MappingGroupsList_EditMappingRequested;
         this.MappingGroupsList.GenerateReversesRequested += this.MappingGroupsList_GenerateReversesRequested;
@@ -104,6 +105,15 @@ public sealed partial class MainMappingPage : Page, IAcceptAppCommands, IInvokeO
         this.ViewModel.HandleMappingCreated(mappedOption);
         this.ViewModel.IsDrawerOpen = false;
         this.DeselectSelectedMapping();
+    }
+
+    private void MappingControl_ChildMappingsRemoved(object? sender, IReadOnlyList<MappedOption> children)
+    {
+        // Saved by the MappingCreated that follows
+        foreach (var child in children)
+        {
+            this.ViewModel.RemoveMapping(child);
+        }
     }
 
     private void MappingControl_MappingDeleted(object? sender, MappedOption mappedOption)

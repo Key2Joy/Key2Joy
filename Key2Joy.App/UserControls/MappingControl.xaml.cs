@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Key2Joy.App.UserControls.Actions;
@@ -43,7 +45,16 @@ public sealed partial class MappingControl : UserControl
     public event EventHandler<MappedOption>? MappingCreated;
     public event EventHandler<MappedOption>? MappingDeleted;
 
+    /// <summary>
+    /// Raised (before <see cref="MappingCreated"/>) with the child mappings that should be
+    /// removed, because the user unticked creating a reverse mapping.
+    /// </summary>
+    public event EventHandler<IReadOnlyList<MappedOption>>? ChildMappingsRemoved;
+
     private bool dominantReverseCheckedState;
+
+    partial void OnCreateOrUpdateReverseMappingChanged(bool value)
+        => this.ActionControl.SetCreatesReverseMapping(value);
 
     partial void OnIsEditingChanged(bool value)
     {
@@ -93,7 +104,7 @@ public sealed partial class MappingControl : UserControl
     }
 
     [RelayCommand]
-    private void CreateMapping()
+    private async Task CreateMappingAsync()
     {
         var trigger = this.TriggerControl.Trigger;
         var action = this.ActionControl.Action;
@@ -110,19 +121,45 @@ public sealed partial class MappingControl : UserControl
             return;
         }
 
+        // Validate a draft first: the mapping being edited is the one in the profile, so it
+        // must only change once saving can no longer be cancelled.
+        var draft = new MappedOption
+        {
+            Trigger = trigger,
+            Action = action,
+        };
+
+        if (!this.TriggerControl.CanMappingSave(draft))
+        {
+            return;
+        }
+
+        if (!this.ActionControl.CanMappingSave(draft))
+        {
+            return;
+        }
+
+        // The reverse mapping checkbox is ticked when editing a mapping with children. If the
+        // user unticked it, those children should go. Only when the checkbox could be changed,
+        // so children of mappings that can't be reversed are left alone.
+        var childrenToRemove = new List<MappedOption>();
+
+        if (this.MappedOption != null
+            && !this.CreateOrUpdateReverseMapping
+            && this.HoldCheckBox.IsEnabled
+            && this.MappedOption.Children.Any())
+        {
+            childrenToRemove = this.MappedOption.Children.ToList();
+
+            if (!await this.ConfirmRemoveChildMappingsAsync(childrenToRemove))
+            {
+                return;
+            }
+        }
+
         this.MappedOption ??= new MappedOption();
         this.MappedOption.Trigger = trigger;
         this.MappedOption.Action = action;
-
-        if (!this.TriggerControl.CanMappingSave(this.MappedOption))
-        {
-            return;
-        }
-
-        if (!this.ActionControl.CanMappingSave(this.MappedOption))
-        {
-            return;
-        }
 
         this.MappedOptionReverse = null;
 
@@ -141,6 +178,11 @@ public sealed partial class MappingControl : UserControl
                 existingReverse.Trigger = reverse.Trigger;
                 existingReverse.Action = reverse.Action;
             }
+        }
+
+        if (childrenToRemove.Count > 0)
+        {
+            ChildMappingsRemoved?.Invoke(this, childrenToRemove);
         }
 
         MappingCreated?.Invoke(this, this.MappedOption);
@@ -182,6 +224,32 @@ public sealed partial class MappingControl : UserControl
         this.MappedOptionReverse = null;
         this.IsEditing = false;
         MappingDeleted?.Invoke(this, toDelete);
+    }
+
+    private async Task<bool> ConfirmRemoveChildMappingsAsync(IReadOnlyList<MappedOption> children)
+    {
+        var list = string.Join(
+            Environment.NewLine,
+            children.Select(child => $"• {child.Trigger} → {child.Action}")
+        );
+
+        var dialog = new ContentDialog
+        {
+            Title = children.Count == 1 ? "Remove child mapping?" : $"Remove {children.Count} child mappings?",
+            Content = new TextBlock
+            {
+                Text = "You unticked creating a reverse mapping. Saving will remove "
+                    + (children.Count == 1 ? "this child mapping:" : "these child mappings:")
+                    + Environment.NewLine + Environment.NewLine + list,
+                TextWrapping = TextWrapping.Wrap,
+            },
+            PrimaryButtonText = "Remove and save",
+            CloseButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Close,
+            XamlRoot = this.XamlRoot,
+        };
+
+        return await dialog.ShowAsync() == ContentDialogResult.Primary;
     }
 
     private void ShowError(string title, string message)

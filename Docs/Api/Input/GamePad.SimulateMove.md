@@ -1,13 +1,13 @@
-# `GamePad.SimulateMove` (```Int16```, ```Int16```, ```GamePadSide```, ```Int32```)
+# `GamePad.SimulateMove` (```Single```, ```Single```, ```GamePadSide```, ```Int32```)
 
 Simulate moving a gamepad joystick
 
 ## Parameters
-* **deltaX (```Int16```)** 
-	The fraction by which to move the stick forward (negative) or backward (positive)
+* **deltaX (```Single```)** 
+	The fraction (-1 to 1) by which to move the stick right (positive) or left (negative)
 
-* **deltaY (```Int16```)** 
-	The fraction by which to move the stick right (positive) or left (negative)
+* **deltaY (```Single```)** 
+	The fraction (-1 to 1) by which to move the stick up (positive) or down (negative)
 
 * **side (```GamePadSide```)** 
 	Which gamepad stick to move, either GamePadSide.Left (default) or .Right
@@ -17,7 +17,7 @@ Simulate moving a gamepad joystick
 
 
 ## Examples
-> Moves the left gamepad joystick halfway down and to the right, then resets after 500ms
+> Moves the left gamepad joystick halfway up and to the right, then resets after 500ms
 > 
 > #### _lua_:
 > ```lua

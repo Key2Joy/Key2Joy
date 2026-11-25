@@ -22,6 +22,7 @@ public sealed partial class ActionControl : UserControl
     public AbstractAction? Action { get; private set; }
 
     private AbstractAction? pendingSelectAction;
+    private bool createsReverseMapping;
 
     public ActionControl()
     {
@@ -111,6 +112,34 @@ public sealed partial class ActionControl : UserControl
     public bool CanMappingSave(AbstractMappedOption mappedOption)
         => this.Options?.CanMappingSave(mappedOption.Action) ?? false;
 
+    /// <summary>
+    /// Lets the options control know whether the mapping also creates a reverse mapping,
+    /// and applies the options to the action again if that changed.
+    /// </summary>
+    /// <param name="createsReverseMapping"></param>
+    public void SetCreatesReverseMapping(bool createsReverseMapping)
+    {
+        if (this.createsReverseMapping == createsReverseMapping)
+        {
+            return;
+        }
+
+        this.createsReverseMapping = createsReverseMapping;
+
+        if (this.Options is IReverseMappingAwareOptionsControl reverseAwareOptions)
+        {
+            reverseAwareOptions.SetCreatesReverseMapping(createsReverseMapping);
+
+            // Don't rebuild through BuildAction: that raises ActionChanged, which makes the
+            // mapping control refresh (and possibly reset) the reverse mapping checkbox while
+            // it's still being toggled. The action itself didn't change, only its options.
+            if (this.Action != null)
+            {
+                this.Options.Setup(this.Action);
+            }
+        }
+    }
+
     partial void OnActionSelectedChanged(ActionComboBoxItem? newValue)
     {
         // Unsubscribe from old options
@@ -133,6 +162,11 @@ public sealed partial class ActionControl : UserControl
         this.ActionContent = newOptions;
 
         newOptions?.OptionsChanged += this.OnOptionsChanged;
+
+        if (newOptions is IReverseMappingAwareOptionsControl reverseAwareOptions)
+        {
+            reverseAwareOptions.SetCreatesReverseMapping(this.createsReverseMapping);
+        }
 
         this.BuildAction();
     }

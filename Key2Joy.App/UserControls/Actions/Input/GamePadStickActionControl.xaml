@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Key2Joy.App.UserControls.Actions.Input"
     xmlns:gamepad="using:Key2Joy.Mapping.Triggers.GamePad"
+    xmlns:input="using:Key2Joy.Mapping.Actions.Input"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -74,6 +75,94 @@
                            SmallChange="0.1"
                            Value="{x:Bind InputScaleY, Mode=TwoWay}" />
             </Grid>
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Input Mode:"
+                           VerticalAlignment="Center"/>
+                <ComboBox Grid.Column="1"
+                          HorizontalAlignment="Stretch"
+                          ToolTipService.ToolTip="Accumulate: moving further moves the stick further (for aiming by stick position). Speed: the stick follows how fast you move and returns to the center when you stop (for turning by stick speed)."
+                          SelectedItem="{x:Bind SelectedInputMode, Mode=TwoWay}"
+                          ItemsSource="{x:Bind AvailableInputModes}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="input:GamePadStickInputMode">
+                            <TextBlock Text="{x:Bind Converter={StaticResource EnumToStringConverter}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+        </StackPanel>
+
+        <!-- Speed mode -->
+        <StackPanel Spacing="4"
+                    Visibility="{x:Bind IsSpeedSettingsVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Full Speed At:"
+                           VerticalAlignment="Center"/>
+                <NumberBox Grid.Column="1"
+                           HorizontalAlignment="Stretch"
+                           SpinButtonPlacementMode="Inline"
+                           Minimum="1"
+                           SmallChange="100"
+                           LargeChange="500"
+                           ToolTipService.ToolTip="Input speed (e.g. mouse movement per second, after the input scale) that fully deflects the stick. Lower is more sensitive."
+                           Value="{x:Bind SpeedFullDeflection, Mode=TwoWay}" />
+            </Grid>
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Smoothing (ms):"
+                           VerticalAlignment="Center"/>
+                <NumberBox Grid.Column="1"
+                           HorizontalAlignment="Stretch"
+                           SpinButtonPlacementMode="Inline"
+                           Minimum="1"
+                           Maximum="1000"
+                           SmallChange="5"
+                           ToolTipService.ToolTip="Milliseconds the speed is averaged over. Higher is smoother but slower to respond. Also how long the stick takes to return to the center after you stop."
+                           Value="{x:Bind SpeedSmoothingMs, Mode=TwoWay}" />
+            </Grid>
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Curve:"
+                           VerticalAlignment="Center"/>
+                <NumberBox Grid.Column="1"
+                           HorizontalAlignment="Stretch"
+                           SpinButtonPlacementMode="Inline"
+                           Minimum="0.1"
+                           Maximum="5"
+                           SmallChange="0.1"
+                           ToolTipService.ToolTip="1 is linear. Higher gives finer control at low speeds."
+                           Value="{x:Bind SpeedCurve, Mode=TwoWay}" />
+            </Grid>
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Min. Output:"
+                           VerticalAlignment="Center"/>
+                <NumberBox Grid.Column="1"
+                           HorizontalAlignment="Stretch"
+                           SpinButtonPlacementMode="Inline"
+                           Minimum="0"
+                           Maximum="1"
+                           SmallChange="0.05"
+                           ToolTipService.ToolTip="Fraction (0 to 1) of deflection any movement gives, to get past deadzones in the game or emulator."
+                           Value="{x:Bind SpeedMinimumOutput, Mode=TwoWay}" />
+            </Grid>
         </StackPanel>
 
         <!-- Exact mode -->
@@ -89,9 +178,11 @@
                 <NumberBox Grid.Column="1"
                            HorizontalAlignment="Stretch"
                            SpinButtonPlacementMode="Inline"
-                           Minimum="-32768"
-                           Maximum="32767"
-                           SmallChange="1"
+                           Minimum="-1"
+                           Maximum="1"
+                           SmallChange="0.05"
+                           LargeChange="0.25"
+                           ToolTipService.ToolTip="Fraction of full deflection: -1 (fully left) to 1 (fully right)"
                            Value="{x:Bind ExactX, Mode=TwoWay}" />
             </Grid>
             <Grid ColumnSpacing="10">
@@ -104,11 +195,18 @@
                 <NumberBox Grid.Column="1"
                            HorizontalAlignment="Stretch"
                            SpinButtonPlacementMode="Inline"
-                           Minimum="-32768"
-                           Maximum="32767"
-                           SmallChange="1"
+                           Minimum="-1"
+                           Maximum="1"
+                           SmallChange="0.05"
+                           LargeChange="0.25"
+                           ToolTipService.ToolTip="Fraction of full deflection: -1 (fully down) to 1 (fully up)"
                            Value="{x:Bind ExactY, Mode=TwoWay}" />
             </Grid>
+        </StackPanel>
+
+        <!-- Exact and accumulate modes (speed mode returns the stick by itself) -->
+        <StackPanel Spacing="4"
+                    Visibility="{x:Bind IsResetAfterVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
             <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
@@ -121,8 +219,15 @@
                            SpinButtonPlacementMode="Inline"
                            Minimum="0"
                            SmallChange="100"
+                           ToolTipService.ToolTip="Milliseconds without input before what this moved is undone. 0 means never."
+                           IsEnabled="{x:Bind IsResetAfterAvailable, Mode=OneWay}"
                            Value="{x:Bind ResetAfterMs, Mode=TwoWay}" />
             </Grid>
+            <TextBlock Text="Not used: the reverse mapping returns the stick when released."
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       TextWrapping="Wrap"
+                       Visibility="{x:Bind CreatesReverseMapping, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
         </StackPanel>
     </StackPanel>
 </UserControl>
