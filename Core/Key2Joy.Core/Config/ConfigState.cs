@@ -117,6 +117,18 @@ public class ConfigState
 
     private bool listenerOverrideDefaultMouseMoveAll = false;
 
+    [BooleanConfigControl(
+        Text = "Use Raw Mouse Movement for Mouse Move Triggers",
+        Hint = "Measures what the mouse reports, without Windows pointer acceleration or speed. Movement amounts change, so input scales and speeds may need retuning."
+    )]
+    public bool UseRawMouseMovement
+    {
+        get => this.useRawMouseMovement;
+        set => this.SaveIfInitialized(this.useRawMouseMovement = value);
+    }
+
+    private bool useRawMouseMovement = false;
+
     #endregion Listener Overrides
 
     [TextConfigControl(
