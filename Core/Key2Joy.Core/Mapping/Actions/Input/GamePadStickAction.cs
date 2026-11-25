@@ -122,6 +122,12 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     /// </summary>
     private HashSet<(int GamePadIndex, GamePadSide Side)> touchedSticks;
 
+    /// <summary>
+    /// Accumulated relative input values this action added to since the last reset, with
+    /// the source they're stored under (shared per trigger listener).
+    /// </summary>
+    private HashSet<(int GamePadIndex, GamePadSide Side, GamePadStickAxis Axis, object Source)> accumulatedSources;
+
     public GamePadStickAction(string name) : base(name)
         => this.InitializeResetState();
 
@@ -131,6 +137,7 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
         this.noInputTimer.Elapsed += this.NoInputTimer_Elapsed;
         this.noInputTimer.AutoReset = false;
         this.movedRelativeAxes = new();
+        this.accumulatedSources = new();
         this.touchedSticks = new();
         this.speedTracker = new();
         this.lastSpeedX = 0;
@@ -333,10 +340,12 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
 
             this.lastSpeedX = x;
             this.lastSpeedY = y;
-        }
 
-        GamePadStickMixer.SetSource(this.GamePadIndex, this.Side, GamePadStickAxis.X, this, x);
-        GamePadStickMixer.SetSource(this.GamePadIndex, this.Side, GamePadStickAxis.Y, this, y);
+            // Published while holding the lock, so StopSpeed (which takes the same lock)
+            // can't run in between and leave these values behind after cleanup.
+            GamePadStickMixer.SetSource(this.GamePadIndex, this.Side, GamePadStickAxis.X, this, x);
+            GamePadStickMixer.SetSource(this.GamePadIndex, this.Side, GamePadStickAxis.Y, this, y);
+        }
 
         var gamePad = ServiceContainer.Get<ISimulatedGamePadService>().GetGamePad(this.GamePadIndex);
 
@@ -393,8 +402,12 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
 
         if (inputBag is AxisDeltaInputBag axisInputBag)
         {
-            // Relative input (e.g. mouse movement) accumulates in this action's own value,
-            // so undoing it doesn't affect what other mappings hold on this axis.
+            // Relative input (e.g. mouse movement) accumulates in a clamped value that is
+            // separate from other kinds of input on this axis, so undoing it doesn't affect
+            // e.g. held keys. Mappings fed by the same trigger listener share that value, so
+            // separate directional mappings (like Mouse Move Left and Right) can fully undo
+            // each other, like they did when they shared the stick directly.
+            var source = (object)this.Listener ?? this;
             var delta = isX
                 ? Scale(axisInputBag.DeltaX, this.InputScaleX)
                 : Scale(axisInputBag.DeltaY, this.InputScaleY);
@@ -404,8 +417,14 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
                 return false;
             }
 
-            GamePadStickMixer.AddToSource(this.GamePadIndex, this.Side, axis, this, delta);
-            this.TrackTouchedStick();
+            GamePadStickMixer.AddToSource(this.GamePadIndex, this.Side, axis, source, delta);
+
+            lock (this.movedRelativeAxes)
+            {
+                this.accumulatedSources.Add((this.GamePadIndex, this.Side, axis, source));
+                this.touchedSticks.Add((this.GamePadIndex, this.Side));
+            }
+
             return true;
         }
 
@@ -443,7 +462,10 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
 
     /// <summary>
     /// Undoes what this action contributed to the sticks:
-    /// - Its own values (from input bags) are removed, leaving other mappings alone.
+    /// - Its own values (speed, gamepad triggers) are removed, leaving other mappings alone.
+    /// - Accumulated relative input is removed on the axes this action moved. That value is
+    ///   shared with mappings fed by the same trigger listener (e.g. Mouse Move Left and
+    ///   Right), so they are undone together, like the reset always behaved.
     /// - The shared total of exact moves is reset on the axes this action moved. That
     ///   total is shared with the reverse mapping (e.g. key release), so it can't be
     ///   undone per action. This matches how the reset always behaved.
@@ -451,13 +473,16 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     private void UndoContributions()
     {
         List<(int GamePadIndex, GamePadSide Side, GamePadStickAxis Axis)> relativeAxes;
+        List<(int GamePadIndex, GamePadSide Side, GamePadStickAxis Axis, object Source)> sources;
         List<(int GamePadIndex, GamePadSide Side)> sticks;
 
         lock (this.movedRelativeAxes)
         {
             relativeAxes = new(this.movedRelativeAxes);
+            sources = new(this.accumulatedSources);
             sticks = new(this.touchedSticks);
             this.movedRelativeAxes.Clear();
+            this.accumulatedSources.Clear();
             this.touchedSticks.Clear();
         }
 
@@ -469,6 +494,11 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
         foreach (var (gamePadIndex, side, axis) in relativeAxes)
         {
             GamePadStickMixer.ResetRelative(gamePadIndex, side, axis);
+        }
+
+        foreach (var (gamePadIndex, side, axis, source) in sources)
+        {
+            GamePadStickMixer.RemoveSource(gamePadIndex, side, axis, source);
         }
 
         GamePadStickMixer.RemoveSource(this);

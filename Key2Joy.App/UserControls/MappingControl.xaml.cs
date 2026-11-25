@@ -121,16 +121,20 @@ public sealed partial class MappingControl : UserControl
             return;
         }
 
-        this.MappedOption ??= new MappedOption();
-        this.MappedOption.Trigger = trigger;
-        this.MappedOption.Action = action;
+        // Validate a draft first: the mapping being edited is the one in the profile, so it
+        // must only change once saving can no longer be cancelled.
+        var draft = new MappedOption
+        {
+            Trigger = trigger,
+            Action = action,
+        };
 
-        if (!this.TriggerControl.CanMappingSave(this.MappedOption))
+        if (!this.TriggerControl.CanMappingSave(draft))
         {
             return;
         }
 
-        if (!this.ActionControl.CanMappingSave(this.MappedOption))
+        if (!this.ActionControl.CanMappingSave(draft))
         {
             return;
         }
@@ -140,7 +144,8 @@ public sealed partial class MappingControl : UserControl
         // so children of mappings that can't be reversed are left alone.
         var childrenToRemove = new List<MappedOption>();
 
-        if (!this.CreateOrUpdateReverseMapping
+        if (this.MappedOption != null
+            && !this.CreateOrUpdateReverseMapping
             && this.HoldCheckBox.IsEnabled
             && this.MappedOption.Children.Any())
         {
@@ -151,6 +156,10 @@ public sealed partial class MappingControl : UserControl
                 return;
             }
         }
+
+        this.MappedOption ??= new MappedOption();
+        this.MappedOption.Trigger = trigger;
+        this.MappedOption.Action = action;
 
         this.MappedOptionReverse = null;
 
