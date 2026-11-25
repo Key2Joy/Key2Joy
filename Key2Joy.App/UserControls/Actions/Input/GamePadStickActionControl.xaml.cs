@@ -27,6 +27,7 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
     public event EventHandler? OptionsChanged;
     public ObservableCollection<GamePadSide> AvailableSides { get; } = [];
     public ObservableCollection<int> AvailableGamePadIndices { get; } = [];
+    public ObservableCollection<GamePadStickInputMode> AvailableInputModes { get; } = [.. Enum.GetValues<GamePadStickInputMode>()];
 
     [ObservableProperty]
     public partial GamePadSide SelectedSide { get; set; }
@@ -44,6 +45,29 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
 
     [ObservableProperty]
     public partial double InputScaleY { get; set; } = -1;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsSpeedSettingsVisible), nameof(IsResetAfterVisible))]
+    public partial GamePadStickInputMode SelectedInputMode { get; set; } = GamePadStickInputMode.Accumulate;
+
+    [ObservableProperty]
+    public partial double SpeedFullDeflection { get; set; } = 2000;
+
+    [ObservableProperty]
+    public partial double SpeedSmoothingMs { get; set; } = 20;
+
+    [ObservableProperty]
+    public partial double SpeedCurve { get; set; } = 1;
+
+    [ObservableProperty]
+    public partial double SpeedMinimumOutput { get; set; } = 0;
+
+    public bool IsSpeedSettingsVisible => this.IsInputMode && this.SelectedInputMode == GamePadStickInputMode.Speed;
+
+    /// <summary>
+    /// Speed mode returns the stick by itself, so it doesn't use the reset.
+    /// </summary>
+    public bool IsResetAfterVisible => !this.IsSpeedSettingsVisible;
 
     [ObservableProperty]
     public partial double ExactX { get; set; } = 0;
@@ -111,6 +135,8 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
     partial void OnIsInputModeChanged(bool value)
     {
         this.OnPropertyChanged(nameof(IsExactMode));
+        this.OnPropertyChanged(nameof(IsSpeedSettingsVisible));
+        this.OnPropertyChanged(nameof(IsResetAfterVisible));
         OptionsChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -118,6 +144,21 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
         => OptionsChanged?.Invoke(this, EventArgs.Empty);
 
     partial void OnInputScaleYChanged(double value)
+        => OptionsChanged?.Invoke(this, EventArgs.Empty);
+
+    partial void OnSelectedInputModeChanged(GamePadStickInputMode value)
+        => OptionsChanged?.Invoke(this, EventArgs.Empty);
+
+    partial void OnSpeedFullDeflectionChanged(double value)
+        => OptionsChanged?.Invoke(this, EventArgs.Empty);
+
+    partial void OnSpeedSmoothingMsChanged(double value)
+        => OptionsChanged?.Invoke(this, EventArgs.Empty);
+
+    partial void OnSpeedCurveChanged(double value)
+        => OptionsChanged?.Invoke(this, EventArgs.Empty);
+
+    partial void OnSpeedMinimumOutputChanged(double value)
         => OptionsChanged?.Invoke(this, EventArgs.Empty);
 
     partial void OnExactXChanged(double value)
@@ -139,6 +180,11 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
         this.InputScaleY = thisAction.InputScaleY;
         this.ExactX = thisAction.DeltaX ?? 0;
         this.ExactY = thisAction.DeltaY ?? 0;
+        this.SelectedInputMode = thisAction.InputMode;
+        this.SpeedFullDeflection = thisAction.SpeedFullDeflection;
+        this.SpeedSmoothingMs = thisAction.SpeedSmoothingMs;
+        this.SpeedCurve = thisAction.SpeedCurve;
+        this.SpeedMinimumOutput = thisAction.SpeedMinimumOutput;
         this.ResetAfterMs = thisAction.ResetAfterIdleTimeInMs;
     }
 
@@ -151,6 +197,11 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
         thisAction.InputScaleY = (float)this.InputScaleY;
         thisAction.DeltaX = this.IsInputMode ? null : (float)this.ExactX;
         thisAction.DeltaY = this.IsInputMode ? null : (float)this.ExactY;
+        thisAction.InputMode = this.SelectedInputMode;
+        thisAction.SpeedFullDeflection = (float)this.SpeedFullDeflection;
+        thisAction.SpeedSmoothingMs = (int)this.SpeedSmoothingMs;
+        thisAction.SpeedCurve = (float)this.SpeedCurve;
+        thisAction.SpeedMinimumOutput = (float)this.SpeedMinimumOutput;
         // 0 means never reset
         thisAction.ResetAfterIdleTimeInMs = this.CreatesReverseMapping ? 0 : (int)this.ResetAfterMs;
     }

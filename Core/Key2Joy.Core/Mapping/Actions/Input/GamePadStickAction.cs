@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 using Key2Joy.Contracts.Mapping;
@@ -18,7 +19,7 @@ namespace Key2Joy.Mapping.Actions.Input;
     NameFormat = "Move {0} Stick on GamePad #{3} by ({1}, {2})",
     GroupName = "GamePad Simulation"
 )]
-public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<GamePadStickAction>
+public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<GamePadStickAction>, IStickSpeedTickTarget
 {
     /// <summary>
     /// This describes what 'a lot of input movement' is, so we can scale
@@ -59,8 +60,40 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     public float InputScaleY { get; set; } = -1;
 
     /// <summary>
+    /// How relative input (like mouse movement) moves the stick, when DeltaX and DeltaY are null.
+    /// </summary>
+    public GamePadStickInputMode InputMode { get; set; } = GamePadStickInputMode.Accumulate;
+
+    /// <summary>
+    /// In <see cref="GamePadStickInputMode.Speed"/> mode: the speed of the input (in units,
+    /// like mouse counts, per second, after applying the input scale) that fully deflects
+    /// the stick.
+    /// </summary>
+    public float SpeedFullDeflection { get; set; } = 2000;
+
+    /// <summary>
+    /// In <see cref="GamePadStickInputMode.Speed"/> mode: over how many milliseconds the
+    /// speed is averaged. Higher is smoother, but slower to respond. This is also how long
+    /// the stick takes to return to the center after the input stops.
+    /// </summary>
+    public int SpeedSmoothingMs { get; set; } = 20;
+
+    /// <summary>
+    /// In <see cref="GamePadStickInputMode.Speed"/> mode: 1 maps speed to stick linearly,
+    /// higher values give finer control at low speeds.
+    /// </summary>
+    public float SpeedCurve { get; set; } = 1;
+
+    /// <summary>
+    /// In <see cref="GamePadStickInputMode.Speed"/> mode: the fraction (0 to 1) of deflection
+    /// any movement gives, to get past deadzones in the game or emulator.
+    /// </summary>
+    public float SpeedMinimumOutput { get; set; } = 0;
+
+    /// <summary>
     /// After how many milliseconds without this action executing should what it
-    /// moved be undone? 0 or less means never.
+    /// moved be undone? 0 or less means never. Not used in
+    /// <see cref="GamePadStickInputMode.Speed"/> mode, which returns the stick by itself.
     /// </summary>
     public int ResetAfterIdleTimeInMs { get; set; } = 500;
 
@@ -70,6 +103,13 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     public int GamePadIndex { get; set; }
 
     private System.Timers.Timer noInputTimer;
+
+    /// <summary>
+    /// Speed mode state, guarded by locking <see cref="speedTracker"/>
+    /// </summary>
+    private StickSpeedTracker speedTracker;
+    private short lastSpeedX;
+    private short lastSpeedY;
 
     /// <summary>
     /// Axes this action added relative (exact mode) moves to since the last reset.
@@ -92,6 +132,9 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
         this.noInputTimer.AutoReset = false;
         this.movedRelativeAxes = new();
         this.touchedSticks = new();
+        this.speedTracker = new();
+        this.lastSpeedX = 0;
+        this.lastSpeedY = 0;
     }
 
     /// <inheritdoc/>
@@ -131,6 +174,7 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
         base.OnStopListening(listener);
 
         this.noInputTimer.Stop();
+        this.StopSpeed();
         this.UndoContributions();
     }
 
@@ -212,6 +256,15 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
             gamePad.PlugIn();
         }
 
+        if (this.DeltaX is null
+            && this.DeltaY is null
+            && this.InputMode == GamePadStickInputMode.Speed
+            && inputBag is AxisDeltaInputBag speedInputBag)
+        {
+            this.AddSpeedSample(speedInputBag);
+            return;
+        }
+
         var movedX = this.ContributeToAxis(GamePadStickAxis.X, this.DeltaX, inputBag);
         var movedY = this.ContributeToAxis(GamePadStickAxis.Y, this.DeltaY, inputBag);
 
@@ -224,6 +277,88 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
         }
 
         GamePadStickMixer.Apply(gamePad, this.Side);
+    }
+
+    /// <summary>
+    /// Records movement for speed mode. The stick itself is updated by the
+    /// <see cref="StickSpeedTicker"/>, which keeps updating it while the speed decays.
+    /// </summary>
+    private void AddSpeedSample(AxisDeltaInputBag inputBag)
+    {
+        lock (this.speedTracker)
+        {
+            this.speedTracker.Add(
+                Stopwatch.GetTimestamp(),
+                inputBag.DeltaX * (double)this.InputScaleX,
+                inputBag.DeltaY * (double)this.InputScaleY
+            );
+        }
+
+        this.TrackTouchedStick();
+        StickSpeedTicker.Activate(this);
+    }
+
+    /// <inheritdoc/>
+    bool IStickSpeedTickTarget.HasPendingSpeedWork
+    {
+        get
+        {
+            lock (this.speedTracker)
+            {
+                return this.speedTracker.HasSamples
+                    || this.lastSpeedX != 0
+                    || this.lastSpeedY != 0;
+            }
+        }
+    }
+
+    /// <inheritdoc/>
+    void IStickSpeedTickTarget.OnSpeedTick(long now)
+    {
+        short x;
+        short y;
+
+        lock (this.speedTracker)
+        {
+            var windowTicks = Stopwatch.Frequency * Math.Max(1, this.SpeedSmoothingMs) / 1000;
+            var (speedX, speedY) = this.speedTracker.GetSpeed(now, windowTicks, Stopwatch.Frequency);
+
+            x = StickSpeedTracker.MapSpeedToStick(speedX, this.SpeedFullDeflection, this.SpeedCurve, this.SpeedMinimumOutput);
+            y = StickSpeedTracker.MapSpeedToStick(speedY, this.SpeedFullDeflection, this.SpeedCurve, this.SpeedMinimumOutput);
+
+            if (x == this.lastSpeedX && y == this.lastSpeedY)
+            {
+                return;
+            }
+
+            this.lastSpeedX = x;
+            this.lastSpeedY = y;
+        }
+
+        GamePadStickMixer.SetSource(this.GamePadIndex, this.Side, GamePadStickAxis.X, this, x);
+        GamePadStickMixer.SetSource(this.GamePadIndex, this.Side, GamePadStickAxis.Y, this, y);
+
+        var gamePad = ServiceContainer.Get<ISimulatedGamePadService>().GetGamePad(this.GamePadIndex);
+
+        if (gamePad.GetIsPluggedIn())
+        {
+            GamePadStickMixer.Apply(gamePad, this.Side);
+        }
+    }
+
+    /// <summary>
+    /// Stops speed mode updates and forgets the movement.
+    /// </summary>
+    private void StopSpeed()
+    {
+        StickSpeedTicker.Deactivate(this);
+
+        lock (this.speedTracker)
+        {
+            this.speedTracker.Clear();
+            this.lastSpeedX = 0;
+            this.lastSpeedY = 0;
+        }
     }
 
     /// <summary>
@@ -353,10 +488,14 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
 
     /// <inheritdoc/>
     public override string GetNameDisplay()
-        => this.Name.Replace("{0}", Enum.GetName(typeof(GamePadSide), this.Side))
-            .Replace("{1}", this.DeltaX?.ToString(CultureInfo.InvariantCulture) ?? $"<TriggerInputX * {this.InputScaleX}>")
-            .Replace("{2}", this.DeltaY?.ToString(CultureInfo.InvariantCulture) ?? $"<TriggerInputY * {this.InputScaleY}>")
+    {
+        var inputName = this.InputMode == GamePadStickInputMode.Speed ? "TriggerSpeed" : "TriggerInput";
+
+        return this.Name.Replace("{0}", Enum.GetName(typeof(GamePadSide), this.Side))
+            .Replace("{1}", this.DeltaX?.ToString(CultureInfo.InvariantCulture) ?? $"<{inputName}X * {this.InputScaleX}>")
+            .Replace("{2}", this.DeltaY?.ToString(CultureInfo.InvariantCulture) ?? $"<{inputName}Y * {this.InputScaleY}>")
             .Replace("{3}", this.GamePadIndex.ToString());
+    }
 
     /// <inheritdoc/>
     public bool Equals(GamePadStickAction other)
@@ -366,6 +505,11 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
         && this.DeltaY == other.DeltaY
         && this.InputScaleX == other.InputScaleX
         && this.InputScaleY == other.InputScaleY
+        && this.InputMode == other.InputMode
+        && this.SpeedFullDeflection == other.SpeedFullDeflection
+        && this.SpeedSmoothingMs == other.SpeedSmoothingMs
+        && this.SpeedCurve == other.SpeedCurve
+        && this.SpeedMinimumOutput == other.SpeedMinimumOutput
         && this.GamePadIndex == other.GamePadIndex
         && this.ResetAfterIdleTimeInMs == other.ResetAfterIdleTimeInMs;
 
@@ -378,6 +522,11 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
         hashCode = (hashCode * -1521134295) + this.DeltaY.GetHashCode();
         hashCode = (hashCode * -1521134295) + this.InputScaleX.GetHashCode();
         hashCode = (hashCode * -1521134295) + this.InputScaleY.GetHashCode();
+        hashCode = (hashCode * -1521134295) + this.InputMode.GetHashCode();
+        hashCode = (hashCode * -1521134295) + this.SpeedFullDeflection.GetHashCode();
+        hashCode = (hashCode * -1521134295) + this.SpeedSmoothingMs.GetHashCode();
+        hashCode = (hashCode * -1521134295) + this.SpeedCurve.GetHashCode();
+        hashCode = (hashCode * -1521134295) + this.SpeedMinimumOutput.GetHashCode();
         hashCode = (hashCode * -1521134295) + this.GamePadIndex.GetHashCode();
         hashCode = (hashCode * -1521134295) + this.ResetAfterIdleTimeInMs.GetHashCode();
         return hashCode;
