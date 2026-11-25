@@ -113,6 +113,10 @@
                            ToolTipService.ToolTip="Fraction of full deflection: -1 (fully down) to 1 (fully up)"
                            Value="{x:Bind ExactY, Mode=TwoWay}" />
             </Grid>
+        </StackPanel>
+
+        <!-- Both modes -->
+        <StackPanel Spacing="4">
             <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
@@ -125,6 +129,7 @@
                            SpinButtonPlacementMode="Inline"
                            Minimum="0"
                            SmallChange="100"
+                           ToolTipService.ToolTip="Milliseconds without input before what this moved is undone. 0 means never."
                            IsEnabled="{x:Bind IsResetAfterAvailable, Mode=OneWay}"
                            Value="{x:Bind ResetAfterMs, Mode=TwoWay}" />
             </Grid>
