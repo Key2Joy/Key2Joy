@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Key2Joy.Config;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Triggers;
@@ -30,9 +31,6 @@ public class MouseMoveTriggerListener : CoreTriggerListener, IOverrideDefaultBeh
     private List<int> lastDirectionHashes;
     private DateTime lastMoveTime;
 
-    private int? lastAllowedX = null;
-    private int? lastAllowedY = null;
-
     private MouseMoveTriggerListener()
         => this.lookupAxis = new Dictionary<int, List<AbstractMappedOption>>();
 
@@ -58,8 +56,6 @@ public class MouseMoveTriggerListener : CoreTriggerListener, IOverrideDefaultBeh
         // This captures global mouse input and blocks default behaviour by setting e.Handled
         this.globalMouseButtonHook = new GlobalInputHook();
         this.globalMouseButtonHook.MouseInputEvent += this.OnMouseInputEvent;
-        this.lastAllowedX = null;
-        this.lastAllowedY = null;
 
         base.Start();
     }
@@ -76,16 +72,16 @@ public class MouseMoveTriggerListener : CoreTriggerListener, IOverrideDefaultBeh
     }
 
     /// <summary>
-    /// Can be called to reset the cursor to the center. Useful for games that take control of the cursor
-    /// and place it somewhere else.
-    /// Used by <see cref="Actions.Logic.AppCommand.ResetMouseMoveTriggerCenter"/>
+    /// No longer needed: movement is now measured from the actual cursor position, so
+    /// games that move the cursor no longer cause drift. Kept so existing profiles that
+    /// use <see cref="Actions.Logic.AppCommand.ResetMouseMoveTriggerCenter"/> keep working.
     /// </summary>
     public void ResetCenterCursor()
-    {
-        this.lastAllowedX = null;
-        this.lastAllowedY = null;
-        System.Diagnostics.Debug.WriteLine($"Mouse move reset center");
-    }
+        => System.Diagnostics.Debug.WriteLine($"Mouse move reset center (no longer needed)");
+
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetPhysicalCursorPos(out Point lpPoint);
 
     /// <inheritdoc/>
     public override void AddMappedOption(AbstractMappedOption mappedOption)
@@ -125,11 +121,18 @@ public class MouseMoveTriggerListener : CoreTriggerListener, IOverrideDefaultBeh
             return;
         }
 
-        var currentX = e.RawData.Position.X;
-        var currentY = e.RawData.Position.Y;
+        // The hook is called before the cursor moves, so the movement is the difference
+        // between where the cursor will go and where it is now. Measuring from the actual
+        // cursor position (instead of the last position we saw) means it doesn't matter
+        // whether we block the movement, or whether something else (like a game) moved
+        // the cursor in the meantime.
+        if (!GetPhysicalCursorPos(out var cursorPosition))
+        {
+            return;
+        }
 
-        var deltaX = currentX - (this.lastAllowedX ?? 0);
-        var deltaY = currentY - (this.lastAllowedY ?? 0);
+        var deltaX = e.RawData.Position.X - cursorPosition.X;
+        var deltaY = e.RawData.Position.Y - cursorPosition.Y;
 
         List<AbstractMappedOption> mappedOptions = new();
         List<int> directionHashes = new();
@@ -183,12 +186,6 @@ public class MouseMoveTriggerListener : CoreTriggerListener, IOverrideDefaultBeh
 
         this.lastDirectionHashes = directionHashes;
         this.lastMoveTime = DateTime.Now;
-
-        if (!shouldOverride || (!this.lastAllowedX.HasValue && !this.lastAllowedY.HasValue))
-        {
-            this.lastAllowedX = e.RawData.Position.X;
-            this.lastAllowedY = e.RawData.Position.Y;
-        }
 
         if (shouldOverride)
         {
