@@ -59,8 +59,8 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     public float InputScaleY { get; set; } = -1;
 
     /// <summary>
-    /// After how many milliseconds should the stick be reset to the center?
-    /// Only the axes this action moved are reset.
+    /// After how many milliseconds without this action executing should what it
+    /// moved be undone? 0 or less means never.
     /// </summary>
     public int ResetAfterIdleTimeInMs { get; set; } = 500;
 
@@ -69,21 +69,38 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     /// </summary>
     public int GamePadIndex { get; set; }
 
-    private readonly System.Timers.Timer noInputTimer;
+    private System.Timers.Timer noInputTimer;
 
     /// <summary>
-    /// Whether this action moved the X/Y axis since the last reset. Used so the
-    /// reset only centers the axes this action is responsible for, leaving axes
-    /// driven by other mappings alone.
+    /// Axes this action added relative (exact mode) moves to since the last reset.
     /// </summary>
-    private volatile bool hasMovedX;
-    private volatile bool hasMovedY;
+    private HashSet<(int GamePadIndex, GamePadSide Side, GamePadStickAxis Axis)> movedRelativeAxes;
+
+    /// <summary>
+    /// Sticks this action contributed to since the last reset, so they can be updated
+    /// when the contributions are undone.
+    /// </summary>
+    private HashSet<(int GamePadIndex, GamePadSide Side)> touchedSticks;
 
     public GamePadStickAction(string name) : base(name)
+        => this.InitializeResetState();
+
+    private void InitializeResetState()
     {
         this.noInputTimer = new System.Timers.Timer();
         this.noInputTimer.Elapsed += this.NoInputTimer_Elapsed;
         this.noInputTimer.AutoReset = false;
+        this.movedRelativeAxes = new();
+        this.touchedSticks = new();
+    }
+
+    /// <inheritdoc/>
+    public override object Clone()
+    {
+        // A memberwise clone would share the timer (bound to this instance) with the clone
+        var clone = (GamePadStickAction)base.Clone();
+        clone.InitializeResetState();
+        return clone;
     }
 
     /// <inheritdoc/>
@@ -106,6 +123,15 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
 
         var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
         gamePadService.EnsurePluggedIn(this.GamePadIndex);
+    }
+
+    /// <inheritdoc/>
+    public override void OnStopListening(AbstractTriggerListener listener)
+    {
+        base.OnStopListening(listener);
+
+        this.noInputTimer.Stop();
+        this.UndoContributions();
     }
 
     /// <markdown-doc>
@@ -186,137 +212,144 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
             gamePad.PlugIn();
         }
 
-        var state = gamePad.GetState();
+        var movedX = this.ContributeToAxis(GamePadStickAxis.X, this.DeltaX, inputBag);
+        var movedY = this.ContributeToAxis(GamePadStickAxis.Y, this.DeltaY, inputBag);
 
-        var deltaX = (short)0;
-        var deltaY = (short)0;
-
-        if (this.DeltaX is not null)
+        if ((movedX || movedY) && this.ResetAfterIdleTimeInMs > 0)
         {
-            deltaX = FractionToStickValue(this.DeltaX.Value);
-        }
-        else if (inputBag is AxisDeltaInputBag axisInputBag)
-        {
-            deltaX = Scale(axisInputBag.DeltaX, this.InputScaleX);
-        }
-        else if (inputBag is GamePadTriggerInputBag triggerInputBag)
-        {
-            // TODO: This is now hard-coded, but I'd love for 'modifiers' to exist in between triggers and actions. Those could (with more fine tuning) be configured by the user.
-            deltaX = Scale((int)(triggerInputBag.LeftTriggerDelta * XInputGamePad.TriggerValueMax), this.InputScaleX);
-            if (deltaX > 0)
-            {
-                // For triggers we need to not have a delta, but simply a value that maps directly to the stick value (feels better)
-                state.LeftStickX = 0;
-                state.RightStickX = 0;
-            }
-        }
-
-        if (this.DeltaY is not null)
-        {
-            deltaY = FractionToStickValue(this.DeltaY.Value);
-        }
-        else if (inputBag is AxisDeltaInputBag axisInputBag)
-        {
-            deltaY = Scale(axisInputBag.DeltaY, this.InputScaleY);
-        }
-        else if (inputBag is GamePadTriggerInputBag triggerInputBag)
-        {
-            deltaY = Scale((int)(triggerInputBag.RightTriggerDelta * XInputGamePad.TriggerValueMax), this.InputScaleY);
-            if (deltaY > 0)
-            {
-                // For triggers we need to not have a delta, but simply a value that maps directly to the stick value (feels better)
-                state.LeftStickY = 0;
-                state.RightStickY = 0;
-            }
-        }
-
-        if (this.Side == GamePadSide.Left)
-        {
-            state.LeftStickX = this.GetStickValue(state.LeftStickX, deltaX);
-            state.LeftStickY = this.GetStickValue(state.LeftStickY, deltaY);
-        }
-        else
-        {
-            state.RightStickX = this.GetStickValue(state.RightStickX, deltaX);
-            state.RightStickY = this.GetStickValue(state.RightStickY, deltaY);
-        }
-
-        if (deltaX != 0)
-        {
-            this.hasMovedX = true;
-        }
-
-        if (deltaY != 0)
-        {
-            this.hasMovedY = true;
-        }
-
-        if (state.LeftStickX != 0
-            || state.LeftStickY != 0
-            || state.RightStickX != 0
-            || state.RightStickY != 0
-        )
-        {
-            // Reset the timer if there's input
-            this.noInputTimer.Interval = this.ResetAfterIdleTimeInMs;
+            // Restart the timer, since there was input
             this.noInputTimer.Stop();
+            this.noInputTimer.Interval = this.ResetAfterIdleTimeInMs;
             this.noInputTimer.Start();
         }
 
-        gamePad.Update();
+        GamePadStickMixer.Apply(gamePad, this.Side);
     }
 
     /// <summary>
-    /// Resets the axes this action moved to the center position if there was no
-    /// input for a while
+    /// Contributes the exact delta, or the value from the input bag, to an axis.
+    /// </summary>
+    /// <returns>Whether anything was contributed</returns>
+    private bool ContributeToAxis(GamePadStickAxis axis, float? exactDelta, AbstractInputBag inputBag)
+    {
+        var isX = axis == GamePadStickAxis.X;
+
+        if (exactDelta is not null)
+        {
+            // Exact moves add to a total shared with other exact moves, so a press and its
+            // (separate) reverse release always cancel out exactly.
+            var delta = FractionToStickValue(exactDelta.Value);
+
+            if (delta == 0)
+            {
+                return false;
+            }
+
+            GamePadStickMixer.AddRelative(this.GamePadIndex, this.Side, axis, delta);
+
+            lock (this.movedRelativeAxes)
+            {
+                this.movedRelativeAxes.Add((this.GamePadIndex, this.Side, axis));
+                this.touchedSticks.Add((this.GamePadIndex, this.Side));
+            }
+
+            return true;
+        }
+
+        if (inputBag is AxisDeltaInputBag axisInputBag)
+        {
+            // Relative input (e.g. mouse movement) accumulates in this action's own value,
+            // so undoing it doesn't affect what other mappings hold on this axis.
+            var delta = isX
+                ? Scale(axisInputBag.DeltaX, this.InputScaleX)
+                : Scale(axisInputBag.DeltaY, this.InputScaleY);
+
+            if (delta == 0)
+            {
+                return false;
+            }
+
+            GamePadStickMixer.AddToSource(this.GamePadIndex, this.Side, axis, this, delta);
+            this.TrackTouchedStick();
+            return true;
+        }
+
+        if (inputBag is GamePadTriggerInputBag triggerInputBag)
+        {
+            // TODO: This is now hard-coded, but I'd love for 'modifiers' to exist in between triggers and actions. Those could (with more fine tuning) be configured by the user.
+            // For triggers we need to not have a delta, but simply a value that maps directly to the stick value (feels better)
+            var value = isX
+                ? Scale((int)(triggerInputBag.LeftTriggerDelta * XInputGamePad.TriggerValueMax), this.InputScaleX)
+                : Scale((int)(triggerInputBag.RightTriggerDelta * XInputGamePad.TriggerValueMax), this.InputScaleY);
+
+            GamePadStickMixer.SetSource(this.GamePadIndex, this.Side, axis, this, value);
+            this.TrackTouchedStick();
+            return value != 0;
+        }
+
+        return false;
+    }
+
+    private void TrackTouchedStick()
+    {
+        lock (this.movedRelativeAxes)
+        {
+            this.touchedSticks.Add((this.GamePadIndex, this.Side));
+        }
+    }
+
+    /// <summary>
+    /// Undoes what this action moved if there was no input for a while
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void NoInputTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-    {
-        var resetX = this.hasMovedX;
-        var resetY = this.hasMovedY;
-        this.hasMovedX = false;
-        this.hasMovedY = false;
+        => this.UndoContributions();
 
-        if (!resetX && !resetY)
+    /// <summary>
+    /// Undoes what this action contributed to the sticks:
+    /// - Its own values (from input bags) are removed, leaving other mappings alone.
+    /// - The shared total of exact moves is reset on the axes this action moved. That
+    ///   total is shared with the reverse mapping (e.g. key release), so it can't be
+    ///   undone per action. This matches how the reset always behaved.
+    /// </summary>
+    private void UndoContributions()
+    {
+        List<(int GamePadIndex, GamePadSide Side, GamePadStickAxis Axis)> relativeAxes;
+        List<(int GamePadIndex, GamePadSide Side)> sticks;
+
+        lock (this.movedRelativeAxes)
+        {
+            relativeAxes = new(this.movedRelativeAxes);
+            sticks = new(this.touchedSticks);
+            this.movedRelativeAxes.Clear();
+            this.touchedSticks.Clear();
+        }
+
+        if (sticks.Count == 0)
         {
             return;
         }
 
-        var gamePad = ServiceContainer.Get<ISimulatedGamePadService>().GetGamePad(this.GamePadIndex);
-        var state = gamePad.GetState();
-
-        if (this.Side == GamePadSide.Left)
+        foreach (var (gamePadIndex, side, axis) in relativeAxes)
         {
-            if (resetX)
-            {
-                state.LeftStickX = 0;
-            }
-
-            if (resetY)
-            {
-                state.LeftStickY = 0;
-            }
-        }
-        else
-        {
-            if (resetX)
-            {
-                state.RightStickX = 0;
-            }
-
-            if (resetY)
-            {
-                state.RightStickY = 0;
-            }
+            GamePadStickMixer.ResetRelative(gamePadIndex, side, axis);
         }
 
-        gamePad.Update();
+        GamePadStickMixer.RemoveSource(this);
+
+        var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
+
+        foreach (var (gamePadIndex, side) in sticks)
+        {
+            var gamePad = gamePadService.GetGamePad(gamePadIndex);
+
+            if (gamePad.GetIsPluggedIn())
+            {
+                GamePadStickMixer.Apply(gamePad, side);
+            }
+        }
     }
-
-    private short GetStickValue(short stickValue, short delta)
-        => (short)Math.Min(Math.Max(stickValue + delta, MIN_STICK_VALUE), MAX_STICK_VALUE);
 
     /// <inheritdoc/>
     public override string GetNameDisplay()

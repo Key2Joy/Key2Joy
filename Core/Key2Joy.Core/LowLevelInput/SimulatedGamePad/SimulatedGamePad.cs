@@ -1,3 +1,4 @@
+using Key2Joy.Mapping.Actions.Input;
 using SimWinInput;
 
 namespace Key2Joy.LowLevelInput.SimulatedGamePad;
@@ -75,6 +76,8 @@ public class SimulatedGamePad : ISimulatedGamePad
     public void ResetState()
     {
         SimGamePad.Instance.State[this.Index].Reset();
+        // Forget stick contributions, so they don't return on the next stick move
+        GamePadStickMixer.Reset(this.Index);
         this.gamePadInfo.OnActivityOccurred();
     }
 

@@ -64,8 +64,7 @@ public class GamePadResetAction : CoreAction
             gamePad.PlugIn();
         }
 
-        var state = gamePad.GetState();
-        state.Reset();
+        gamePad.ResetState();
         gamePad.Update();
     }
 
@@ -73,8 +72,7 @@ public class GamePadResetAction : CoreAction
     {
         var gamePadService = ServiceContainer.Get<ISimulatedGamePadService>();
         var gamePad = gamePadService.GetGamePad(this.GamePadIndex);
-        var state = gamePad.GetState();
-        state.Reset();
+        gamePad.ResetState();
         gamePad.Update();
     }
 
