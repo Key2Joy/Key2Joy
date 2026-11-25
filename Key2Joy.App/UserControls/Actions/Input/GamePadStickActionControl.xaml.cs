@@ -22,7 +22,7 @@ namespace Key2Joy.App.UserControls.Actions.Input;
     "MVVMTK0050:Using [ObservableObject] is not AOT compatible for WinRT",
     Justification = "Cannot inherit from ObservableObject, must remain UserControl"
 )]
-public sealed partial class GamePadStickActionControl : UserControl, IActionOptionsControl
+public sealed partial class GamePadStickActionControl : UserControl, IActionOptionsControl, IReverseMappingAwareOptionsControl
 {
     public event EventHandler? OptionsChanged;
     public ObservableCollection<GamePadSide> AvailableSides { get; } = [];
@@ -53,6 +53,17 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
 
     [ObservableProperty]
     public partial double ResetAfterMs { get; set; } = 500;
+
+    /// <summary>
+    /// When the mapping also creates a reverse mapping (e.g. on key release), that
+    /// reverse returns the stick. A reset would center the stick while the key is still
+    /// held, so it's not used.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsResetAfterAvailable))]
+    public partial bool CreatesReverseMapping { get; set; }
+
+    public bool IsResetAfterAvailable => !this.CreatesReverseMapping;
 
     public GamePadStickActionControl()
     {
@@ -140,8 +151,12 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
         thisAction.InputScaleY = (float)this.InputScaleY;
         thisAction.DeltaX = this.IsInputMode ? null : (float)this.ExactX;
         thisAction.DeltaY = this.IsInputMode ? null : (float)this.ExactY;
-        thisAction.ResetAfterIdleTimeInMs = (int)this.ResetAfterMs;
+        // 0 means never reset
+        thisAction.ResetAfterIdleTimeInMs = this.CreatesReverseMapping ? 0 : (int)this.ResetAfterMs;
     }
+
+    void IReverseMappingAwareOptionsControl.SetCreatesReverseMapping(bool createsReverseMapping)
+        => this.CreatesReverseMapping = createsReverseMapping;
 
     bool IActionOptionsControl.CanMappingSave(AbstractAction action) => true;
 }

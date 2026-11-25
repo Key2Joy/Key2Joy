@@ -125,8 +125,14 @@
                            SpinButtonPlacementMode="Inline"
                            Minimum="0"
                            SmallChange="100"
+                           IsEnabled="{x:Bind IsResetAfterAvailable, Mode=OneWay}"
                            Value="{x:Bind ResetAfterMs, Mode=TwoWay}" />
             </Grid>
+            <TextBlock Text="Not used: the reverse mapping returns the stick when released."
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       TextWrapping="Wrap"
+                       Visibility="{x:Bind CreatesReverseMapping, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"/>
         </StackPanel>
     </StackPanel>
 </UserControl>

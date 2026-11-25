@@ -45,6 +45,9 @@ public sealed partial class MappingControl : UserControl
 
     private bool dominantReverseCheckedState;
 
+    partial void OnCreateOrUpdateReverseMappingChanged(bool value)
+        => this.ActionControl.SetCreatesReverseMapping(value);
+
     partial void OnIsEditingChanged(bool value)
     {
         this.ModeTitle = value ? "Modifying a mapping" : "Creating a new mapping";
