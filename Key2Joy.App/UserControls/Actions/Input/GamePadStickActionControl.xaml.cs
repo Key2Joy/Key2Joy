@@ -138,8 +138,8 @@ public sealed partial class GamePadStickActionControl : UserControl, IActionOpti
         thisAction.GamePadIndex = this.SelectedGamePadIndex;
         thisAction.InputScaleX = (float)this.InputScaleX;
         thisAction.InputScaleY = (float)this.InputScaleY;
-        thisAction.DeltaX = this.IsInputMode ? null : (short?)this.ExactX;
-        thisAction.DeltaY = this.IsInputMode ? null : (short?)this.ExactY;
+        thisAction.DeltaX = this.IsInputMode ? null : (float)this.ExactX;
+        thisAction.DeltaY = this.IsInputMode ? null : (float)this.ExactY;
         thisAction.ResetAfterIdleTimeInMs = (int)this.ResetAfterMs;
     }
 

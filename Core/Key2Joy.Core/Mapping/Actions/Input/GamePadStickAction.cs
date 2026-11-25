@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Key2Joy.Contracts.Mapping;
 using Key2Joy.Contracts.Mapping.Actions;
@@ -28,24 +29,24 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     private const short MIN_STICK_VALUE = XInputGamePad.ThumbstickValueMin;
     private const short MAX_STICK_VALUE = XInputGamePad.ThumbstickValueMax;
 
-    private const float EXACT_SCALE = (MAX_STICK_VALUE - MIN_STICK_VALUE) / 2f;
-
     /// <summary>
     /// Which side to simulate
     /// </summary>
     public GamePadSide Side { get; set; }
 
     /// <summary>
-    /// How much to simulate on the X axis. If null, then the inputbag of the input
+    /// How much to move the stick on the X axis, as a fraction of full deflection
+    /// (-1 is fully left, 1 is fully right). If null, then the inputbag of the input
     /// that triggered this will be used if possible
     /// </summary>
-    public short? DeltaX { get; set; } = null;
+    public float? DeltaX { get; set; } = null;
 
     /// <summary>
-    /// How much to simulate on the Y axis. If null, then the inputbag of the input
+    /// How much to move the stick on the Y axis, as a fraction of full deflection
+    /// (-1 is fully down, 1 is fully up). If null, then the inputbag of the input
     /// that triggered this will be used if possible
     /// </summary>
-    public short? DeltaY { get; set; } = null;
+    public float? DeltaY { get; set; } = null;
 
     /// <summary>
     /// If DeltaX is null, this is the scale factor to apply to the inputbag
@@ -84,8 +85,8 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
         if (this.DeltaX.HasValue
             && this.DeltaY.HasValue)
         {
-            reverse.DeltaX = (short?)(this.DeltaX.Value * -1);
-            reverse.DeltaY = (short?)(this.DeltaY.Value * -1);
+            reverse.DeltaX = this.DeltaX.Value * -1;
+            reverse.DeltaY = this.DeltaY.Value * -1;
         }
     }
 
@@ -106,7 +107,7 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     /// Simulate moving a gamepad joystick
     /// </summary>
     /// <markdown-example>
-    /// Moves the left gamepad joystick halfway down and to the right, then resets after 500ms
+    /// Moves the left gamepad joystick halfway up and to the right, then resets after 500ms
     /// <code language="lua">
     /// <![CDATA[
     /// GamePad.SimulateMove(0.5,0.5)
@@ -116,15 +117,15 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     /// ]]>
     /// </code>
     /// </markdown-example>
-    /// <param name="deltaX">The fraction by which to move the stick forward (negative) or backward (positive)</param>
-    /// <param name="deltaY">The fraction by which to move the stick right (positive) or left (negative)</param>
+    /// <param name="deltaX">The fraction (-1 to 1) by which to move the stick right (positive) or left (negative)</param>
+    /// <param name="deltaY">The fraction (-1 to 1) by which to move the stick up (positive) or down (negative)</param>
     /// <param name="side">Which gamepad stick to move, either GamePadSide.Left (default) or .Right</param>
     /// <param name="gamepadIndex">Which of 4 possible gamepads to simulate: 0 (default), 1, 2 or 3</param>
     /// <name>GamePad.SimulateMove</name>
     [ExposesScriptingMethod("GamePad.SimulateMove")]
     public async void ExecuteForScript(
-        short deltaX,
-        short deltaY,
+        float deltaX,
+        float deltaY,
         GamePadSide side = GamePadSide.Left,
         int gamepadIndex = 0)
     {
@@ -153,6 +154,18 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
         return gamePadStickX;
     }
 
+    /// <summary>
+    /// Converts a fraction of full deflection (-1 to 1) to a gamepad stick value
+    /// </summary>
+    /// <param name="fraction"></param>
+    /// <returns></returns>
+    private static short FractionToStickValue(float fraction)
+    {
+        var clamped = Math.Min(Math.Max(fraction, -1f), 1f);
+
+        return (short)Math.Round(clamped * MAX_STICK_VALUE);
+    }
+
     /// <inheritdoc/>
     public override async Task Execute(AbstractInputBag inputBag = null)
     {
@@ -171,7 +184,7 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
 
         if (this.DeltaX is not null)
         {
-            deltaX = Scale((short)this.DeltaX, EXACT_SCALE);
+            deltaX = FractionToStickValue(this.DeltaX.Value);
         }
         else if (inputBag is AxisDeltaInputBag axisInputBag)
         {
@@ -191,7 +204,7 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
 
         if (this.DeltaY is not null)
         {
-            deltaY = Scale((int)this.DeltaY, EXACT_SCALE);
+            deltaY = FractionToStickValue(this.DeltaY.Value);
         }
         else if (inputBag is AxisDeltaInputBag axisInputBag)
         {
@@ -264,8 +277,8 @@ public class GamePadStickAction : CoreAction, IProvideReverseAspect, IEquatable<
     /// <inheritdoc/>
     public override string GetNameDisplay()
         => this.Name.Replace("{0}", Enum.GetName(typeof(GamePadSide), this.Side))
-            .Replace("{1}", this.DeltaX?.ToString() ?? $"<TriggerInputX * {this.InputScaleX}>")
-            .Replace("{2}", this.DeltaY?.ToString() ?? $"<TriggerInputY * {this.InputScaleY}>")
+            .Replace("{1}", this.DeltaX?.ToString(CultureInfo.InvariantCulture) ?? $"<TriggerInputX * {this.InputScaleX}>")
+            .Replace("{2}", this.DeltaY?.ToString(CultureInfo.InvariantCulture) ?? $"<TriggerInputY * {this.InputScaleY}>")
             .Replace("{3}", this.GamePadIndex.ToString());
 
     /// <inheritdoc/>
